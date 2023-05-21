@@ -323,10 +323,20 @@ class c_peminjaman extends Controller
                 'waktu_pengajuan'=> $now,
                ];
                $this->peminjaman->addData($data);
+
                 $data2 = [
                     'id_peminjaman'=> $id_peminjaman, 
                 ];
                 $this->keranjang->finish($id_user, $data2);
+
+                $data_approval = [
+                    'id_peminjaman'=> $id_peminjaman,
+                    'wakil_direktur_1'=> "Proses",
+                    'wakil_direktur_2'=> "Proses",
+                    'kepala_bagian'=> "Proses",
+                    'staff_umum'=> "Proses",
+                   ];
+                $this->approval->addData($data_approval);
         }else{
             $filename_pengenal = $request->nama_pj."-".$tahun.'.'. $file_pengenal->extension();   
             $file_pengenal->move(public_path('foto/peminjaman/foto_identitas'),$filename_pengenal);
@@ -351,6 +361,15 @@ class c_peminjaman extends Controller
                     'id_peminjaman'=> $id_peminjaman, 
                 ];
                 $this->keranjang->finish($id_user, $data2);
+
+                $data_approval = [
+                    'id_peminjaman'=> $id_peminjaman,
+                    'wakil_direktur_1'=> "Proses",
+                    'wakil_direktur_2'=> "Proses",
+                    'kepala_bagian'=> "Proses",
+                    'staff_umum'=> "Proses",
+                   ];
+                $this->approval->addData($data_approval);
         }
        
            return redirect()->route('dashboard')->with('success','Pengajuan Berhasil Dikirim');

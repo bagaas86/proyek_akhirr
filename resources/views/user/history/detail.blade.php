@@ -1,26 +1,24 @@
-@extends('layouts.templateBaru')
-@section('content')
 @php
 $waktu_pengajuan = date('d-m-Y h:i', strtotime($peminjaman->waktu_pengajuan));
 $waktu_awal = date('d-m-Y h:i', strtotime($peminjaman->waktu_awal));
 $waktu_akhir = date('d-m-Y h:i', strtotime($peminjaman->waktu_akhir));
 $diff = Carbon\Carbon::parse($waktu_awal)->diffInDays(Carbon\Carbon::parse($waktu_akhir))                      
 @endphp
-<div class="container" style="color:black">
-    <a style="margin-left:1em" href="{{route('history.index')}}" class="btn btn-primary btn-sm"><i class="bi bi-arrow-left-square"></i></a>
+
+    <a style="margin-left:1em" href="#" onclick="read()" class="btn btn-primary btn-sm"><i class="bi bi-arrow-left-square"></i></a>
         <div class="col col-12 col-md-12">
             <div class="text-center title">
                 <h3>Detail History Peminjaman Saya</h3>
             </div>
             <div class="row">
                 <div class="col col-12 col-md-8">
-                    <div class="card">
+                    <div class="card mt-2">
                         <div class="card-body">
                             <div class="header" style="text-align: center">
                                 <h4>Detail Pengajuan</h4>
                             </div>
                             <div class="1">
-                                <table>
+                                <table style="text-align:left">
                                     <tr style="vertical-align:top;font-size:12px">
                                         <td style="width:40%;font-weight:bold">Nama PJ</td>
                                         <td style="width:5%">:</td>
@@ -56,36 +54,138 @@ $diff = Carbon\Carbon::parse($waktu_awal)->diffInDays(Carbon\Carbon::parse($wakt
                             </div>  
                         </div>
                     </div>
-                </div>
-            <div class="col col-12 col-md-4">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="header" style="text-align: center">
-                            <h4>List Pengajuan Peminjaman</h4>
+
+                    <div class="card mt-2">
+                        <div class="card-body">
+                            <div class="header" style="text-align: center">
+                                <h4>Persetujuan Peminjaman</h4>
+                            </div>
+                            <div class="table">
+                                <div class="row">
+                                    @if(Auth::user()->level == "Dosen")
+                                    <div class="col col-md-3">
+                                        <div class="card-header h-50">
+                                            <img src="{{asset('foto/dm/pengguna/default.png')}}" class="img-rounded" style="width:25%">
+                                            <h6>Wakil Direktur I</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            @if($approval->wakil_direktur_1 == "Proses" )
+                                            <i class="bi bi-hourglass-top" style="font-size:36px;color:yellow"></i>
+                                            @elseif($approval->wakil_direktur_1 == "Ditolak")
+                                            <i class="bi bi-x" style="font-size:36px;color:red"></i>
+                                            @elseif($approval->wakil_direktur_1 == "Disetujui")
+                                            <i class="bi bi-check" style="font-size:36px;color:green"></i>
+                                            @endif
+                                        </div>
+                                     
+                                    </div>
+                            
+                                    <div class="col col-md-3">
+                                        <div class="card-header h-50">
+                                            <img src="{{asset('foto/dm/pengguna/default.png')}}" class="img-rounded" style="width:25%">
+                                            <h6>Wakil Direktur II</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            @if($approval->wakil_direktur_2 == "Proses" )
+                                            <i class="bi bi-hourglass-top" style="font-size:36px;color:yellow"></i>
+                                            @elseif($approval->wakil_direktur_2 == "Ditolak")
+                                            <i class="bi bi-x" style="font-size:36px;color:red"></i>
+                                            @elseif($approval->wakil_direktur_2 == "Disetujui")
+                                            <i class="bi bi-check" style="font-size:36px;color:green"></i>
+                                            @endif
+                                        </div>
+                                     
+                                    </div>
+                                    
+                                    <div class="col col-md-3">
+                                        <div class="card-header h-50">
+                                            <img src="{{asset('foto/dm/pengguna/default.png')}}" class="img-rounded" style="width:25%">
+                                            <h6>Kepala Bagian</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            @if($approval->kepala_bagian == "Proses" )
+                                            <i class="bi bi-hourglass-top" style="font-size:36px;color:yellow"></i>
+                                            @elseif($approval->kepala_bagian == "Ditolak")
+                                            <i class="bi bi-x" style="font-size:36px;color:red"></i>
+                                            @elseif($approval->kepala_bagian == "Disetujui")
+                                            <i class="bi bi-check" style="font-size:36px;color:green"></i>
+                                            @endif
+                                        </div>
+                                     
+                                    </div>
+                                    @endif
+                                    <div class="col col-md-3">
+                                        <div class="card-header h-50">
+                                            <img src="{{asset('foto/dm/pengguna/default.png')}}" class="img-rounded" style="width:25%">
+                                            <h6>Staff Umum</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            @if($approval->staff_umum == "Proses" )
+                                            <i class="bi bi-hourglass-top" style="font-size:36px;color:yellow"></i>
+                                            @elseif($approval->staff_umum == "Ditolak")
+                                            <i class="bi bi-x" style="font-size:36px;color:red"></i>
+                                            @elseif($approval->staff_umum == "Disetujui")
+                                            <i class="bi bi-check" style="font-size:36px;color:green"></i>
+                                            @endif
+                                        </div>
+                                     
+                                    </div>
+                                  
+                                  
+                                   
+                                </div>
+                            </div>  
                         </div>
-                        <div class="table">
-                            <table>
-                                <tr style="border-bottom:1pt solid rgb(205, 205, 205);">
-                                    <th style="width:70%">Nama Item</th>
-                                    <th style="width:10%">Kategori</th>
-                                    <th style="width:15%">Jumlah</th>  
-                                </tr>
-                                @foreach($keranjang as $data)
-                                <tr style="height:30px">
-                                    <td style="width:70%">{{$data->nama_item}}</td>
-                                    <td style="width:70%">{{$data->kategori_item}}</td>
-                                    <td style="width:15%">{{$data->jumlah}}</td>
-                                </tr>
-                                @endforeach
-                            </table> 
-                        </div>  
                     </div>
                 </div>
-            </div>
+
+                <div class="col col-12 col-md-4">
+                    <div class="card mt-2">
+                        <div class="card-body">
+                            <div class="header" style="text-align: center">
+                                <h4>List Pengajuan Peminjaman</h4>
+                            </div>
+                            <div  style="text-align:left" class="table">
+                                <table>
+                                    <tr style="border-bottom:1pt solid rgb(205, 205, 205);">
+                                        <th style="width:70%">Nama Item</th>
+                                        <th style="width:10%">Kategori</th>
+                                        <th style="width:15%">Jumlah</th>  
+                                    </tr>
+                                    @foreach($keranjang as $data)
+                                    <tr style="height:30px">
+                                        <td style="width:70%">{{$data->nama_item}}</td>
+                                        <td style="width:70%">{{$data->kategori_item}}</td>
+                                        <td style="width:15%">{{$data->jumlah}}</td>
+                                    </tr>
+                                    @endforeach
+                                </table> 
+                            </div>  
+                        </div>
+                    </div>
+                    <div class="card mt-2">
+                        <div class="card-body">
+                            <div class="header" style="text-align: center">
+                                <h4>Berita Acara</h4>
+                            </div>
+                            <div  style="text-align:left" class="card">
+                              <div class="card-body">
+                                berita_acara barang.pdf
+                              </div>
+                            </div>  
+                            <div  style="text-align:left" class="card">
+                                <div class="card-body">
+                                  berita_acara barang.pdf
+                                </div>
+                              </div>  
+                        </div>
+                    </div>
+                </div>
+
             
         </div>
 
     </div>
-</div>
-@endsection
+
+
 

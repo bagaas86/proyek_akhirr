@@ -101,7 +101,7 @@
   @endif
 
   <!-- ======= Footer ======= -->
-  <footer id="footer">
+  {{-- <footer id="footer">
 
     <div class="container d-md-flex py-4">
 
@@ -125,7 +125,7 @@
         <a href="#" class="linkedin"><i class="bx bxl-linkedin"></i></a>
       </div>
     </div>
-  </footer><!-- End Footer -->
+  </footer><!-- End Footer --> --}}
 
   <div id="preloader"></div>
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>

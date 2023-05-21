@@ -1,6 +1,6 @@
 <center>
     <div class="col col-md-4 col-12 mt-2" id="pilihKategori">
-        <select class="form-select form-select" aria-label=".form-select-sm example" id="kategori" onclick="submit()">
+        <select class="form-select form-select" aria-label=".form-select-sm example" id="kategori" onchange="submit()">
             <option value="All" selected disabled>-- Pilih Kategori --</option>
             {{-- <option value="All">Semua Kategori</option> --}}
             <option value="Barang">Barang</option>
@@ -113,22 +113,6 @@
 {{-- endModal --}}
 
 <script>
-    
-    function modalDetail(id_item) {
-        $.get("{{ url('detailbmn') }}/" + id_item, {}, function(data, status) {
-            $("#exampleModalCenterTitle").html(`Detail BMN`)
-            $("#page").html(data);
-            $("#exampleModalCenter").modal('show');
-           });
-          
-             
-     
-           
-    }
-
-</script>
-
-<script>
      function submit(){
         var kategori = $("#kategori").val();
       $.ajax({
@@ -229,6 +213,15 @@
                 }
             });
         }
+    
+    function modalDetail(id_item) {
+        $.get("{{ url('detailbmn') }}/" + id_item, {}, function(data, status) {
+            $("#exampleModalCenterTitle").html(`Detail BMN`)
+            $("#page").html(data);
+            $("#exampleModalCenter").modal('show');
+           })  
+    }
 
 </script>
+
 

@@ -24,7 +24,7 @@
 <div class="card">
     <div class="xtabledm">
         <a href="{{route('dm.barang.create')}}" class="btn btn-primary mb-2"><i class="fa fa-plus"></i>Tambah</a>
-        <table id="myTable" class="display">
+        <table id="myTable" class="display nowrap" style="width:100%">
             <thead>
                 <tr>
                     <th>No</th>
@@ -94,25 +94,29 @@
 <script>
    $(document).ready(function () {
     var t = $('#myTable').DataTable({
+        rowReorder: {
+            selector: 'td:nth-child(2)'
+        },
+        responsive: true,
+        stateSave: true,
         columnDefs: [
-            {
-                searchable: false,
-                orderable: false,
-                targets: 0,
-            },
-        ],
-        order: [[1, 'asc']],
-        stateSave:true,
+             {
+                 searchable: false,
+                 orderable: false,
+                 targets: 0,
+             },
+         ],
+         order: [[1, 'asc']],
 
     });
 
     t.on('order.dt search.dt', function () {
-        let i = 1;
- 
-        t.cells(null, 0, { search: 'applied', order: 'applied' }).every(function (cell) {
-            this.data(i++);
-        });
-    }).draw();
+         let i = 1;
+  
+         t.cells(null, 0, { search: 'applied', order: 'applied' }).every(function (cell) {
+             this.data(i++);
+         });
+     }).draw();
     
 
     
@@ -120,17 +124,6 @@
 </script>
 @endsection
 
-<script type="text/javascript">
-
-    $(document).ready(function()
-    {
-      setTimeout(function()
-      {
-        $("div.alert").remove();
-      }, 5000);
-    });
-
-  </script>
 
 <script>
     

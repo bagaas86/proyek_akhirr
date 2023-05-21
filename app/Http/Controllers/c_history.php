@@ -8,6 +8,7 @@ use App\Models\pengguna;
 use App\Models\peminjaman;
 use App\Models\item;
 use App\Models\keranjang;
+use App\Models\approval;
 use DB;
 use Auth;
 
@@ -18,16 +19,26 @@ class c_history extends Controller
         $this->peminjaman = new peminjaman();
         $this->item = new item();
         $this->keranjang = new keranjang();
+        $this->approval = new approval();
     }
 
     public function index()
+    {
+        $id = Auth::user()->id;
+        $data =[
+            'history' => $this->peminjaman->myData($id),
+        ];
+        return view('user.history.index', $data);
+    }
+
+    public function history()
     {
         $id = Auth::user()->id;
 
         $data =[
             'history' => $this->peminjaman->myData($id),
         ];
-        return view('user.history.index', $data);
+        return view('user.history.history', $data);
     }
 
     public function detailHistory($id_peminjaman)
@@ -35,6 +46,7 @@ class c_history extends Controller
         $data =[
             'keranjang' => $this->keranjang->detailPeminjaman($id_peminjaman),
             'peminjaman'=> $this->peminjaman->detailPeminjaman($id_peminjaman),
+            'approval' => $this->approval->detailData($id_peminjaman)
         ];
         
         return view('user.history.detail', $data);

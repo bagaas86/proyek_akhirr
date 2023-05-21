@@ -55,20 +55,23 @@
 <script>
     $(document).ready(function () {
      var t = $('#myTable').DataTable({
-         columnDefs: [
+        rowReorder: {
+            selector: 'td:nth-child(2)'
+        },
+        responsive: true,
+        stateSave: true,
+        columnDefs: [
              {
                  searchable: false,
                  orderable: false,
                  targets: 0,
-                 scrollX: true,
              },
          ],
-         order: [[ 3, 'asc' ], [ 5, 'desc' ]],
-         stateSave:true,
- 
-     });
- 
-     t.on('order.dt search.dt', function () {
+         order: [[1, 'asc']],
+
+    });
+
+    t.on('order.dt search.dt', function () {
          let i = 1;
   
          t.cells(null, 0, { search: 'applied', order: 'applied' }).every(function (cell) {

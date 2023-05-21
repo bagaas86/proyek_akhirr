@@ -31,7 +31,7 @@ class peminjaman extends Model
 
     public function myData($id)
     {
-        return DB::table('peminjaman')->where('id_user', $id)->get();
+        return DB::table('peminjaman')->join('approvals', 'peminjaman.id_peminjaman','=','approvals.id_peminjaman')->where('peminjaman.id_user', $id)->get();
     }
     
     public function detailPeminjaman($id_peminjaman)

@@ -24,7 +24,7 @@
 <div class="card">
     <div class="xtabledm">
         <a href="{{route('dm.kendaraan.create')}}" class="btn btn-primary btn-sm mb-2"><i class="fa fa-plus"></i>Tambah Kendaraan</a>
-        <table id="myTable2" class="display">
+        <table id="myTable2" class="display nowrap" style="width:100%">
             <thead>
                 <tr>
                     <th>No</th>
@@ -84,7 +84,12 @@
 <script>
     $(document).ready(function () {
      var t = $('#myTable2').DataTable({
-         columnDefs: [
+        rowReorder: {
+            selector: 'td:nth-child(2)'
+        },
+        responsive: true,
+        stateSave: true,
+        columnDefs: [
              {
                  searchable: false,
                  orderable: false,
@@ -92,10 +97,10 @@
              },
          ],
          order: [[1, 'asc']],
-         stateSave:true,
-     });
-  
-     t.on('order.dt search.dt', function () {
+
+    });
+
+    t.on('order.dt search.dt', function () {
          let i = 1;
   
          t.cells(null, 0, { search: 'applied', order: 'applied' }).every(function (cell) {

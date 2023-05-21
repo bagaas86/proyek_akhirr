@@ -100,7 +100,11 @@ Route::controller(c_peminjaman::class)->middleware('auth')->group(function () {
 
 Route::controller(c_history::class)->middleware('auth')->group(function () {
     Route::get('history', 'index')->name('history.index');
-    Route::get('history/detail/{id}', 'detailHistory')->name('history.detail');
+    // Route::get('history/detail/{id}', 'detailHistory')->name('history.detail');
+
+    // js
+    Route::get('jshistory', 'history')->name('jshistory');
+    Route::get('detailhistory/{id}', 'detailHistory')->name('detailhistory');
 });
 
 
