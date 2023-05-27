@@ -25,215 +25,83 @@
 <div class="card">
     <div class="xtabledm">
         <a href="#" class="btn btn-primary mb-2"><i class="fa fa-plus"></i>Tambah Peminjaman</a>
-        <div class="form-group col-md-4">
-            <label for="">Sumber Pengajuan</label>
-            <select class="form-control" name="table" id="filter" onchange="filterPengajuan()">
-            <option value="" disabled selected>-- Pilih Sumber Pengajuan --</option>
-            <option value="Ormawa">Ormawa</option>
-            <option value="Dosen">Dosen/Staff</option>
-            </select>
-        </div>
         @php
         date_default_timezone_set("Asia/Jakarta");
         $d = date("Y-m");
         @endphp
-        <input type="month" id="cekws" class="form-control col-md-3"  value="{{ $d }}" hidden>
+        <div class="row">
+            <div class="form-group col-md-4">
+                <label for="">Sumber Pengajuan</label>
+                {{-- <select class="form-control" name="table" id="filter" onchange="filterPengajuan()"> --}}
+                <select class="form-control" name="table" id="filter" onchange="tampil()">
+                {{-- <option value="" disabled>-- Pilih Sumber Pengajuan --</option> --}}
+                <option value="Semua" selected>Semua Pengajuan</option>
+                <option value="Ormawa">Ormawa</option>
+                <option value="Dosen">Dosen/Staff</option>
+                </select>
+            </div>
+            <div class="form-group col-md-4">
+                <label for="">Periode Peminjaman</label>
+                    <input type="month" id="bulan" class="form-control"  value="{{ $d }}" onchange="jh()">
+                   <div class="input-group">
+                     <input type="date" id="dari" class="form-control" onchange="tampil()">
+                     <div style="width:20%">
+                       <input style="text-align:center" type="text" class="form-control" value="-" readonly>
+                     </div>
+                     <input type="date" id="sampai" class="form-control" onchange="tampil()">
+                   </div>
+               </div>  
+        </div>
+        
+      
+    
+        @php
+        date_default_timezone_set("Asia/Jakarta");
+        $d = date("Y-m");
+        @endphp
       
         <div id="table">
             
         </div>
        
     </div>
-</div>
-
-{{-- Modal --}}
-<div id="exampleModalCenter" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalCenterTitle">Modal Title</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            </div>
-            <div class="modal-body">
-                <p class="mb-0" id="page"></p>
-            </div>
-            <div id="modalFooter" class="modal-footer">
-             
-            </div>
-        </div>
     </div>
 </div>
-{{-- endModal --}}
 
-{{-- Modal --}}
-<div id="exampleModalCenter2" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalCenterTitle2">Modal Title</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            </div>
-            <div class="modal-body">
-                <p class="mb-0" id="page2"></p>
-            </div>
-            <div id="modalFooter2" class="modal-footer">
-             
-            </div>
-        </div>
-    </div>
-</div>
-{{-- endModal --}}
 
 <script>
-        function filterPengajuan()
-    {
-        var filter = $("#filter").val();
-        if (filter == "Ormawa")
-        {
-            tableormawa()
-        }
-        if (filter == "Dosen")
-        {
-            tabledosen()
-        }
-    }
-     function tableormawa()
-     {
-        $.get("{{ url('tableormawa') }}", {}, function(data, status) {
-               $("#table").html(data);
-           });
-     }
-     function tabledosen()
-     {
-        $.get("{{ url('tabledosen') }}", {}, function(data, status) {
-               $("#table").html(data);
-           });
-     }
-     
 
-     function ubahStatus(id_peminjaman) {
+$(document).ready(function() {
+            jh()
+        });
+function tampil() {
+            var filter = $("#filter").val();
+            var dari = $("#dari").val();
+            var sampai = $("#sampai").val();
             $.ajax({
                 type: "get",
-                url: "{{ url('ubahstatus') }}/" + id_peminjaman,
+                url: "{{ url('tampilpeminjaman') }}",
+                data:{
+                    "filter": filter,
+                    "dari": dari,
+                    "sampai": sampai,
+                },
                 success: function(data) {
-                    filterPengajuan(),
-                    modalFinish()
+                    $("#table").html(data);
                 }
             });
         }
 
-    function cetakBarang(id_peminjaman)
+function jh()
     {
-        var cek = $('#barangs').attr("data-custom-value");
-        $("#download").html(`Sedang Membuat Berita Acara, Harap Tunggu...`)
-        $.ajax({
-                type: "get",
-                url: "{{ url('peminjaman/pengajuan/cetak/') }}/" + id_peminjaman,
-                data: {
-                "cek": cek
-                 },
-                 xhrFields: {
-                responseType: 'blob',
-                },
-                success: function(response) {
-                    var blob = new Blob([response]);
-                    var link = document.createElement('a');
-
-                    link.href = window.URL.createObjectURL(blob);
-                    link.download = "Berita Acara Barang.pdf";
-                    link.click()
-                    $("#download").html(`Berita Acara Selesai...`)
-                },
-                error: function(blob){
-                console.log(blob);
-            }
-            });
+        var bulan =  $("#bulan").val();
+        $.get("{{ url('hari') }}/"+bulan, {}, function(data, status) {
+        $("#dari").val(bulan+"-01");
+        $("#sampai").val(bulan+"-"+data);
+        tampil()
+        });    
     }
 
-    function cetakRuangan(id_peminjaman)
-    {
-        var cek = $('#ruangans').attr("data-custom-value");
-        $("#download").html(`Sedang Membuat Berita Acara, Harap Tunggu...`)
-        $.ajax({
-                type: "get",
-                url: "{{ url('peminjaman/pengajuan/cetak/') }}/" + id_peminjaman,
-                data: {
-                "cek": cek
-                 },
-                 xhrFields: {
-                responseType: 'blob',
-                },
-                success: function(response) {
-                    var blob = new Blob([response]);
-                    var link = document.createElement('a');
-                    link.href = window.URL.createObjectURL(blob);
-                    link.download = "Berita Acara Ruangan.pdf";
-                    link.click()
-                    $("#download").html(`Berita Acara Selesai...`)
-                },
-                error: function(blob){
-                console.log(blob);
-            }
-            });
-    }
-  
-   
-    
-    function modalStatus(id_peminjaman) 
-    {
-            $("#exampleModalCenterTitle").html(`Konfirmasi Peminjaman?`)
-            $("#page").html('Apakah Anda yakin Ingin Menyetujui Peminjaman?');
-            $("#modalFooter").html(`
-            <a style="color:white" class="btn  btn-secondary" data-dismiss="modal">Tutup</a>
-            <a style="color:white" href="#" onclick="ubahStatus(`+id_peminjaman+`)" class="btn  btn-success">Setuju</a>)`)
-            $("#exampleModalCenter").modal('show');
-    }
-
-    function modalCetak(id_peminjaman) 
-    {
-        $.get("{{ url('modalcetak') }}/" + id_peminjaman, {}, function(data, status){
-            $("#exampleModalCenterTitle2").html(`Detail Peminjaman`)
-            $("#page2").html(data);
-            $("#modalFooter2").html(`
-            <a style="color:white" class="btn  btn-secondary" data-dismiss="modal">Tutup</a>)`)
-            $("#exampleModalCenter2").modal('show');
-        })
-    }
-
-    function modalFinish() 
-    {
-            $("#exampleModalCenterTitle").html(`Berhasil`)
-            $("#page").html('Berhasil');
-            $("#modalFooter").html(`
-            <a style="color:white" class="btn  btn-secondary" data-dismiss="modal">Tutup</a>)`)
-            $("#exampleModalCenter").modal('show');
-    }
-
-
-
-    function modalDetail(id_peminjaman)
-    {
-        $.get("{{ url('detailpeminjaman') }}/" + id_peminjaman, {}, function(data, status){
-            $("#exampleModalCenterTitle2").html(`Detail Peminjaman`)
-            $("#page2").html(data);
-            $("#modalFooter2").html(`
-            <a style="color:white" class="btn  btn-secondary" data-dismiss="modal">Tutup</a>)`)
-            $("#exampleModalCenter2").modal('show');
-        })
-       
-    }
-
-    function modalApproval(id_peminjaman)
-    {
-        $.get("{{ url('modalapproval') }}/" + id_peminjaman, {}, function(data, status){
-            $("#exampleModalCenterTitle2").html(`Lihat Persetujuan`)
-            $("#page2").html(data);
-            $("#modalFooter2").html(`
-            <a style="color:white" class="btn  btn-secondary" data-dismiss="modal">Tutup</a>)`)
-            $("#exampleModalCenter2").modal('show');
-        })
-       
-    }
 
 
 </script>

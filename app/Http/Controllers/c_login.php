@@ -61,9 +61,14 @@ class c_login extends Controller
     public function dashboard(){
 
         if (Auth::user()->level == "Bagian Umum") {
-    
             return view('admin.v_dashboard');
-        } else {
+        } elseif(Auth::user()->level == "Kabag") {
+            return view('admin.v_dashboard');
+        }elseif(Auth::user()->level == "Wadir 1") {
+            return view('admin.v_dashboard');
+        }elseif(Auth::user()->level == "Wadir 2") {
+            return view('admin.v_dashboard');
+        }elseif(Auth::user()->level == "Ormawa") {
             return view('user.v_dashboard');
         }
        

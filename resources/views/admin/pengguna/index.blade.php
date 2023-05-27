@@ -42,11 +42,17 @@
                     <td id="name">{{$data->name}}</td>
                     <td style="width:10%"><img src="{{asset('foto/dm/pengguna/'. $data->foto)}}" class="img-rounded" style="width:50%" alt=""></td>
                     <td>{{$data->username}}</td>
-                    <td>
+                    <td style="color:white">
                         @if($data->level == "Dosen")
                         <i class="badge bg-warning">Dosen</i>
                         @elseif($data->level == "Ormawa")
                         <i class="badge bg-primary">Ormawa</i>
+                        @elseif($data->level == "Wadir 1")
+                        <i class="badge bg-success">Wakil Direktur 1</i>
+                        @elseif($data->level == "Wadir 2")
+                        <i class="badge bg-success">Wakil Direktur 2</i>
+                        @elseif($data->level == "Kabag")
+                        <i class="badge bg-secondary">Kepala Bagian</i>
                         @endif
                     </td>
                     <td>

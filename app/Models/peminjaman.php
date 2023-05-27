@@ -44,6 +44,17 @@ class peminjaman extends Model
         return DB::table('peminjaman')->join('users', 'peminjaman.id_user','=','users.id')->where('id_peminjaman', $id_peminjaman)->first();
     }
 
+    public function tampilPeminjamann($dari, $sampai)
+    {
+        return DB::table('peminjaman')->join('users', 'peminjaman.id_user','=','users.id')->join('approvals', 'peminjaman.id_peminjaman','=','approvals.id_peminjaman')->whereBetween('waktu_awal', [$dari, $sampai])->whereBetween('waktu_akhir', [$dari, $sampai])->get();
+    }
+
+    public function tampilPeminjamans($dari, $sampai, $filter)
+    {
+        return DB::table('peminjaman')->join('users', 'peminjaman.id_user','=','users.id')->join('approvals', 'peminjaman.id_peminjaman','=','approvals.id_peminjaman')->where('level', $filter)->whereBetween('waktu_awal', [$dari, $sampai])->whereBetween('waktu_akhir', [$dari, $sampai])->get();
+    }
+
+
     public function tampilPeminjaman()
     {
         return DB::table('peminjaman')->join('users', 'peminjaman.id_user','=','users.id')->join('approvals', 'peminjaman.id_peminjaman','=','approvals.id_peminjaman')->where('level', 'Ormawa')->get();

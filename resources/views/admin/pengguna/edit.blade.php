@@ -48,6 +48,9 @@
                             <label for="level">Level Akun</label>
                             <select name="level" class="form-control @error('level') is-invalid @enderror">
                                 <option value="" selected disabled>-- Pilih Level Akun --</option>
+                                <option value="Wadir 1" @if($pengguna->level == "Wadir 1") selected @endif>Wakil Direktur 1</option>
+                                <option value="Wadir 2" @if($pengguna->level == "Wadir 2") selected @endif>Wakil Direktur 2</option>
+                                <option value="Kabag" @if($pengguna->level == "Kabag") selected @endif>Kepala Bagian</option>
                                 <option value="Dosen" @if($pengguna->level == "Dosen") selected @endif>Dosen</option>
                                 <option value="Ormawa" @if($pengguna->level == "Ormawa") selected @endif>Ormawa</option>
                             </select>

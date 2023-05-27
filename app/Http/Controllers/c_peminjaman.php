@@ -90,9 +90,9 @@ class c_peminjaman extends Controller
             ];
               $pdf = PDF::loadView('admin.beritaacara.barang', $data)->setPaper('legal', 'potrait');
               $path = public_path('pdf/');
-              $fileName =  'ba_barang'.'-'.$getData->nama_kegiatan.'-'.$now.'.'.'pdf' ;
-              $pdf->save($path . '/' . $fileName);
-              $pdf = public_path('pdf/'.$fileName);
+              $fileNameBarang =  'ba_barang'.'-'.$getData->nama_kegiatan.'-'.$now.'.'.'pdf' ;
+              $pdf->save($path . '/' . $fileNameBarang);
+              $pdf = public_path('pdf/'.$fileNameBarang);
               return response()->download($pdf);
         
         }elseif($request->cek == "Ruangan"){
@@ -111,37 +111,64 @@ class c_peminjaman extends Controller
             ];
             $pdf = PDF::loadView('admin.beritaacara.ruangan', $data)->setPaper('legal', 'potrait');
             $path = public_path('pdf/');
-            $fileName =  'ba_ruangan'.'-'.$getData->nama_kegiatan.'-'.$now.'.'.'pdf' ;
-            $pdf->save($path . '/' . $fileName);
-            $pdf = public_path('pdf/'.$fileName);
+            $fileNameRuangan =  'ba_ruangan'.'-'.$getData->id_peminjaman.'-'.$getData->nama_kegiatan.'-'.$now.'.'.'pdf' ;
+            $pdf->save($path . '/' . $fileNameRuangan);
+            $pdf = public_path('pdf/'.$fileNameRuangan);
+            
+            // $beritaRuangan = [
+            //     'id_peminjaman' => $id_peminjaman,
+            //     'ba_ruangan' => $fileNameRuangan,
+            
+            // ];
+            // $this->beritaacara->editData($id, $beritaRuangan);
+
             return response()->download($pdf);
         }       
       
     }
 
-    
-    public function tableOrmawa()
+    public function tablePeminjaman(Request $request)
     {
-        $data =[
-            'peminjaman'=> $this->peminjaman->tampilPeminjaman(),
-        ];
-        return view ('admin.peminjaman.tableormawa', $data);
+        $filter = $request->filter;
+        $dari = $request->dari;
+        $sampai = $request->sampai;
+        if($filter == "Semua")
+        {
+            $data =[
+                'peminjaman'=> $this->peminjaman->tampilPeminjamann($dari, $sampai)
+            ];
+        }else{
+            $data =[
+                'peminjaman'=> $this->peminjaman->tampilPeminjamans($dari, $sampai, $filter)
+            ];
+        }
+        return view ('admin.peminjaman.table', $data);
     }
 
-    public function tableDosen()
-    {
-        $data =[
-            'peminjaman'=> $this->peminjaman->tampilPeminjamanDosen(),
-        ];
-        return view ('admin.peminjaman.tabledosen', $data);
-    }
 
-    public function ubahStatus($id_peminjaman)
+    public function ubahStatus(Request $request, $id_peminjaman)
     {
-        $data = [
-            'staff_umum'=> "Disetujui",
-        ];
+        $status = $request->status;
+
+        if($status == "Bagian Umum"){
+            $data = [
+                'staff_umum'=> "Disetujui",
+            ];
+        }elseif($status == "Kabag"){
+            $data = [
+                'kepala_bagian'=> "Disetujui",
+            ];
+        }elseif($status == "Wadir 1"){
+            $data = [
+                'wakil_direktur_1'=> "Disetujui",
+            ];
+        }elseif($status == "Wadir 2"){
+            $data = [
+                'wakil_direktur_2'=> "Disetujui",
+            ];
+        }
         $this->approval->updatePeminjaman($id_peminjaman, $data);
+      
     }
 
     public function modalCetak($id_peminjaman)
@@ -201,6 +228,7 @@ class c_peminjaman extends Controller
 
     public function kirimPengajuan(Request $request)
     {
+       $level = Auth::user()->level;
        $id_user = Auth::user()->id;
        $checkidPeminjaman = $this->peminjaman->checkID();
        $id_peminjaman = $checkidPeminjaman + 1;
@@ -256,14 +284,7 @@ class c_peminjaman extends Controller
             ];
             $this->keranjang->finish($id_user, $data2);
 
-            $data_approval = [
-                'id_peminjaman'=> $id_peminjaman,
-                'wakil_direktur_1'=> "Proses",
-                'wakil_direktur_2'=> "Proses",
-                'kepala_bagian'=> "Proses",
-                'staff_umum'=> "Proses",
-               ];
-            $this->approval->addData($data_approval);
+            $approval = $this->approval($level, $id_peminjaman);
 
          }else{
             $filename_pengenal = $request->nama_pj."-".$tahun.'.'. $file_pengenal->extension();   
@@ -291,14 +312,7 @@ class c_peminjaman extends Controller
                 ];
                 $this->keranjang->finish($id_user, $data2);
 
-                $data_approval = [
-                    'id_peminjaman'=> $id_peminjaman,
-                    'wakil_direktur_1'=> "Proses",
-                    'wakil_direktur_2'=> "Proses",
-                    'kepala_bagian'=> "Proses",
-                    'staff_umum'=> "Proses",
-                   ];
-                $this->approval->addData($data_approval);
+               $approval = $this->approval($level, $id_peminjaman);
          }
         return redirect()->route('dashboard')->with('success','Pengajuan Berhasil Dikirim');
 
@@ -329,14 +343,7 @@ class c_peminjaman extends Controller
                 ];
                 $this->keranjang->finish($id_user, $data2);
 
-                $data_approval = [
-                    'id_peminjaman'=> $id_peminjaman,
-                    'wakil_direktur_1'=> "Proses",
-                    'wakil_direktur_2'=> "Proses",
-                    'kepala_bagian'=> "Proses",
-                    'staff_umum'=> "Proses",
-                   ];
-                $this->approval->addData($data_approval);
+                $approval = $this->approval($level, $id_peminjaman);
         }else{
             $filename_pengenal = $request->nama_pj."-".$tahun.'.'. $file_pengenal->extension();   
             $file_pengenal->move(public_path('foto/peminjaman/foto_identitas'),$filename_pengenal);
@@ -362,21 +369,70 @@ class c_peminjaman extends Controller
                 ];
                 $this->keranjang->finish($id_user, $data2);
 
-                $data_approval = [
-                    'id_peminjaman'=> $id_peminjaman,
-                    'wakil_direktur_1'=> "Proses",
-                    'wakil_direktur_2'=> "Proses",
-                    'kepala_bagian'=> "Proses",
-                    'staff_umum'=> "Proses",
-                   ];
-                $this->approval->addData($data_approval);
+                $approval = $this->approval($level, $id_peminjaman);
         }
        
            return redirect()->route('dashboard')->with('success','Pengajuan Berhasil Dikirim');
        }
     }
 
+    public function approval($level, $id_peminjaman)
+    {
+        if($level == "Bagian Umum"){
+            $data_approval = [
+                'id_peminjaman'=> $id_peminjaman,
+                'wakil_direktur_1'=> "Proses",
+                'wakil_direktur_2'=> "Proses",
+                'kepala_bagian'=> "Proses",
+                'staff_umum'=> "Disetujui",
+               ];
+        }elseif($level == "Kabag"){
+            $data_approval = [
+                'id_peminjaman'=> $id_peminjaman,
+                'wakil_direktur_1'=> "Proses",
+                'wakil_direktur_2'=> "Proses",
+                'kepala_bagian'=> "Disetujui",
+                'staff_umum'=> "Proses",
+               ];
+        }elseif($level == "Wadir 1"){
+            $data_approval = [
+                'id_peminjaman'=> $id_peminjaman,
+                'wakil_direktur_1'=> "Disetujui",
+                'wakil_direktur_2'=> "Proses",
+                'kepala_bagian'=> "Proses",
+                'staff_umum'=> "Proses",
+               ];
+        }elseif($level == "Wadir 2"){
+            $data_approval = [
+                'id_peminjaman'=> $id_peminjaman,
+                'wakil_direktur_1'=> "Proses",
+                'wakil_direktur_2'=> "Disetujui",
+                'kepala_bagian'=> "Proses",
+                'staff_umum'=> "Proses",
+               ];
+        }elseif($level == "Ormawa" OR $level == "Supir"){
+            $data_approval = [
+                'id_peminjaman'=> $id_peminjaman,
+                'wakil_direktur_1'=> "Proses",
+                'wakil_direktur_2'=> "Proses",
+                'kepala_bagian'=> "Proses",
+                'staff_umum'=> "Proses",
+               ];
+        }
+        $this->approval->addData($data_approval);
+    }
+
     // Ajax
+
+    public function hari($id)
+    {
+        $data = strtotime($id);
+        $kalender = CAL_GREGORIAN;
+        $bulan = date('m', $data);
+        $tahun = date('Y', $data);
+        $hari = cal_days_in_month($kalender, $bulan, $tahun);
+        return $hari;
+    }
     
     public function loadItem(Request $request)
     {

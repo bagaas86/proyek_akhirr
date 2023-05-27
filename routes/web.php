@@ -81,6 +81,8 @@ Route::controller(c_peminjaman::class)->middleware('auth')->group(function () {
         Route::get('ubahstatus/{id}', 'ubahStatus')->name('ubahstatus');
         Route::get('modalcetak/{id}', 'modalCetak')->name('modalcetak');
         Route::get('modalapproval/{id}', 'modalApproval')->name('modalapproval');
+        Route::get('tampilpeminjaman', 'tablePeminjaman')->name('tablepeminjaman');
+        Route::get('hari/{id}', 'hari')->name('hari');
 
     // user
     Route::get('dm/peminjaman', 'index')->name('dm.peminjaman.index');

@@ -3,7 +3,7 @@
  <li><a class="getstarted scrollto" href="{{url('/auth')}}">Masuk</a></li>
  @endguest
   @auth
-  <li><a class="nav-link scrollto " href="{{url('dashboard')}}">Home</a></li>
+  <li><a class="nav-link scrollto " href="{{url('dashboard')}}">Beranda</a></li>
   <li><a class="nav-link scrollto" href="{{route('dm.peminjaman.index')}}">Peminjaman</a></li>
   <li><a class="nav-link scrollto" href="#services">Pengembalian</a></li>
   <li class="dropdown"><a class="getstarted scrollto" href="#"><img src="{{asset('foto/dm/pengguna/'. Auth::user()->foto)}}" style="width:15%;float:right">{{Auth::user()->username}}<i class="bi bi-chevron-down"></i></a>

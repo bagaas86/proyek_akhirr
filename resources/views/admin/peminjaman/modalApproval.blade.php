@@ -1,8 +1,8 @@
 <center>
     <div class="row">
        
-        <div class="col col-md-6 col-6">
-            <div class="card-header">
+        <div class="col col-md-3 col-6">
+            <div class="card-header h-50">
                 <img src="{{asset('foto/dm/pengguna/default.png')}}" class="img-rounded" style="width:50%">
                 <h6>Wakil Direktur I</h6>
             </div>
@@ -18,8 +18,8 @@
          
         </div>
 
-        <div class="col col-md-6 col-6">
-            <div class="card-header">
+        <div class="col col-md-3 col-6">
+            <div class="card-header h-50">
                 <img src="{{asset('foto/dm/pengguna/default.png')}}" class="img-rounded" style="width:50%">
                 <h6>Wakil Direktur II</h6>
             </div>
@@ -35,8 +35,8 @@
          
         </div>
 
-        <div class="col col-md-6 col-6">
-            <div class="card-header">
+        <div class="col col-md-3 col-6">
+            <div class="card-header h-50">
                 <img src="{{asset('foto/dm/pengguna/default.png')}}" class="img-rounded" style="width:50%">
                 <h6>Kepala Bagian Umum</h6>
             </div>
@@ -52,8 +52,8 @@
          
         </div>
 
-        <div class="col col-md-6 col-6">
-            <div class="card-header">
+        <div class="col col-md-3 col-6">
+            <div class="card-header h-50">
                 <img src="{{asset('foto/dm/pengguna/default.png')}}" class="img-rounded" style="width:50%">
                 <h6>Staff Umum</h6>
             </div>

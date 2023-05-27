@@ -37,6 +37,7 @@
             <li class="nav-item">
                 <a href="{{url('/dashboard')}}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-home"></i></span><span class="pcoded-mtext">Beranda</span></a>
             </li>
+            @if(Auth::user()->level == "Bagian Umum")
             <li class="nav-item pcoded-hasmenu">
                 <a href="#" class="nav-link "><span class="pcoded-micon"><i class="fa fa-cube"></i></span><span class="pcoded-mtext">Data Master</span></a>
                 <ul class="pcoded-submenu">
@@ -47,18 +48,29 @@
                     <li><a href="{{route('dm.pengguna.index')}}">Pengguna</a></li>
                 </ul>
             </li>
+            @endif
+            @if(Auth::user()->level == "Bagian Umum" OR Auth::user()->level == "Kabag")
             <li class="nav-item pcoded-hasmenu">
-                <a href="#" class="nav-link "><span class="pcoded-micon"><i class="fa fa-cube"></i></span><span class="pcoded-mtext">Peminjaman</span></a>
+                <a href="#" class="nav-link "><span class="pcoded-micon"><i class="fa fa-cube"></i></span><span class="pcoded-mtext">Kelola Peminjaman</span></a>
                 <ul class="pcoded-submenu">
                     <li><a href="{{route('peminjaman.pengajuan.index')}}">Pengajuan Peminjaman</a></li>
                 </ul>
             </li>
+            @endif
+            
+            @if(Auth::user()->level == "Bagian Umum")
             <li class="nav-item">
                 <a href="#" class="nav-link "><span class="pcoded-micon"><i class="fa fa-folder-closed"></i></span><span class="pcoded-mtext">Pengembalian</span></a>
+            </li>
+            @endif
+            @if(Auth::user()->level == "Bagian Umum" OR Auth::user()->level == "Kabag")
+            <li class="nav-item">
+                <a href="{{route('dm.peminjaman.index')}}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-home"></i></span><span class="pcoded-mtext">Peminjaman</span></a>
             </li>
             <li class="nav-item">
                 <a href="#" class="nav-link "><span class="pcoded-micon"><i class="fa fa-file"></i></span><span class="pcoded-mtext">Laporan</span></a>
             </li>
+            @endif
         </ul>
     </div>
 </div>
