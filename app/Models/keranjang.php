@@ -65,6 +65,11 @@ class keranjang extends Model
         return DB::table('keranjangs')->where('id_keranjang', $id_keranjang)->delete();
     }
 
+    public function resetKeranjang($id)
+    {
+        return DB::table('keranjangs')->where('id_user', $id)->where('id_peminjaman', null)->delete();
+    }
+
     public function finish($id_user, $data2)
     {
         return DB::table('keranjangs')->where('id_peminjaman', null)->where('id_user', $id_user)->update($data2);

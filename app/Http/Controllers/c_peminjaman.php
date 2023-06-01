@@ -142,6 +142,7 @@ class c_peminjaman extends Controller
                 'peminjaman'=> $this->peminjaman->tampilPeminjamans($dari, $sampai, $filter)
             ];
         }
+        dd($data);
         return view ('admin.peminjaman.table', $data);
     }
 
@@ -436,6 +437,9 @@ class c_peminjaman extends Controller
     
     public function loadItem(Request $request)
     {
+        $id = Auth::user()->id;
+        $this->keranjang->resetKeranjang($id);
+
         $filterUser = $request->kategori;
         if($filterUser <> "All"){
             $data =[

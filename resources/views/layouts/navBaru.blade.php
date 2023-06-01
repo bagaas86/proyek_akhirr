@@ -4,7 +4,13 @@
  @endguest
   @auth
   <li><a class="nav-link scrollto " href="{{url('dashboard')}}">Beranda</a></li>
-  <li><a class="nav-link scrollto" href="{{route('dm.peminjaman.index')}}">Peminjaman</a></li>
+  {{-- <li><a class="nav-link scrollto " href="{{route('dm.peminjaman.index')}}">Peminjaman</a></li> --}}
+  <li class="dropdownx"><a href="#"><span>Peminjaman</span> <i class="bi bi-chevron-down"></i></a>
+    <ul>
+      <li><a href="{{route('dm.peminjaman.index')}}">Barang dan Ruangan</a></li>
+      <li><a href="#">Kendaraan</a></li>
+    </ul>
+  </li>
   <li><a class="nav-link scrollto" href="#services">Pengembalian</a></li>
   <li class="dropdown"><a class="getstarted scrollto" href="#"><img src="{{asset('foto/dm/pengguna/'. Auth::user()->foto)}}" style="width:15%;float:right">{{Auth::user()->username}}<i class="bi bi-chevron-down"></i></a>
     <ul>

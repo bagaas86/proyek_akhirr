@@ -55,7 +55,15 @@
                                         <label for="">Sampai<small style="color:red">*</small></label>
                                         <input id="todate" type="datetime-local" class="form-control" placeholder="Masukkan" name="todate" required>
                                     </div>
-                                    <div class="col col-12 col-md-12 mt-2">
+                                     <div class="col col-12 col-md-12 mt-2">
+                                        <label for=""><b>Jenis Peminjaman</b><small style="color:red">*</small></label>
+                                        <select name="jenis_peminjaman" class="form-select">
+                                            <option value="Barang">Barang/Ruangan</option>
+                                            <option value="Kendaraan">Kendaraan</option>
+                                            <option value="Barang dan Kendaraan">Barang/Ruangan dan Kendaraan</option>
+                                        </select>
+                                    </div>
+                                    {{-- <div class="col col-12 col-md-12 mt-2">
                                         <label for=""><b>Nama Penanggung Jawab</b><small style="color:red">*</small></label>
                                         <input type="text" class="form-control" placeholder="Nama Penanggung Jawab" id="nama_pj" name="nama_pj" required>
                                     </div>
@@ -66,7 +74,7 @@
                                     <div class="col col-12 col-md-12 mt-2">
                                         <label for=""><b>Nomor HP</b><small style="color:red">*</small></label>
                                         <input type="number" class="form-control" placeholder="Nomor HP" id="no_hp" name="no_hp" required>
-                                    </div>
+                                    </div> --}}
                                     <div class="col col-12 col-md-12 mt-2">
                                         <label for=""><b>Nama Kegiatan</b><small style="color:red">*</small></label>
                                         <input type="text" class="form-control" placeholder="Nama Kegiatan" id="nama_kegiatan" name="nama_kegiatan" required>
