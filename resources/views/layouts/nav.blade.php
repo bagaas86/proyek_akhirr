@@ -37,35 +37,41 @@
             <li class="nav-item">
                 <a href="{{url('/dashboard')}}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-home"></i></span><span class="pcoded-mtext">Beranda</span></a>
             </li>
-            @if(Auth::user()->level == "Bagian Umum")
+            @if(Auth::user()->sebagai == "Staff Umum")
             <li class="nav-item pcoded-hasmenu">
                 <a href="#" class="nav-link "><span class="pcoded-micon"><i class="fa fa-cube"></i></span><span class="pcoded-mtext">Data Master</span></a>
                 <ul class="pcoded-submenu">
                     <li><a href="{{route('dm.barang.index')}}">Barang</a></li>
                     <li><a href="{{route('dm.ruangan.index')}}">Ruangan</a></li>
                     <li><a href="{{route('dm.kendaraan.index')}}">Kendaraan</a></li>
-                    <li><a href="#">Supir</a></li>
+                   
+                    <li><a href="{{route('dm.unit.index')}}">Unit</a></li>
                     <li><a href="{{route('dm.pengguna.index')}}">Pengguna</a></li>
                 </ul>
             </li>
             @endif
-            @if(Auth::user()->level == "Bagian Umum" OR Auth::user()->level == "Kabag")
-            <li class="nav-item pcoded-hasmenu">
+            @if(Auth::user()->sebagai == "Staff Umum" OR Auth::user()->sebagai == "Kepala Bagian" OR Auth::user()->sebagai == "Wakil Direktur 1" OR Auth::user()->sebagai == "Wakil Direktur 2" )
+            <li class="nav-item">
+                <a href="{{route('peminjaman.pengajuan.index')}}" class="nav-link "><span class="pcoded-micon"><i class="bi bi-file-earmark-arrow-down"></i></span><span class="pcoded-mtext">Kelola Peminjaman</span></a>
+            </li>
+            {{-- <li class="nav-item pcoded-hasmenu">
                 <a href="#" class="nav-link "><span class="pcoded-micon"><i class="fa fa-cube"></i></span><span class="pcoded-mtext">Kelola Peminjaman</span></a>
                 <ul class="pcoded-submenu">
                     <li><a href="{{route('peminjaman.pengajuan.index')}}">Pengajuan Peminjaman</a></li>
                 </ul>
-            </li>
+            </li> --}}
             @endif
+
             
-            @if(Auth::user()->level == "Bagian Umum")
+            
+            @if(Auth::user()->sebagai == "Staff Umum")
             <li class="nav-item">
                 <a href="#" class="nav-link "><span class="pcoded-micon"><i class="fa fa-folder-closed"></i></span><span class="pcoded-mtext">Pengembalian</span></a>
             </li>
             @endif
-            @if(Auth::user()->level == "Bagian Umum" OR Auth::user()->level == "Kabag")
+            @if(Auth::user()->sebagai == "Staff Umum" OR Auth::user()->sebagai == "Kabag")
             <li class="nav-item">
-                <a href="{{route('dm.peminjaman.index')}}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-home"></i></span><span class="pcoded-mtext">Peminjaman</span></a>
+                <a href="{{route('dm.peminjaman.index')}}" class="nav-link "><span class="pcoded-micon"><i class="bi bi-cart-plus"></i></span><span class="pcoded-mtext">Peminjaman</span></a>
             </li>
             <li class="nav-item">
                 <a href="#" class="nav-link "><span class="pcoded-micon"><i class="fa fa-file"></i></span><span class="pcoded-mtext">Laporan</span></a>

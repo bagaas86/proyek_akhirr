@@ -24,20 +24,29 @@
 @endif
 <div class="card">
     <div class="xtabledm">
-        <a href="#" class="btn btn-primary mb-2"><i class="fa fa-plus"></i>Tambah Peminjaman</a>
         @php
         date_default_timezone_set("Asia/Jakarta");
         $d = date("Y-m");
         @endphp
         <div class="row">
             <div class="form-group col-md-4">
-                <label for="">Sumber Pengajuan</label>
+                <label for="">Jenis Peminjaman</label>
                 {{-- <select class="form-control" name="table" id="filter" onchange="filterPengajuan()"> --}}
                 <select class="form-control" name="table" id="filter" onchange="tampil()">
                 {{-- <option value="" disabled>-- Pilih Sumber Pengajuan --</option> --}}
-                <option value="Semua" selected>Semua Pengajuan</option>
-                <option value="Ormawa">Ormawa</option>
-                <option value="Dosen">Dosen/Staff</option>
+                @if(Auth::user()->sebagai == "Wakil Direktur 1" OR Auth::user()->sebagai == "Wakil Direktur 2" OR Auth::user()->sebagai == "Pengelola Supir")
+                <option value="Kendaraan">Kendaraan</option>
+                @else
+                <option value="Semua" selected>Semua Peminjaman</option>
+                <option value="Barang">Barang</option>
+                <option value="Ruangan">Ruangan</option>
+                <option value="Kendaraan">Kendaraan</option>
+               
+                {{-- <option value="Barang Ruangan">Barang dan Ruangan</option>
+                <option value="Barang Kendaraan">Barang dan Kendaraan</option>
+                <option value="Ruangan Kendaraan">Ruangan dan Kendaraan</option> --}}
+                @endif
+                
                 </select>
             </div>
             <div class="form-group col-md-4">
@@ -66,7 +75,44 @@
        
     </div>
     </div>
+
+    {{-- Modal --}}
+<div id="exampleModalCenter" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Modal Title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <p class="mb-0" id="page"></p>
+            </div>
+            <div id="modalFooter" class="modal-footer">
+             
+            </div>
+        </div>
+    </div>
 </div>
+{{-- endModal --}}
+
+{{-- Modal --}}
+<div id="exampleModalCenter2" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle2">Modal Title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <p class="mb-0" id="page2"></p>
+            </div>
+            <div id="modalFooter2" class="modal-footer">
+             
+            </div>
+        </div>
+    </div>
+</div>
+{{-- endModal --}}
 
 
 <script>

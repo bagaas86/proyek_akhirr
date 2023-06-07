@@ -142,7 +142,7 @@ class c_peminjaman extends Controller
                 'peminjaman'=> $this->peminjaman->tampilPeminjamans($dari, $sampai, $filter)
             ];
         }
-        dd($data);
+
         return view ('admin.peminjaman.table', $data);
     }
 
@@ -151,21 +151,46 @@ class c_peminjaman extends Controller
     {
         $status = $request->status;
 
-        if($status == "Bagian Umum"){
+        if($status == "Staff Umum"){
             $data = [
                 'staff_umum'=> "Disetujui",
             ];
-        }elseif($status == "Kabag"){
+        }elseif($status == "Kepala Bagian"){
             $data = [
                 'kepala_bagian'=> "Disetujui",
             ];
-        }elseif($status == "Wadir 1"){
+        }elseif($status == "Wakil Direktur 1"){
             $data = [
                 'wakil_direktur_1'=> "Disetujui",
             ];
-        }elseif($status == "Wadir 2"){
+        }elseif($status == "Wakil Direktur 2"){
             $data = [
                 'wakil_direktur_2'=> "Disetujui",
+            ];
+        }
+        $this->approval->updatePeminjaman($id_peminjaman, $data);
+      
+    }
+
+    public function ubahStatusTolak(Request $request, $id_peminjaman)
+    {
+        $status = $request->status;
+
+        if($status == "Staff Umum"){
+            $data = [
+                'staff_umum'=> "Ditolak",
+            ];
+        }elseif($status == "Kepala Bagian"){
+            $data = [
+                'kepala_bagian'=> "Ditolak",
+            ];
+        }elseif($status == "Wakil Direktur 1"){
+            $data = [
+                'wakil_direktur_1'=> "Ditolak",
+            ];
+        }elseif($status == "Wakil Direktur 2"){
+            $data = [
+                'wakil_direktur_2'=> "Ditolak",
             ];
         }
         $this->approval->updatePeminjaman($id_peminjaman, $data);
@@ -219,7 +244,13 @@ class c_peminjaman extends Controller
     public function listBarang()
     {
         $id = Auth::user()->id;
+        $checkBarang = $this->keranjang->checkBarang1($id);
+        $checkRuangan = $this->keranjang->checkRuangan1($id);
+        $checkKendaraan = $this->keranjang->checkKendaraan1($id);
         $data = [
+            'check1' => $checkBarang,
+            'check2' => $checkRuangan,
+            'check3' => $checkKendaraan,
             'keranjang'=> $this->keranjang->keranjangBarang($id),
             'ruangan'=> $this->keranjang->keranjangRuangan($id),
             'kendaraan'=> $this->keranjang->keranjangKendaraan($id),
@@ -229,7 +260,7 @@ class c_peminjaman extends Controller
 
     public function kirimPengajuan(Request $request)
     {
-       $level = Auth::user()->level;
+       $sebagai = Auth::user()->sebagai;
        $id_user = Auth::user()->id;
        $checkidPeminjaman = $this->peminjaman->checkID();
        $id_peminjaman = $checkidPeminjaman + 1;
@@ -267,6 +298,7 @@ class c_peminjaman extends Controller
             $data = [
                 'id_peminjaman'=> $id_peminjaman,
                 'id_user'=> $id_user,
+                'jenis_peminjaman' => $request->jenis_peminjaman,
                 'waktu_awal'=> $request->fromdate,
                 'waktu_akhir'=> $request->todate,
                 'nama_pj'=> $request->nama_pj,
@@ -285,7 +317,7 @@ class c_peminjaman extends Controller
             ];
             $this->keranjang->finish($id_user, $data2);
 
-            $approval = $this->approval($level, $id_peminjaman);
+            $approval = $this->approval($sebagai, $id_peminjaman);
 
          }else{
             $filename_pengenal = $request->nama_pj."-".$tahun.'.'. $file_pengenal->extension();   
@@ -295,6 +327,7 @@ class c_peminjaman extends Controller
                 $data = [
                     'id_peminjaman'=> $id_peminjaman,
                     'id_user'=> $id_user,
+                    'jenis_peminjaman' => $request->jenis_peminjaman,
                     'waktu_awal'=> $request->fromdate,
                     'waktu_akhir'=> $request->todate,
                     'nama_pj'=> $request->nama_pj,
@@ -313,7 +346,7 @@ class c_peminjaman extends Controller
                 ];
                 $this->keranjang->finish($id_user, $data2);
 
-               $approval = $this->approval($level, $id_peminjaman);
+               $approval = $this->approval($sebagai, $id_peminjaman);
          }
         return redirect()->route('dashboard')->with('success','Pengajuan Berhasil Dikirim');
 
@@ -326,6 +359,7 @@ class c_peminjaman extends Controller
             $data = [
                 'id_peminjaman' => $id_peminjaman,
                 'id_user'=> $id_user,
+                'jenis_peminjaman' => $request->jenis_peminjaman,
                 'waktu_awal'=> $request->fromdate,
                 'waktu_akhir'=> $request->todate,
                 'nama_pj'=> $request->nama_pj,
@@ -344,7 +378,7 @@ class c_peminjaman extends Controller
                 ];
                 $this->keranjang->finish($id_user, $data2);
 
-                $approval = $this->approval($level, $id_peminjaman);
+                $approval = $this->approval($sebagai, $id_peminjaman);
         }else{
             $filename_pengenal = $request->nama_pj."-".$tahun.'.'. $file_pengenal->extension();   
             $file_pengenal->move(public_path('foto/peminjaman/foto_identitas'),$filename_pengenal);
@@ -353,6 +387,7 @@ class c_peminjaman extends Controller
             $data = [
                 'id_peminjaman' => $id_peminjaman,
                 'id_user'=> $id_user,
+                'jenis_peminjaman' => $request->jenis_peminjaman,
                 'waktu_awal'=> $request->fromdate,
                 'waktu_akhir'=> $request->todate,
                 'nama_pj'=> $request->nama_pj,
@@ -370,16 +405,16 @@ class c_peminjaman extends Controller
                 ];
                 $this->keranjang->finish($id_user, $data2);
 
-                $approval = $this->approval($level, $id_peminjaman);
+                $approval = $this->approval($sebagai, $id_peminjaman);
         }
        
            return redirect()->route('dashboard')->with('success','Pengajuan Berhasil Dikirim');
        }
     }
 
-    public function approval($level, $id_peminjaman)
+    public function approval($sebagai, $id_peminjaman)
     {
-        if($level == "Bagian Umum"){
+        if($sebagai == "Bagian Umum"){
             $data_approval = [
                 'id_peminjaman'=> $id_peminjaman,
                 'wakil_direktur_1'=> "Proses",
@@ -387,7 +422,7 @@ class c_peminjaman extends Controller
                 'kepala_bagian'=> "Proses",
                 'staff_umum'=> "Disetujui",
                ];
-        }elseif($level == "Kabag"){
+        }elseif($sebagai == "Kepala Bagian"){
             $data_approval = [
                 'id_peminjaman'=> $id_peminjaman,
                 'wakil_direktur_1'=> "Proses",
@@ -395,7 +430,7 @@ class c_peminjaman extends Controller
                 'kepala_bagian'=> "Disetujui",
                 'staff_umum'=> "Proses",
                ];
-        }elseif($level == "Wadir 1"){
+        }elseif($sebagai == "Wakil Direktur 1"){
             $data_approval = [
                 'id_peminjaman'=> $id_peminjaman,
                 'wakil_direktur_1'=> "Disetujui",
@@ -403,7 +438,7 @@ class c_peminjaman extends Controller
                 'kepala_bagian'=> "Proses",
                 'staff_umum'=> "Proses",
                ];
-        }elseif($level == "Wadir 2"){
+        }elseif($sebagai == "Wakil Direktur 2"){
             $data_approval = [
                 'id_peminjaman'=> $id_peminjaman,
                 'wakil_direktur_1'=> "Proses",
@@ -411,7 +446,7 @@ class c_peminjaman extends Controller
                 'kepala_bagian'=> "Proses",
                 'staff_umum'=> "Proses",
                ];
-        }elseif($level == "Ormawa" OR $level == "Supir"){
+        }else{
             $data_approval = [
                 'id_peminjaman'=> $id_peminjaman,
                 'wakil_direktur_1'=> "Proses",
@@ -425,6 +460,12 @@ class c_peminjaman extends Controller
 
     // Ajax
 
+    public function resetKeranjang()
+    {
+        $id = Auth::user()->id;
+        $this->keranjang->resetKeranjang($id);
+    }
+
     public function hari($id)
     {
         $data = strtotime($id);
@@ -437,10 +478,54 @@ class c_peminjaman extends Controller
     
     public function loadItem(Request $request)
     {
-        $id = Auth::user()->id;
-        $this->keranjang->resetKeranjang($id);
-
+        $todate = $request->todate;
+        $fromdate = $request->fromdate;
         $filterUser = $request->kategori;
+
+
+        $checkTbl_Items = $this->item->checkItemTersedia($filterUser);
+        $checkTbl_Items2 = $this->item->checkItemNull();
+
+        // $count=count($checkTbl_Items);
+        // if($count<>null)
+        // {
+        //     foreach ($checkTbl_Items as $item)
+        //     {
+        //         $looping_keranjang = $this->keranjang->joinKeranjang_Items($item->id_item, $fromdate, $todate);
+        //         $loop = count($looping_keranjang);
+        //         if($loop <> null){
+        //             foreach ($looping_keranjang as $check) { 
+        //                 $data = 
+        //                 [
+        //                     'item'=>$this->item->ambilData($check->id_item, $filterUser),
+        //                 ];
+                        
+                       
+        //             };
+        //             return view('user.peminjaman.table',$data);  
+        //         }else{
+        //             $data = 
+        //             [
+        //                 'item'=>$this->item->itemFilter($filterUser),
+        //             ];
+        //             return view('user.peminjaman.table',$data);  
+              
+        //         }
+        //     }
+        // }else{
+        //     $data = 
+        //     [
+        //         'item'=>$this->item->itemFilter($filterUser),
+        //     ];
+        //     return view('user.peminjaman.table',$data);  
+        // }
+
+        // $checkKeranjang = $this->keranjang->checkPeminjaman();
+        // $checkPeminjaman = $this->peminjaman->detailPeminjaman();
+
+
+
+    
         if($filterUser <> "All"){
             $data =[
                 'item'=> $this->item->itemFilter($filterUser),
@@ -477,7 +562,6 @@ class c_peminjaman extends Controller
 
     public function ubahJumlah(Request $request)
     {
-        
         $id_keranjang = $request->id_keranjang;
         $id = Auth::user()->id;
         $jumlah = $request->jumlah;

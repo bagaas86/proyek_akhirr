@@ -1,4 +1,18 @@
 <center>
+    <div id="tanggal">
+        <div class="row" style="margin-left: 4em;margin-right:4em">
+            <div class="col col-6 col-md-6">
+                <label for="">Dari</label>
+                <input id="fromdate" type="datetime-local" class="form-control" placeholder="Masukkan"  name="fromdate" value="{{old('fromdate')}}" onchange="submit()"  required>
+            </div>
+            <div class="col col-6 col-md-6">
+                <label for="">Sampai</label>
+                <input id="todate" type="datetime-local" class="form-control" placeholder="Masukkan" name="todate" value="{{old('todate')}}" onchange="submit()"  required>
+            </div>
+        </div>
+    </div>
+   
+
     <div class="col col-md-4 col-12 mt-2" id="pilihKategori">
         <select class="form-select form-select" aria-label=".form-select-sm example" id="kategori" onchange="submit()">
             <option value="All" selected disabled>-- Pilih Kategori --</option>
@@ -9,8 +23,7 @@
         </select>
     </div>
  
-</center>
-  
+</center> 
 
 <div class="text-center title mt-4">
     <div class="text-center title">
@@ -29,75 +42,9 @@
 
         </div>
     </div>
-    <div class="col col-md-6 col-12">
+    <div class="col col-md-12 col-12">
         <div class="list" id="list">
 
-        </div>
-    </div>
-    <div class="col col-md-6 col-12 mt-2" style="color:black">
-        <div class="pengajuan" id="pengajuan" style="display:none">
-            <div class="col col-md-12 col-12">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="header" style="text-align: center">
-                            <h4>Form Pengajuan</h4>
-                        </div>
-                        <div class="form">
-                            <form action="{{route('kirimpengajuan')}}" method="POST" enctype="multipart/form-data">
-                                @csrf
-                                <label for=""><b>Tanggal Peminjaman</b><small style="color:red">*</small></label>
-                                <div class="row">
-                                    <div class="col col-6 col-md-6">
-                                        <label for="">Dari<small style="color:red">*</small></label>
-                                        <input id="fromdate" type="datetime-local" class="form-control" placeholder="Masukkan" name="fromdate" value="{{old('fromdate')}}" required>
-                                    </div>
-                                    <div class="col col-6 col-md-6">
-                                        <label for="">Sampai<small style="color:red">*</small></label>
-                                        <input id="todate" type="datetime-local" class="form-control" placeholder="Masukkan" name="todate" required>
-                                    </div>
-                                     <div class="col col-12 col-md-12 mt-2">
-                                        <label for=""><b>Jenis Peminjaman</b><small style="color:red">*</small></label>
-                                        <select name="jenis_peminjaman" class="form-select">
-                                            <option value="Barang">Barang/Ruangan</option>
-                                            <option value="Kendaraan">Kendaraan</option>
-                                            <option value="Barang dan Kendaraan">Barang/Ruangan dan Kendaraan</option>
-                                        </select>
-                                    </div>
-                                    {{-- <div class="col col-12 col-md-12 mt-2">
-                                        <label for=""><b>Nama Penanggung Jawab</b><small style="color:red">*</small></label>
-                                        <input type="text" class="form-control" placeholder="Nama Penanggung Jawab" id="nama_pj" name="nama_pj" required>
-                                    </div>
-                                    <div class="col col-12 col-md-12 mt-2">
-                                        <label for=""><b>Nomor Identitas</b><small style="color:red">*</small></label>
-                                        <input type="number" class="form-control" placeholder="Nomor Identitas" id="no_identitas" name="no_identitas" required>
-                                    </div>
-                                    <div class="col col-12 col-md-12 mt-2">
-                                        <label for=""><b>Nomor HP</b><small style="color:red">*</small></label>
-                                        <input type="number" class="form-control" placeholder="Nomor HP" id="no_hp" name="no_hp" required>
-                                    </div> --}}
-                                    <div class="col col-12 col-md-12 mt-2">
-                                        <label for=""><b>Nama Kegiatan</b><small style="color:red">*</small></label>
-                                        <input type="text" class="form-control" placeholder="Nama Kegiatan" id="nama_kegiatan" name="nama_kegiatan" required>
-                                    </div>
-                                    <div class="col col-12 col-md-12 mt-2">
-                                        <label for=""><b>Upload Surat Pengajuan</b><small>(opsional)</small></label>
-                                        <input type="file" class="form-control" placeholder="Nama Kegiatan" id="bukti" name="surat_pengajuan">
-                                    </div>
-                                    <div class="col col-12 col-md-12 mt-2">
-                                        <label for=""><b>Upload Kartu Identitas</b><small style="color:red">*</small></label>
-                                        <input type="file" class="form-control" placeholder="Nama Kegiatan" id="tanda_pengenal" name="foto_identitas" required>
-                                    </div>
-                                </div>
-                                <div style="text-align: center">
-                                    <button class="btn btn-block btn-primary mt-4">Kirim Pengajuan</button>
-                                </div>
-                            </form>
-                            
-            
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </div>
@@ -123,21 +70,26 @@
 <script>
      function submit(){
         var kategori = $("#kategori").val();
+        var fromdate = $("#fromdate").val();
+        var todate = $("#todate").val();
       $.ajax({
              type: "get",
              url: "{{ url('loaditem') }}",
              data: {
                 "kategori": kategori,
+                "fromdate": fromdate,
+                "todate": todate,
              },
          success: function(data, status) {
              $("#tableItem").html(data),
-             console.log(data),
              document.getElementById("pilihKategori").style.display="block";
              document.getElementById("pengajuan").style.display="none";
              document.getElementById("tableItem").style.display="block";
              document.getElementById("selanjutnya").style.display="block";
              document.getElementById("kembali").style.display="none";
              document.getElementById("list").style.display="none";
+             document.getElementById("tanggal").style.display="block";
+        
              }
          });
      }
@@ -149,9 +101,22 @@
          success: function(data, status) {
              $("#tableItem").html(data),
              submit();
+             resetKeranjang();
              }
          });
      }
+
+     function resetKeranjang(){ 
+      $.ajax({
+             type: "get",
+             url: "{{ url('resetkeranjang') }}",
+         success: function(data, status) {
+            console.log('success')
+             }
+         });
+     }
+
+
      function tambahitem(id_item){
       var id_user = $("#id_user").val();
       $.ajax({
@@ -186,6 +151,8 @@
      }
      function list()
      {
+        var fromdate = $("#fromdate").val();
+        var todate = $("#todate").val();
         $.get("{{ url('listbarang') }}", {}, function(data, status) {
                $("#list").html(data);
                document.getElementById("tableItem").style.display="none";
@@ -194,6 +161,9 @@
                document.getElementById("pengajuan").style.display="block";
                document.getElementById("selanjutnya").style.display="none";
                document.getElementById("kembali").style.display="block";
+               document.getElementById("tanggal").style.display="none";
+               $('#fromdate1').val(fromdate);
+             $('#todate1').val(todate);
            });
      }
 
@@ -229,6 +199,9 @@
             $("#exampleModalCenter").modal('show');
            })  
     }
+
+
+
 
 </script>
 

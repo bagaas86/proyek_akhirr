@@ -74,6 +74,24 @@ class item extends Model
         return DB::table('items')->where('id_item', $id)->delete();
     }
 
+    public function checkItemTersedia($filterUser)
+    {
+        return DB::table('items')->where('item_tersedia','<', '1')
+        ->where('kategori_item', $filterUser)
+        ->get();
+    }
+
+    public function checkItemNull()
+    {
+        return DB::table('items')->whereNot('item_tersedia', '0')->get();
+    }
+
+    public function ambilData($id_item, $filterUser)
+        {
+            return DB::table('items')->whereNot('id_item', $id_item)->where('kategori_item', $filterUser)->get();
+        }
+
+
     // public function checkItem($fromdate, $todate)
     // {
     //        return DB::table('items')->leftjoin('keranjangs','items.id_item', '=', 'keranjangs.id_item')->groupby('items.nama_item')->get();

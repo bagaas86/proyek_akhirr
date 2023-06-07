@@ -24,7 +24,7 @@
 <div class="card">
     <div class="xtabledm">
         <a href="{{route('dm.barang.create')}}" class="btn btn-primary mb-2"><i class="fa fa-plus"></i>Tambah</a>
-        <table id="myTable" class="display nowrap" style="width:100%">
+        <table id="barang" class="display" style="width:100%;font-size:14px;">
             <thead>
                 <tr>
                     <th>No</th>
@@ -47,7 +47,7 @@
                 @endphp
                 <tr>
                     <td></td>
-                    <td style="width:25%">{{$data->nama_item}}</td>
+                    <td id="name" style="width:25%">{{$data->nama_item}}</td>
                     <td style="width:10%"><img src="{{asset('foto/dm/barang/'. $data->foto_item)}}" class="img-rounded" style="width:50%" alt=""></td>
                     <td>{{$data->jumlah_item}}</td>
                     <td>
@@ -59,9 +59,9 @@
                     </td>
                     <td style="width:20%">{{$data->lokasi_item}}</td>
                     <td>
-                        <a href="{{route('dm.barang.detail', $data->id_item)}}" class="btn btn-primary"><i class="fa fa-eye"></i></a>
-                        <a href="{{route('dm.barang.edit', $data->id_item)}}" class="btn btn-warning"><i class="fa fa-edit"></i></a>
-                        <a href="#" onclick="modalDelete({{$data->id_item}})" class="btn btn-danger"><i class="fa fa-trash"></i></a>
+                        <a href="{{route('dm.barang.detail', $data->id_item)}}" class="btn btn-primary btn-sm"><i class="fa fa-eye"></i></a>
+                        <a href="{{route('dm.barang.edit', $data->id_item)}}" class="btn btn-warning btn-sm"><i class="fa fa-edit"></i></a>
+                        <a href="#" onclick="modalDelete({{$data->id_item}})" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></a>
                     </td>
                 </tr>
                 @endforeach
@@ -93,7 +93,7 @@
 @section('script')
 <script>
    $(document).ready(function () {
-    var t = $('#myTable').DataTable({
+    var t = $('#barang').DataTable({
         rowReorder: {
             selector: 'td:nth-child(2)'
         },

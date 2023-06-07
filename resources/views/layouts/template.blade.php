@@ -35,11 +35,12 @@
 
     <script src="https://code.jquery.com/jquery-3.6.1.js" integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI=" crossorigin="anonymous"></script>
 
+    {{-- Datatable --}}
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/rowreorder/1.3.3/css/rowReorder.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.4.1/css/responsive.dataTables.min.css" />
 
-  
+
 </head>
 <body class="">
 	<!-- [ Pre-loader ] start -->
@@ -62,10 +63,10 @@
 					<a class="mobile-menu" id="mobile-collapse" href="#!"><span></span></a>
 					<a href="#!" class="b-brand">
 						<!-- ========   change your logo hear   ============ -->
-                        @if(Auth::user()->level == "Bagian Umum")
-                        <h5 style="color:white">Bagian Umum</h5>
-                        @else
-                        <h5 style="color:white">Admin</h5>
+                        @if(Auth::user()->sebagai == "Staff Umum")
+                        <h5 style="color:white">Staff Umum</h5>
+                        @elseif(Auth::user()->sebagai == "Kabag")
+                        <h5 style="color:white">Kabag</h5>
                         @endif
 					</a>
 					<a href="#!" class="mob-toggler">
@@ -110,6 +111,8 @@
 <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/rowreorder/1.3.3/js/dataTables.rowReorder.min.js"></script>
 <script src="https://cdn.datatables.net/responsive/2.4.1/js/dataTables.responsive.min.js"></script>
+
+
 @yield('script')
 </body>
 

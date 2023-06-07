@@ -71,6 +71,7 @@ class c_barang extends Controller
                     'kondisi_item'=> $request->kondisi_item,
                     'deskripsi_item'=> $request->deskripsi_item,
                     'kategori_item'=>"Barang",
+                    'item_tersedia'=>$request->jumlah_item,
                     'foto_item'=> $filename
                 ];
                 $this->item->addData($data);
@@ -83,7 +84,8 @@ class c_barang extends Controller
                     'kondisi_item'=> $request->kondisi_item,
                     'deskripsi_item'=> $request->deskripsi_item,
                     'kategori_item'=>"Barang",
-                    'foto_item'=> 'nbarang.png'
+                    'foto_item'=> 'nbarang.png',
+                    'item_tersedia'=>$request->jumlah_item,
                 ];
                 $this->item->addData($data);
             }

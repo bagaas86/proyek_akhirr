@@ -16,7 +16,9 @@ class approval extends Model
 
     public function detailData($id_peminjaman)
     {
-        return DB::table('approvals')->where('id_peminjaman', $id_peminjaman)->first();
+        return DB::table('approvals')
+        ->join('peminjaman', 'approvals.id_peminjaman','=','peminjaman.id_peminjaman')
+        ->where('approvals.id_peminjaman', $id_peminjaman)->first();
     }
 
     public function updatePeminjaman($id_peminjaman, $data)

@@ -7,6 +7,7 @@ use App\Http\Controllers\c_ruangan;
 use App\Http\Controllers\c_pengguna;
 use App\Http\Controllers\c_peminjaman;
 use App\Http\Controllers\c_history;
+use App\Http\Controllers\c_unit;
 
 
 /*
@@ -68,6 +69,16 @@ Route::controller(c_pengguna::class)->middleware('auth')->group(function () {
     Route::get('dm/pengguna/destroy/{id}', 'destroy')->name('dm.pengguna.destroy');
 });
 
+// Unit
+Route::controller(c_unit::class)->middleware('auth')->group(function () {
+    Route::get('dm/unit', 'index')->name('dm.unit.index');
+    Route::get('dm/unit/create', 'create')->name('dm.unit.create');
+    Route::post('dm/unit/store', 'store')->name('dm.unit.store');
+    Route::get('dm/unit/edit/{id}', 'edit')->name('dm.unit.edit');
+    Route::post('dm/unit/update/{id}', 'update')->name('dm.unit.update');
+    Route::get('dm/unit/destroy/{id}', 'destroy')->name('dm.unit.destroy');
+});
+
 // Peminjaman
 Route::controller(c_peminjaman::class)->middleware('auth')->group(function () {
     // admin
@@ -79,6 +90,7 @@ Route::controller(c_peminjaman::class)->middleware('auth')->group(function () {
         Route::get('tableormawa', 'tableOrmawa')->name('tableormawa');
         Route::get('tabledosen', 'tableDosen')->name('tabledosen');
         Route::get('ubahstatus/{id}', 'ubahStatus')->name('ubahstatus');
+        Route::get('ubahstatustolak/{id}', 'ubahStatusTolak')->name('ubahstatustolak');
         Route::get('modalcetak/{id}', 'modalCetak')->name('modalcetak');
         Route::get('modalapproval/{id}', 'modalApproval')->name('modalapproval');
         Route::get('tampilpeminjaman', 'tablePeminjaman')->name('tablepeminjaman');
@@ -96,6 +108,7 @@ Route::controller(c_peminjaman::class)->middleware('auth')->group(function () {
         Route::get('hapusbarang/{id}', 'hapusBarang')->name('hapusbarang');
         Route::get('filteruser', 'filterUser')->name('filteruser');
         Route::get('detailbmn/{id}', 'detailBMN')->name('detailbmn');
+        Route::get('resetkeranjang', 'resetKeranjang')->name('resetkeranjang');
     
 
 });

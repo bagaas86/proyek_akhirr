@@ -94,5 +94,59 @@ class keranjang extends Model
     //     return DB::table('keranjangs')->join('users','keranjangs.id_user','=','users.id')->join('items','keranjangs.id_item','=','items.id_item')->get();
     // }
 
+    public function checkPeminjaman()
+    {
+        return DB::table('keranjangs')->join('items','keranjangs.id_item','=','items.id_item')->get();
+    }
+
+    // public function joinKeranjang_Items($fromdate, $todate)
+    // {
+    //     // return DB::table('keranjangs')->join('peminjaman','keranjangs.id_peminjaman','=','keranjangs.id_peminjaman')
+    //     // ->where('keranjangs.id_item', $id_item)
+    //     // ->where('waktu_awal', '<=', $fromdate)
+    //     // ->where('waktu_akhir', '>=', $todate)
+    //     // ->get();
+    //     return DB::table('keranjangs')->join('peminjaman','keranjangs.id_peminjaman','=','keranjangs.id_peminjaman')
+    //     ->whereNotBetween('waktu_awal', [$fromdate, $todate])
+    //     ->OrwhereNotBetween('waktu_akhir', [$fromdate, $todate])
+    //     ->get();
+    // }
+
+    // public function join($id_item)
+    // {
+    //     return DB::table('keranjangs')->join('items','keranjangs.id_item','=','items.id_item')->where('items.id_item', $id_item)->get();
+    // }
+
+    public function checkBarang1($id)
+    {
+        return DB::table('keranjangs')->join('items','keranjangs.id_item','=','items.id_item')
+        ->where('id_user', $id)
+        ->where("items.kategori_item", "Barang")
+        ->where("keranjangs.id_peminjaman", null)
+        ->count();
+    }
+
+    public function checkRuangan1($id)
+    {
+        return DB::table('keranjangs')->join('items','keranjangs.id_item','=','items.id_item')
+        ->where('id_user', $id)
+        ->where("items.kategori_item", "Ruangan")
+        ->where("keranjangs.id_peminjaman", null)
+        ->count();
+    }
+
+    public function checkKendaraan1($id)
+    {
+        return DB::table('keranjangs')->join('items','keranjangs.id_item','=','items.id_item')
+        ->where('id_user', $id)
+        ->where("items.kategori_item", "Kendaraan")
+        ->where("keranjangs.id_peminjaman", null)
+        ->count();
+    }
+
+
+
+
+
     
 }

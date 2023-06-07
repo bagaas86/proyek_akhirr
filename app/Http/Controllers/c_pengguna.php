@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Models\pengguna;
+use App\Models\unit;
 use DB;
 use File;
 
@@ -13,6 +14,7 @@ class c_pengguna extends Controller
     public function __construct()
     {
         $this->pengguna = new pengguna();
+        $this->unit = new unit();
        
     }
     public function index()
@@ -25,7 +27,10 @@ class c_pengguna extends Controller
 
     public function create()
     {
-        return view ('admin.pengguna.create');
+        $data =[
+            'unit' => $this->unit->allData()
+        ];
+        return view ('admin.pengguna.create', $data);
     }
     
     public function store(Request $request)
@@ -33,14 +38,18 @@ class c_pengguna extends Controller
         $request->validate([
             'username' => 'required|unique:users,username',
             'name' => 'required',
-            'level' => 'required',
+            // 'level' => 'required',
             'password' => 'required',
+            // 'id_unit' => 'required',
+            'sebagai' => 'required',
         ],[
             'username.required'=>'Username Wajib Terisi',
             'username.unique'=>'Username Sudah Ada',
             'name.required'=>'Nama Wajib Terisi',
-            'level.required'=>'Level Akun Wajib Terisi',
+            // 'level.required'=>'Level Akun Wajib Terisi',
             'password.required'=>'Password Wajib Terisi',
+            // 'id_unit.required'=>'Unit Wajib Terisi',
+            'sebagai.required'=>'Sebagai Wajib Terisi',
         ]);
 
             if($request->foto <> null){
@@ -50,18 +59,24 @@ class c_pengguna extends Controller
                 $data = [
                     'username'=> $request->username,
                     'name'=> $request->name,
-                    'level'=> $request->level,
+                    // 'level'=> $request->level,
                     'password'=> Hash::make($request->password),
-                    'foto'=> $filename
+                    'foto'=> $filename,
+                    // 'id_unit'=> $request->id_unit,
+                    'sebagai'=> $request->sebagai,
+                    'status_user' => "Aktif",
                 ];
                 $this->pengguna->addData($data);
             }else{
                 $data = [
                     'username'=> $request->username,
                     'name'=> $request->name,
-                    'level'=> $request->level,
+                    // 'level'=> $request->level,
                     'password'=> Hash::make($request->password),
-                    'foto'=> 'default.png'
+                    'foto'=> 'default.png',
+                    // 'id_unit'=> $request->id_unit,
+                    'sebagai'=> $request->sebagai,
+                    'status_user' => "Aktif",
                 ];
                 $this->pengguna->addData($data);
             }
@@ -72,7 +87,8 @@ class c_pengguna extends Controller
     public function edit($id)
     {
         $data =[
-            'pengguna'=> $this->pengguna->detailData($id)
+            'pengguna'=> $this->pengguna->detailData($id),
+            // 'unit' => $this->unit->allData(),
         ];
         return view ('admin.pengguna.edit', $data);
     }
@@ -95,7 +111,7 @@ class c_pengguna extends Controller
         }else{
             $data = [
                 'name'=> $request->name,
-                'level'=> $request->level,
+                'sebagai'=> $request->sebagai,
                 'username'=> $request->username,
             ];
            

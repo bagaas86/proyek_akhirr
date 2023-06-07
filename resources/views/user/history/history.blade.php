@@ -5,21 +5,20 @@
      @foreach($history as $data)
           <div class="card">
               <div class="row">
-                  @if(Auth::user()->level == "Ormawa")
+                  @if($data->jenis_peminjaman == "Kendaraan" OR $data->jenis_peminjaman == "Barang Kendaraan" OR $data->jenis_peminjaman == "Ruangan Kendaraan" OR $data->jenis_peminjaman == "Barang Ruangan Kendaraan")
                   <div class="card-body col col-2 col-md-2">
-                      <div class="status">
-                          @if($data->staff_umum == "Proses")
-                      <i class="badge bg-warning">Menunggu...</i>
-                      @else
-                      <i class="badge bg-success">Disetujui</i>
-                      </div>
-                      @endif
+                        <div class="status">
+                            @if($data->staff_umum =="Proses" OR $data->wakil_direktur_1 == "Proses" OR $data->wakil_direktur_2 == "Proses" OR $data->kepala_bagian == "Proses")
+                            <i class="badge bg-warning">Menunggu...</i>
+                            @else
+                            <i class="badge bg-success">Disetujui</i>
+                            @endif
+                        </div>
                   </div>
-                  @endif
-                  @if(Auth::user()->level == "Dosen")
+                  @else
                   <div class="card-body col col-2 col-md-2">
                       <div class="status">
-                          @if($data->staff_umum =="Proses" OR $data->wakil_direktur_1 == "Proses" OR $data->wakil_direktur_2 == "Proses")
+                          @if($data->staff_umum =="Proses" OR $data->kepala_bagian == "Proses")
                           <i class="badge bg-warning">Menunggu</i>
                           @else
                           <i class="badge bg-warning">Disetujui</i>

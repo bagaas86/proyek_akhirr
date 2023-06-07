@@ -11,7 +11,7 @@ class pengguna extends Model
     use HasFactory;
     public function allData()
     {
-        return DB::table('users')->Orwhere('level', "Dosen")->Orwhere('level', "Ormawa")->Orwhere('level', "Wadir 1")->Orwhere('level', "Wadir 2")->Orwhere('level', "Kabag")->get();
+        return DB::table('users')->get();
     }
 
     public function addData($data)

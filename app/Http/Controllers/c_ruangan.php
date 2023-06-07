@@ -67,7 +67,8 @@ class c_ruangan extends Controller
                     'kondisi_item'=> $request->kondisi_item,
                     'deskripsi_item'=> $request->deskripsi_item,
                     'kategori_item'=>"Ruangan",
-                    'foto_item'=> $filename
+                    'foto_item'=> $filename,
+                    'item_tersedia' => "1",
                 ];
                 $this->item->addData($data);
             }else{
@@ -78,7 +79,8 @@ class c_ruangan extends Controller
                     'kondisi_item'=> $request->kondisi_item,
                     'deskripsi_item'=> $request->deskripsi_item,
                     'kategori_item'=>"Ruangan",
-                    'foto_item'=> 'nruangan.png'
+                    'foto_item'=> 'nruangan.png',
+                    'item_tersedia' => "1",
                 ];
                 $this->item->addData($data);
             }

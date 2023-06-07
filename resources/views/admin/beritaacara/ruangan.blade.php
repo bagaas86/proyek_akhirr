@@ -100,7 +100,7 @@
             <tr>
                   <td style="width:20%"><p>Unit/Jurusan</p></td>
                   <td style="width:2%"><p>:</p></td>
-                  <td style="width:78%"><p>{{$peminjaman->name}}</p></td>
+                  <td style="width:78%"><p>{{$peminjaman->nama_unit}}</p></td>
             </tr>
             <tr>
                   <td style="width:20%"><p>No Identitas</p></td>

@@ -8,7 +8,7 @@ $lama = $diff+1;
 <div class="container" style="color:black">
         <div class="col col-12 col-md-12 mt-4">
             <div style="color:white" class="text-center title">
-              <h5>Detail Peminjaman</h5>
+              <h3>Detail Peminjaman</h3>
             </div>
             <div class="row">
                 <div class="col col-12 col-md-12">
@@ -25,9 +25,9 @@ $lama = $diff+1;
                                         <td style="width:50%">{{$peminjaman->nama_pj}}</td>  
                                     </tr>
                                     <tr style="vertical-align:top;font-size:12px">
-                                        <td style="width:40%;font-weight:bold">Sebagai</td>
+                                        <td style="width:40%;font-weight:bold">Unit/Organisasi</td>
                                         <td style="width:5%">:</td>
-                                        <td style="width:50%">{{$peminjaman->level}}</td>  
+                                        <td style="width:50%">{{$peminjaman->sebagai}}</td>  
                                     </tr>
                                     <tr style="vertical-align:top;font-size:12px">
                                         <td style="width:40%;font-weight:bold">No. Identitas</td>
@@ -68,13 +68,13 @@ $lama = $diff+1;
                         </div>
                         <div class="table">
                             <table>
-                                <tr style="border-bottom:1px solid rgb(0, 0, 0);font-size:12px">
-                                    <th style="width:70%">Nama Item</th>
+                                <tr style="border-bottom:1px solid rgb(0, 0, 0);font-size:14px">
+                                    <th style="width:70%">Nama BMN</th>
                                     <th style="width:10%">Kategori</th>
                                     <th style="width:15%">Jumlah</th>  
                                 </tr>
                                 @foreach($keranjang as $data)
-                                <tr style="font-size:12px">
+                                <tr style="font-size:14px">
                                     <td style="width:70%">{{$data->nama_item}}</td>
                                     <td style="width:70%">{{$data->kategori_item}}</td>
                                     <td style="width:15%">{{$data->jumlah}}</td>

@@ -24,7 +24,7 @@
 <div class="card">
     <div class="xtabledm">
         <a href="{{route('dm.ruangan.create')}}" class="btn btn-primary btn-sm mb-2"><i class="fa fa-plus"></i>Tambah Ruangan</a>
-        <table id="myTable3" class="display">
+        <table id="ruangan" class="display" style="width:100%">
             <thead>
                 <tr>
                     <th>No</th>
@@ -88,7 +88,7 @@
 @section('script')
 <script>
     $(document).ready(function () {
-     var t = $('#myTable3').DataTable({
+     var t = $('#ruangan').DataTable({
          columnDefs: [
              {
                  searchable: false,

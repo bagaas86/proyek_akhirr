@@ -72,7 +72,8 @@ class c_kendaraan extends Controller
                     'kondisi_item'=> $request->kondisi_item,
                     'deskripsi_item'=> $request->deskripsi_item,
                     'kategori_item'=>"Kendaraan",
-                    'foto_item'=> $filename
+                    'foto_item'=> $filename,
+                    'item_tersedia'=>$request->jumlah_item,
                 ];
                 $this->item->addData($data);
                 $data_kendaraan = [
@@ -94,6 +95,7 @@ class c_kendaraan extends Controller
                     'deskripsi_item'=> $request->deskripsi_item,
                     'kategori_item'=>"Kendaraan",
                     'foto_item'=> "nbarang.png",
+                    'item_tersedia'=>$request->jumlah_item,
                 ];
                 $this->item->addData($data);
                 $data_kendaraan = [

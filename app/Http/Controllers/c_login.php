@@ -60,15 +60,9 @@ class c_login extends Controller
     // Login multiuser
     public function dashboard(){
 
-        if (Auth::user()->level == "Bagian Umum") {
+        if (Auth::user()->sebagai == "Staff Umum" OR Auth::user()->sebagai == "Kepala Bagian" OR Auth::user()->sebagai == "Wakil Direktur 1" OR Auth::user()->sebagai == "Wakil Direktur 2") {
             return view('admin.v_dashboard');
-        } elseif(Auth::user()->level == "Kabag") {
-            return view('admin.v_dashboard');
-        }elseif(Auth::user()->level == "Wadir 1") {
-            return view('admin.v_dashboard');
-        }elseif(Auth::user()->level == "Wadir 2") {
-            return view('admin.v_dashboard');
-        }elseif(Auth::user()->level == "Ormawa") {
+        }else{
             return view('user.v_dashboard');
         }
        

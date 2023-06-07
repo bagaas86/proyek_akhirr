@@ -16,17 +16,19 @@ return new class extends Migration
         Schema::create('peminjaman', function (Blueprint $table) {
             $table->id('id_peminjaman');
             $table->string('id_user');
-            $table->string('nama_pj');
-            $table->string('no_identitas');
-            $table->string('no_hp');
+            $table->string('jenis_peminjaman')->nullable();  
+            $table->string('nama_pj')->nullable();  
+            $table->string('no_identitas')->nullable();  
+            $table->string('no_hp')->nullable(); 
             $table->string('foto_identitas');
             $table->string('nama_kegiatan');
             $table->string('surat_pengajuan')->nullable();
             $table->string('waktu_pengajuan')->nullable();
             $table->string('waktu_awal');
-            $table->string('waktu_akhir');  
+            $table->string('waktu_akhir');
             $table->text('feedback')->nullable();
-            $table->timestamps();
+            $table->string('status_peminjaman')->nullable();
+        
         });
     }
 
