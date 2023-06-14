@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('wakil_direktur_2')->nullable();
             $table->string('kepala_bagian')->nullable();
             $table->string('staff_umum')->nullable();
+            $table->string('pengelola_supir')->nullable();
             $table->timestamps();
         });
     }

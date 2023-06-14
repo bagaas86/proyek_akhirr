@@ -62,7 +62,7 @@ class c_kendaraan extends Controller
 
             if($request->foto_item <> null){
                 $file = $request->foto_item;
-                $filename = $request->nama_item.".".$file->extension();     
+                $filename = $request->nama_item.".".$request->plat_kendaraan.".".$file->extension();     
                 $file->move(public_path('foto/dm/kendaraan'),$filename);
                 $data = [
                     'id_item' => $request->id_item,

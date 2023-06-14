@@ -93,6 +93,30 @@
             @endif
         </div>
     </div>
+
+     <div class="col col-12 col-md-12 mt-2" style="display:none">
+        <label for=""><b>Jenis Peminjaman</b><small style="color:red">*</small></label>
+        @if($check1 <> null AND $check2 <> null AND $check3 <> null)
+        <input type="text" id="inputt" name="jenis_peminjaman" class="form-control" readonly value="Barang,Ruangan,Kendaraan">
+        @elseif($check1 <> null AND $check2 <> null)
+        <input type="text" id="inputt" name="jenis_peminjaman" class="form-control" readonly value="Barang,Ruangan">
+        @elseif($check1 <> null AND $check3 <> null)
+        <input type="text" id="inputt" name="jenis_peminjaman" class="form-control" readonly value="Barang,Kendaraan">
+        @elseif($check2 <> null AND $check3 <> null)
+        <input type="text" id="inputt" name="jenis_peminjaman" class="form-control" readonly value="Ruangan,Kendaraan">
+        @elseif($check1 <> null)
+        <input type="text" id="inputt" name="jenis_peminjaman" class="form-control" readonly value="Barang">
+        @elseif($check2 <> null)
+        <input type="text" id="inputt" name="jenis_peminjaman" class="form-control" readonly value="Ruangan">
+        @elseif($check3 <> null)
+        <input type="text" id="inputt" name="jenis_peminjaman" class="form-control" readonly value="Kendaraan">
+        @else
+        <input type="text" id="inputt" name="jenis_peminjaman" class="form-control" readonly value="Masukkan Barang Terlebih Dahulu">
+        @endif
+    </div>
+   
+
+
     <div class="col col-md-6 col-12">
             <div class="pengajuan" id="pengajuan" style="display:none">
                 <div class="col col-md-12 col-12">
@@ -106,44 +130,27 @@
                                     @csrf
                                     <label for=""><b>Tanggal Peminjaman</b><small style="color:red">*</small></label>
                                     <div class="row">
-                                        <div class="col col-6 col-md-6">
+                                        <div class="col col-12 col-md-6">
                                             <label for="">Dari<small style="color:red">*</small></label>
                                             <input id="fromdate1" type="datetime-local" class="form-control" placeholder="Masukkan" name="fromdate" value="" readonly>
                                         </div>
-                                        <div class="col col-6 col-md-6">
+                                        <div class="col col-12 col-md-6">
                                             <label for="">Sampai<small style="color:red">*</small></label>
                                             <input id="todate1" type="datetime-local" class="form-control" placeholder="Masukkan" name="todate" value="" readonly>
                                         </div>
-                                         {{-- <div class="col col-12 col-md-12 mt-2">
+                                         <div class="col col-12 col-md-12 mt-2">
                                             <label for=""><b>Jenis Peminjaman</b><small style="color:red">*</small></label>
-                                            <select id="jenis_peminjaman" name="jenis_peminjaman" class="form-select">
-                                                <option value="Barang">Barang</option>
-                                                <option value="Ruangan">Ruangan</option>
-                                                <option value="Kendaraan">Kendaraan</option>
-                                                <option value="Barang dan Ruangan">Barang dan Ruangan</option>
-                                                <option value="Barang dan Kendaraan">Barang dan Kendaraan</option>
-                                                <option value="Kendaraan dan Ruangan">Kendaraan dan Ruangan</option>
-                                            </select>
-                                        </div> --}}
-                                        <div class="col col-12 col-md-12 mt-2">
-                                            <label for=""><b>Jenis Peminjaman</b><small style="color:red">*</small></label>
-                                            @if($check1 <> null AND $check2 <> null AND $check3 <> null)
-                                            <input type="text" name="jenis_peminjaman" class="form-control" readonly value="Barang Ruangan Kendaraan">
-                                            @elseif($check1 <> null AND $check2 <> null)
-                                            <input type="text" name="jenis_peminjaman" class="form-control" readonly value="Barang Ruangan">
-                                            @elseif($check1 <> null AND $check3 <> null)
-                                            <input type="text" name="jenis_peminjaman" class="form-control" readonly value="Barang Kendaraan">
-                                            @elseif($check2 <> null AND $check3 <> null)
-                                            <input type="text" name="jenis_peminjaman" class="form-control" readonly value="Ruangan Kendaraan">
-                                            @elseif($check1 <> null)
-                                            <input type="text" name="jenis_peminjaman" class="form-control" readonly value="Barang">
-                                            @elseif($check2 <> null)
-                                            <input type="text" name="jenis_peminjaman" class="form-control" readonly value="Ruangan">
-                                            @elseif($check3 <> null)
-                                            <input type="text" name="jenis_peminjaman" class="form-control" readonly value="Kendaraan">
-                                            @else
-                                            <input type="text" name="jenis_peminjaman" class="form-control" readonly value="Masukkan Barang Terlebih Dahulu">
-                                            @endif
+                                         <input class="form-control" type="text" id="outputt" name="jenis_peminjaman" value="">
+                                        </div>
+                                      
+                                        <div id="ceksupir" class="col col-12 col-md-12 mt-2">
+                                            <label for=""><b>Supir</b><small>abaikan jika tanpa supir</small></label>
+                                            <div class="input-group mb-3">
+                                                <input type="text" class="form-control" id="id_supir" name="id_supir" placeholder="Nama Supir" aria-label="Recipient's username" aria-describedby="basic-addon2" value="" readonly>
+                                                <div class="input-group-append">
+                                                  <button class="btn btn-outline-primary" type="button" onclick="modalSupir()">Check</button>
+                                                </div>
+                                              </div>
                                         </div>
                                         <div class="col col-12 col-md-12 mt-2">
                                             <label for=""><b>Nama Penanggung Jawab</b><small style="color:red">*</small></label>
@@ -151,7 +158,7 @@
                                         </div>
                                         <div class="col col-12 col-md-12 mt-2">
                                             <label for=""><b>Nomor Identitas</b><small style="color:red">*</small></label>
-                                            <input type="number" class="form-control" placeholder="Nomor Identitas" id="no_identitas" name="no_identitas" value="{{Auth::user()->username}}" readonly>
+                                            <input type="number" class="form-control" placeholder="Nomor Identitas" id="no_identitas" name="no_identitas" value="{{Auth::user()->no_identitas}}" readonly>
                                         </div>
                                         <div class="col col-12 col-md-12 mt-2">
                                             <label for=""><b>Nomor HP</b><small style="color:red">*</small></label>
@@ -183,5 +190,57 @@
             </div>
     </div>
 </div>
+
+<script>
+    $( document ).ready(function() {
+    jenisPeminjaman()
+});
+    function jenisPeminjaman(){
+       var x = $('#inputt').val();
+       $('#outputt').val(x);
+       if(x == "Barang,Kendaraan" || x == "Ruangan,Kendaraan" || x == "Kendaraan" )
+       {
+        document.getElementById("ceksupir").style.display="block";
+       }
+       else
+       {
+        document.getElementById("ceksupir").style.display="none";
+       }
+    }
+
+    function ubah(){
+       var x = $('#inputt').val();
+       var z = x+",Supir";
+       $('#outputt').val(z);
+    }
+
+    function modalSupir() {
+        var fromdate = $("#fromdate1").val();
+        var todate = $("#todate1").val();
+      $.ajax({
+             type: "get",
+             url: "{{ url('modalsupir') }}",
+             data: {
+                "fromdate": fromdate,
+                "todate": todate,
+             },
+         success: function(data, status) {
+             $("#exampleModalCenterTitle").html(`Supir Tersedia`)
+             $("#page").html(data);
+             $("#exampleModalCenter").modal('show');
+             }
+         });
+       
+    }
+
+    function pilihSupir(id_supir){
+       var x = id_supir;
+       $('#id_supir').val(x);
+       $('#exampleModalCenter').modal('hide');
+       ubah();
+    }
+
+ 
+</script>
 
 

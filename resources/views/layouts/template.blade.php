@@ -58,16 +58,12 @@
 	<!-- [ Header ] start -->
 	<header class="navbar pcoded-header navbar-expand-lg navbar-light header-blue">
 		
-			
+                
 				<div class="m-header">
 					<a class="mobile-menu" id="mobile-collapse" href="#!"><span></span></a>
 					<a href="#!" class="b-brand">
 						<!-- ========   change your logo hear   ============ -->
-                        @if(Auth::user()->sebagai == "Staff Umum")
-                        <h5 style="color:white">Staff Umum</h5>
-                        @elseif(Auth::user()->sebagai == "Kabag")
-                        <h5 style="color:white">Kabag</h5>
-                        @endif
+                        <h5 style="color:white">{{Auth::user()->sebagai}}</h5>
 					</a>
 					<a href="#!" class="mob-toggler">
 						<i class="feather icon-more-vertical"></i>

@@ -13,8 +13,8 @@
 <div class="row">
     @foreach($item as $data)
     <div class="col col-6 col-md-3" style="margin-top:1em;">
-        <div class="card h-100">
-            <div type="button" onclick="tambahitem({{ $data->id_item }})"  class="card-header h-100">
+        <div class="card h-100" style="border:1px solid grey">
+            <div type="button" onclick="tambahitem({{ $data->id_item }})"  class="card-header h-50">
                 <div style="text-align: center">
                     @if($data->kategori_item == "Barang")
                     <img class="img-rounded" src="{{asset('foto/dm/barang/'. $data->foto_item)}}" width="50%" height="50%"  alt="">    
@@ -27,12 +27,14 @@
                
                 
             </div>
-            <div class="card-body">
+            <div class="card-body h-20">
                 <div style="text-align: center">
                     <h6>{{$data->nama_item}}</h6>
                   
                 </div>
-                <a class="btn btn-primary" onclick="modalDetail({{$data->id_item}})" href="#"><i class="bi bi-eye"></i></a>
+                <div style="text-align:center">
+                    <a class="btn btn-primary btn-sm" onclick="modalDetail({{$data->id_item}})" href="#"><i class="bi bi-eye"></i></a>
+                </div>
             </div>
            
         </div>

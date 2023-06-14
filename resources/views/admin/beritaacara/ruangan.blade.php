@@ -1,11 +1,11 @@
 <html>
 <head>
-    <title> KOP SURAT </title>
+    <title> Berita Acara Ruangan </title>
     <style type= "text/css">
     *{
             margin: 1;
         }
-    body {font-family: 'Times New Roman', Times, serif; background-color : #ccc }
+    body {font-family: 'Times New Roman', Times, serif; background-color : #fff }
     .rangkasurat {margin:auto ;background-color : #fff;padding: 10px}
    .header {border-bottom : 3px solid black; padding: 0px;margin-top:0em;line-height: 1.5}
     .tengah {text-align : center;font-size:16px;}
@@ -100,7 +100,7 @@
             <tr>
                   <td style="width:20%"><p>Unit/Jurusan</p></td>
                   <td style="width:2%"><p>:</p></td>
-                  <td style="width:78%"><p>{{$peminjaman->nama_unit}}</p></td>
+                  <td style="width:78%"><p>{{$peminjaman->sebagai}}</p></td>
             </tr>
             <tr>
                   <td style="width:20%"><p>No Identitas</p></td>
@@ -110,7 +110,7 @@
             <tr>
                   <td style="width:20%"><p>No HP</p></td>
                   <td style="width:2%"><p>:</p></td>
-                  <td style="width:78%"><p>082249025414</p></td>
+                  <td style="width:78%"><p>{{$peminjaman->no_hp}}</p></td>
             </tr>
             <tr>
                   <td colspan="3"><p>Untuk melakukan kegiatan pada ruangan sebagai berikut:</p></td>
@@ -121,6 +121,7 @@
                   <td style="width:78%">
                         <p>
                         @foreach($ruangan as $data)
+                  
                         {{$data->nama_item}} 
                         </p>
                         @endforeach

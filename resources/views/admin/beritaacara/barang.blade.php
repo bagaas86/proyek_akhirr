@@ -1,11 +1,11 @@
 <html>
 <head>
-    <title> KOP SURAT </title>
+    <title>Berita Acara Barang </title>
     <style type= "text/css">
     *{
             margin: 1;
         }
-    body {font-family: 'Times New Roman', Times, serif; background-color : #ccc }
+    body {font-family: 'Times New Roman', Times, serif; background-color : #fff }
     .rangkasurat {margin:auto ;background-color : #fff;padding: 10px}
    .header {border-bottom : 3px solid black; padding: 0px;margin-top:0em;line-height: 1.5}
     .tengah {text-align : center;font-size:16px;}
@@ -77,10 +77,7 @@
                        <h4 style="font-weight:1;line-height:20px;">Telp. (0260) 417658 Laman: <span style="color:blue">https://www.polsub.ac.id</span></h4>
                  </td>
             </tr>
-     </table>
-     {{-- <div>
-      <h1 style="font-size:px">MAAFIN AKU PIAA CANTIKKK YAAAAA, NGGA DIULANGIN LAGII BENER DEHH</h1>
-     </div> --}}
+      </table>
      <div class="judul">
       <h4 style="font-weight:bold; font-size:14px;" >BERITA ACARA PEMINJAMAN BARANG INVENTARIS</h4>
       <h4 style="line-height:20px; font-size:14px;">POLITEKNIK NEGERI SUBANG</h4>
@@ -110,7 +107,7 @@
             <tr>
                   <td style="width:20%"><p>No HP</p></td>
                   <td style="width:2%"><p>:</p></td>
-                  <td style="width:78%"><p>082249025414</p></td>
+                  <td style="width:78%"><p>{{$peminjaman->no_hp}}</p></td>
             </tr>
             <tr>
                   <td colspan="3"><p>Untuk melakukan peminjaman barang/alat dengan rincian sebagai berikut:</p></td>

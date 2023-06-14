@@ -27,10 +27,7 @@ class c_pengguna extends Controller
 
     public function create()
     {
-        $data =[
-            'unit' => $this->unit->allData()
-        ];
-        return view ('admin.pengguna.create', $data);
+        return view ('admin.pengguna.create');
     }
     
     public function store(Request $request)
@@ -88,7 +85,6 @@ class c_pengguna extends Controller
     {
         $data =[
             'pengguna'=> $this->pengguna->detailData($id),
-            // 'unit' => $this->unit->allData(),
         ];
         return view ('admin.pengguna.edit', $data);
     }

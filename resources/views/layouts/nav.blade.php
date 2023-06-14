@@ -44,8 +44,6 @@
                     <li><a href="{{route('dm.barang.index')}}">Barang</a></li>
                     <li><a href="{{route('dm.ruangan.index')}}">Ruangan</a></li>
                     <li><a href="{{route('dm.kendaraan.index')}}">Kendaraan</a></li>
-                   
-                    <li><a href="{{route('dm.unit.index')}}">Unit</a></li>
                     <li><a href="{{route('dm.pengguna.index')}}">Pengguna</a></li>
                 </ul>
             </li>
@@ -66,7 +64,7 @@
             
             @if(Auth::user()->sebagai == "Staff Umum")
             <li class="nav-item">
-                <a href="#" class="nav-link "><span class="pcoded-micon"><i class="fa fa-folder-closed"></i></span><span class="pcoded-mtext">Pengembalian</span></a>
+                <a href="{{route('pengembalian.index')}}" class="nav-link "><span class="pcoded-micon"><i class="fa fa-folder-closed"></i></span><span class="pcoded-mtext">Pengembalian</span></a>
             </li>
             @endif
             @if(Auth::user()->sebagai == "Staff Umum" OR Auth::user()->sebagai == "Kabag")
@@ -75,6 +73,18 @@
             </li>
             <li class="nav-item">
                 <a href="#" class="nav-link "><span class="pcoded-micon"><i class="fa fa-file"></i></span><span class="pcoded-mtext">Laporan</span></a>
+            </li>
+            @endif
+
+            @if(Auth::user()->sebagai == "Pengelola Supir")
+            <li class="nav-item">
+                <a href="{{route('supir.kelola.index')}}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-home"></i></span><span class="pcoded-mtext">Kelola Supir</span></a>
+            </li>
+            <li class="nav-item">
+                <a href="{{route('supir.aktivitas.index')}}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-home"></i></span><span class="pcoded-mtext">Kelola Aktivitas Supir</span></a>
+            </li>
+            <li class="nav-item">
+                <a href="{{route('peminjaman.pengajuan.index')}}" class="nav-link "><span class="pcoded-micon"><i class="bi bi-file-earmark-arrow-down"></i></span><span class="pcoded-mtext">Peminjaman Supir</span></a>
             </li>
             @endif
         </ul>

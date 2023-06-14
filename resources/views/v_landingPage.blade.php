@@ -1,167 +1,219 @@
-@extends('layouts.templateBaru')
-@section('content')
-<div class="container">
-	
-	@if (session()->has('success'))
-    <div onload="alert()"></div>
-	@endif
-	
-	<div class="container d-flex flex-column align-items-center justify-content-center" data-aos="fade-up">
-		<h1>Sistem Informasi Peminjaman Barang Milik Negara</h1>
-		<h2>Politeknik Negeri Subang</h2>
-		<a href="{{url('auth')}}" class="btn-get-started scrollto">Mulai</a>
-		<img src="{{asset('templateBaru')}}/assets/img/hero-img.png" class="img-fluid hero-img" alt="" data-aos="zoom-in" data-aos-delay="150">
-	  </div>
-  
-</div>
-@endsection
+<!DOCTYPE html>
+<html lang="en">
 
-@section('clients')
-<div class="row">
+<head>
+    <title>Ablepro v8.0 bootstrap admin template by Phoenixcoded</title>
+    <!-- HTML5 Shim and Respond.js IE11 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 11]>
+    	<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    	<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    	<![endif]-->
+    <!-- Meta -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="">
+    <meta name="author" content="Phoenixcoded" />
+    <!-- Favicon icon -->
+    <link rel="icon" href="{{asset('template')}}/dist/assets/images/favicon.ico" type="image/x-icon">
 
-	<div class="col-lg-2 col-md-4 col-6 d-flex align-items-center justify-content-center">
-	  <img src="{{asset('templateBaru')}}/assets/img/clients/client-1.png" class="img-fluid" alt="">
-	</div>
+    <!-- prism css -->
+    <link rel="stylesheet" href="{{asset('template')}}/dist/assets/css/plugins/prism-coy.css">
+    <!-- vendor css -->
+    <link rel="stylesheet" href="{{asset('template')}}/dist/assets/css/style.css">
+    
+    
 
-	<div class="col-lg-2 col-md-4 col-6 d-flex align-items-center justify-content-center">
-	  <img src="{{asset('templateBaru')}}/assets/img/clients/client-2.png" class="img-fluid" alt="">
-	</div>
+</head>
 
-	<div class="col-lg-2 col-md-4 col-6 d-flex align-items-center justify-content-center">
-	  <img src="{{asset('templateBaru')}}/assets/img/clients/client-3.png" class="img-fluid" alt="">
-	</div>
+<body>
+    <!-- [ Pre-loader ] start -->
+    <div class="loader-bg">
+        <div class="loader-track">
+            <div class="loader-fill"></div>
+        </div>
+    </div>
+    <!-- [ Pre-loader ] End -->
+    <!-- [ navigation menu ] start -->
+    <nav class="pcoded-navbar theme-horizontal menu-light brand-blue">
+        <div class="navbar-wrapper container">
+            <div class="navbar-content sidenav-horizontal" id="layout-sidenav">
+                <ul class="nav pcoded-inner-navbar sidenav-inner">
+                    <li class="nav-item pcoded-menu-caption">
+                        <label>Haii</label>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{url('auth')}}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-log-in"></i></span><span class="pcoded-mtext">LOGIN</span></a>
+                    </li>
 
-	<div class="col-lg-2 col-md-4 col-6 d-flex align-items-center justify-content-center">
-	  <img src="{{asset('templateBaru')}}/assets/img/clients/client-4.png" class="img-fluid" alt="">
-	</div>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- [ navigation menu ] end -->
+    <!-- [ Header ] start -->
+    <header class="navbar pcoded-header navbar-expand-lg navbar-light header-blue">
+        <div class="container">
+            <div class="m-header">
+                <a class="mobile-menu" id="mobile-collapse" href="#!"><span></span></a>
+                <a href="#!" class="b-brand">
+                    <!-- ========   change your logo hear   ============ -->
+                    <img src="{{asset('templateBaru')}}/assets/img/logo.png" style="width:200px" alt="" class="logo">
+                    <img src="{{asset('template')}}/dist/assets/images/logo-icon.png" alt="" class="logo-thumb">
+                </a>
+                <a href="#!" class="mob-toggler">
+                    <i class="feather icon-more-vertical"></i>
+                </a>
+            </div>
+        </div>
+    </header>
+    <!-- [ Header ] end -->
 
-	<div class="col-lg-2 col-md-4 col-6 d-flex align-items-center justify-content-center">
-	  <img src="{{asset('templateBaru')}}/assets/img/clients/client-5.png" class="img-fluid" alt="">
-	</div>
-
-	<div class="col-lg-2 col-md-4 col-6 d-flex align-items-center justify-content-center">
-	  <img src="{{asset('templateBaru')}}/assets/img/clients/client-6.png" class="img-fluid" alt="">
-	</div>
-
-  </div>
-@endsection
-
-@section('services')
-<div class="section-title">
-	<h2>Services</h2>
-	<p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit in iste officiis commodi quidem hic quas.</p>
-  </div>
-
-  <div class="row">
-	<div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0" data-aos="fade-up" data-aos-delay="100">
-	  <div class="icon-box">
-		<div class="icon"><i class="bx bxl-dribbble"></i></div>
-		<h4 class="title"><a href="">Lorem Ipsum</a></h4>
-		<p class="description">Voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi</p>
-	  </div>
-	</div>
-
-	<div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0" data-aos="fade-up" data-aos-delay="200">
-	  <div class="icon-box">
-		<div class="icon"><i class="bx bx-file"></i></div>
-		<h4 class="title"><a href="">Sed ut perspiciatis</a></h4>
-		<p class="description">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore</p>
-	  </div>
-	</div>
-
-	<div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0" data-aos="fade-up" data-aos-delay="300">
-	  <div class="icon-box">
-		<div class="icon"><i class="bx bx-tachometer"></i></div>
-		<h4 class="title"><a href="">Magni Dolores</a></h4>
-		<p class="description">Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia</p>
-	  </div>
-	</div>
-
-	<div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0" data-aos="fade-up" data-aos-delay="400">
-	  <div class="icon-box">
-		<div class="icon"><i class="bx bx-layer"></i></div>
-		<h4 class="title"><a href="">Nemo Enim</a></h4>
-		<p class="description">At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis</p>
-	  </div>
-	</div>
-
-  </div>
-@endsection
-
-@section('contact')
-<div class="section-title">
-	<h2>Contact</h2>
-	<p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit in iste officiis commodi quidem hic quas.</p>
-  </div>
-
-  <div class="row">
-
-	<div class="col-lg-6">
-
-	  <div class="row">
-		<div class="col-md-12">
-		  <div class="info-box">
-			<i class="bx bx-map"></i>
-			<h3>Our Address</h3>
-			<p>A108 Adam Street, New York, NY 535022</p>
-		  </div>
-		</div>
-		<div class="col-md-6">
-		  <div class="info-box mt-4">
-			<i class="bx bx-envelope"></i>
-			<h3>Email Us</h3>
-			<p>info@example.com<br>contact@example.com</p>
-		  </div>
-		</div>
-		<div class="col-md-6">
-		  <div class="info-box mt-4">
-			<i class="bx bx-phone-call"></i>
-			<h3>Call Us</h3>
-			<p>+1 5589 55488 55<br>+1 6678 254445 41</p>
-		  </div>
-		</div>
-	  </div>
-
-	</div>
-
-	<div class="col-lg-6 mt-4 mt-md-0">
-	  <form action="forms/contact.php" method="post" role="form" class="php-email-form">
-		<div class="row">
-		  <div class="col-md-6 form-group">
-			<input type="text" name="name" class="form-control" id="name" placeholder="Your Name" required>
-		  </div>
-		  <div class="col-md-6 form-group mt-3 mt-md-0">
-			<input type="email" class="form-control" name="email" id="email" placeholder="Your Email" required>
-		  </div>
-		</div>
-		<div class="form-group mt-3">
-		  <input type="text" class="form-control" name="subject" id="subject" placeholder="Subject" required>
-		</div>
-		<div class="form-group mt-3">
-		  <textarea class="form-control" name="message" rows="5" placeholder="Message" required></textarea>
-		</div>
-		<div class="my-3">
-		  <div class="loading">Loading</div>
-		  <div class="error-message"></div>
-		  <div class="sent-message">Your message has been sent. Thank you!</div>
-		</div>
-		<div class="text-center"><button type="submit">Send Message</button></div>
-	  </form>
-	</div>
-
-  </div>
-@endsection
+    <!-- [ Main Content ] start -->
+    <div class="pcoded-main-container" style="background-color: white">
+        <div class="pcoded-wrapper container text-center">    
+				<h2>SISTEM INFORMASI PEMINJAMAN DAN PENGEMBALIAN</h2>
+                <h2>BARANG MILIK NEGARA</h2>
+				<img src="{{asset('template')}}/dist/assets/images/logoPolsub.png" style="width:40%" alt="" class="logo">
+        </div>
 
 
+        <div class="pcoded-wrapper container text-center mt-4">    
+            <h2>BMN TERSEDIA</h2> 
+        </div>
+        <div class="row" style="margin-left:2em;margin-right:2em;">
+                @foreach($item as $data)
+                <div class="col col-6 col-md-3" style="margin-top:1em;">
+                    <div class="card h-100" style="border:1px solid grey">
+                        <div type="button" onclick="tambahitem({{ $data->id_item }})"  class="card-header h-75">
+                            <div style="text-align: center">
+                                @if($data->kategori_item == "Barang")
+                                <img class="img-rounded" src="{{asset('foto/dm/barang/'. $data->foto_item)}}" width="50%" height="50%"  alt="">    
+                                @elseif($data->kategori_item == "Ruangan")
+                                <img class="img-rounded" src="{{asset('foto/dm/ruangan/'. $data->foto_item)}}" width="50%" height="50%" alt="">    
+                                @elseif($data->kategori_item == "Kendaraan")
+                                <img class="img-rounded" src="{{asset('foto/dm/kendaraan/'. $data->foto_item)}}" width="50%" height="50%" alt="">    
+                                @endif
+                            </div>                     
+                        </div>
+                        <div class="card-body h-20">
+                            <div style="text-align: center">
+                                <h6>{{$data->nama_item}}</h6>
+                              
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @endforeach
+        </div>
+        <br>
+    </div>
+    <!-- [ Main Content ] end -->
 
-<script>
-	function alert(){
-		Swal.fire(
-                    {
-                        icon: 'success',
-                        title: 'Berhasil',
-                        text: 'Item Berhasil Ditambahkan!'
-                        }
-                    )
-	}
-</script>
+        <!-- Warning Section start -->
+        <!-- Older IE warning message -->
+        <!--[if lt IE 11]>
+            <div class="ie-warning">
+                <h1>Warning!!</h1>
+                <p>You are using an outdated version of Internet Explorer, please upgrade
+                   <br/>to any of the following web browsers to access this website.
+                </p>
+                <div class="iew-container">
+                    <ul class="iew-download">
+                        <li>
+                            <a href="http://www.google.com/chrome/">
+                                <img src="{{asset('template')}}/dist/assets/images/browser/chrome.png" alt="Chrome">
+                                <div>Chrome</div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.mozilla.org/en-US/firefox/new/">
+                                <img src="{{asset('template')}}/dist/assets/images/browser/firefox.png" alt="Firefox">
+                                <div>Firefox</div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="http://www.opera.com">
+                                <img src="{{asset('template')}}/dist/assets/images/browser/opera.png" alt="Opera">
+                                <div>Opera</div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.apple.com/safari/">
+                                <img src="{{asset('template')}}/dist/assets/images/browser/safari.png" alt="Safari">
+                                <div>Safari</div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="http://windows.microsoft.com/en-us/internet-explorer/download-ie">
+                                <img src="{{asset('template')}}/dist/assets/images/browser/ie.png" alt="">
+                                <div>IE (11 & above)</div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <p>Sorry for the inconvenience!</p>
+            </div>
+        <![endif]-->
+        <!-- Warning Section Ends -->
+
+        <!-- Required Js -->
+        <script src="{{asset('template')}}/dist/assets/js/vendor-all.min.js"></script>
+        <script src="{{asset('template')}}/dist/assets/js/plugins/bootstrap.min.js"></script>
+        <script src="{{asset('template')}}/dist/assets/js/ripple.js"></script>
+        <script src="{{asset('template')}}/dist/assets/js/pcoded.min.js"></script>
+
+
+    <!-- prism Js -->
+    <script src="{{asset('template')}}/dist/assets/js/plugins/prism.js"></script>
+
+    
+
+
+
+    <script src="{{asset('template')}}/dist/assets/js/horizontal-menu.js"></script>
+    <script>
+        (function() {
+            if ($('#layout-sidenav').hasClass('sidenav-horizontal') || window.layoutHelpers.isSmallScreen()) {
+                return;
+            }
+            try {
+                window.layoutHelpers._getSetting("Rtl")
+                window.layoutHelpers.setCollapsed(
+                    localStorage.getItem('layoutCollapsed') === 'true',
+                    false
+                );
+            } catch (e) {}
+        })();
+        $(function() {
+            $('#layout-sidenav').each(function() {
+                new SideNav(this, {
+                    orientation: $(this).hasClass('sidenav-horizontal') ? 'horizontal' : 'vertical'
+                });
+            });
+            $('body').on('click', '.layout-sidenav-toggle', function(e) {
+                e.preventDefault();
+                window.layoutHelpers.toggleCollapsed();
+                if (!window.layoutHelpers.isSmallScreen()) {
+                    try {
+                        localStorage.setItem('layoutCollapsed', String(window.layoutHelpers.isCollapsed()));
+                    } catch (e) {}
+                }
+            });
+        });
+        $(document).ready(function() {
+            $("#pcoded").pcodedmenu({
+                themelayout: 'horizontal',
+                MenuTrigger: 'hover',
+                SubMenuTrigger: 'hover',
+            });
+        });
+    </script>
+
+    <script src="{{asset('template')}}/dist/assets/js/analytics.js"></script>
+
+</body>
+
+</html>

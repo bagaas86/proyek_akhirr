@@ -5,21 +5,37 @@
      @foreach($history as $data)
           <div class="card">
               <div class="row">
-                  @if($data->jenis_peminjaman == "Kendaraan" OR $data->jenis_peminjaman == "Barang Kendaraan" OR $data->jenis_peminjaman == "Ruangan Kendaraan" OR $data->jenis_peminjaman == "Barang Ruangan Kendaraan")
+                  @if($data->jenis_peminjaman == "Kendaraan" OR $data->jenis_peminjaman == "Barang,Kendaraan" OR $data->jenis_peminjaman == "Ruangan,Kendaraan" OR $data->jenis_peminjaman == "Barang,Ruangan,Kendaraan")
                   <div class="card-body col col-2 col-md-2">
                         <div class="status">
                             @if($data->staff_umum =="Proses" OR $data->wakil_direktur_1 == "Proses" OR $data->wakil_direktur_2 == "Proses" OR $data->kepala_bagian == "Proses")
                             <i class="badge bg-warning">Menunggu...</i>
+                            @elseif($data->staff_umum =="Ditolak" OR $data->wakil_direktur_1 == "Ditolak" OR $data->wakil_direktur_2 == "Ditolak" OR $data->kepala_bagian == "Ditolak")
+                            <i class="badge bg-danger">Ditolak...</i>
                             @else
                             <i class="badge bg-success">Disetujui</i>
                             @endif
                         </div>
                   </div>
+                  @elseif($data->jenis_peminjaman == "Kendaraan,Supir" OR $data->jenis_peminjaman == "Barang,Kendaraan,Supir" OR $data->jenis_peminjaman == "Ruangan,Kendaraan,Supir" OR $data->jenis_peminjaman == "Barang,Ruangan,Kendaraan,Supir")
+                  <div class="card-body col col-2 col-md-2">
+                    <div class="status">
+                        @if($data->staff_umum =="Proses" OR $data->wakil_direktur_1 == "Proses" OR $data->wakil_direktur_2 == "Proses" OR $data->kepala_bagian == "Proses" OR $data->pengelola_supir == "Proses")
+                        <i class="badge bg-warning">Menunggu...</i>
+                        @elseif($data->staff_umum =="Ditolak" OR $data->wakil_direktur_1 == "Ditolak" OR $data->wakil_direktur_2 == "Ditolak" OR $data->kepala_bagian == "Ditolak" OR $data->pengelola_supir == "Ditolak")
+                        <i class="badge bg-danger">Ditolak...</i>
+                        @else
+                        <i class="badge bg-success">Disetujui</i>
+                        @endif
+                    </div>
+                 </div>
                   @else
                   <div class="card-body col col-2 col-md-2">
                       <div class="status">
                           @if($data->staff_umum =="Proses" OR $data->kepala_bagian == "Proses")
                           <i class="badge bg-warning">Menunggu</i>
+                          @elseif($data->staff_umum =="Ditolak" OR $data->kepala_bagian == "Ditolak")
+                          <i class="badge bg-danger">Ditolak...</i>
                           @else
                           <i class="badge bg-warning">Disetujui</i>
                           @endif

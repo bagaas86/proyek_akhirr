@@ -21,7 +21,7 @@
     <tbody>
         @foreach($peminjaman as $data)
         @php
-        $jenis_peminjaman = explode("+" , $data->jenis_peminjaman);
+        $jenis_peminjaman = explode("," , $data->jenis_peminjaman);
         date_default_timezone_set("Asia/Jakarta");
         $waktu_pengajuan = date('d M Y h:i', strtotime($data->waktu_pengajuan));
         $waktu_awal = date('d M Y ', strtotime($data->waktu_awal));
@@ -77,6 +77,16 @@
                 <span class="badge bg-danger">Ditolak</span>
                 @endif
                 @endif
+
+                @if(Auth::user()->sebagai == "Pengelola Supir")
+                @if($data->pengelola_supir == "Proses")
+                <span class="badge bg-warning">Menunggu Persetujuan Anda</span>
+                @elseif($data->pengelola_supir == "Disetujui")
+                <span class="badge bg-success">Disetujui</span>
+                @elseif($data->pengelola_supir == "Ditolak")
+                <span class="badge bg-danger">Ditolak</span>
+                @endif
+                @endif
             </td>
             <td style="width:20%">
                 <a href="#" onclick="modalApproval({{$data->id_peminjaman}})" class="btn btn-primary btn-sm mt-2">Lihat Persetujuan</a>
@@ -97,6 +107,13 @@
 
                 @if(Auth::user()->sebagai == "Wakil Direktur 2")
                 @if($data->wakil_direktur_2 == "Proses")
+                <a href="#" onclick="modalStatus({{$data->id_peminjaman}})" class="btn btn-success btn-sm mt-2"><i class="bi bi-check"></i></a>
+                <a href="#" onclick="modalStatusTolak({{$data->id_peminjaman}})"  class="btn btn-danger btn-sm mt-2"><i class="bi bi-x"></i></a>
+                @endif
+                @endif
+
+                @if(Auth::user()->sebagai == "Pengelola Supir")
+                @if($data->pengelola_supir == "Proses")
                 <a href="#" onclick="modalStatus({{$data->id_peminjaman}})" class="btn btn-success btn-sm mt-2"><i class="bi bi-check"></i></a>
                 <a href="#" onclick="modalStatusTolak({{$data->id_peminjaman}})"  class="btn btn-danger btn-sm mt-2"><i class="bi bi-x"></i></a>
                 @endif

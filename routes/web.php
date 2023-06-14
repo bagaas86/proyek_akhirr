@@ -8,6 +8,8 @@ use App\Http\Controllers\c_pengguna;
 use App\Http\Controllers\c_peminjaman;
 use App\Http\Controllers\c_history;
 use App\Http\Controllers\c_unit;
+use App\Http\Controllers\c_supir;
+use App\Http\Controllers\c_pengembalian;
 
 
 /*
@@ -20,6 +22,8 @@ use App\Http\Controllers\c_unit;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Route::get('error', [App\Http\Controllers\c_login::class, 'errorPage'])->name('error');
 Route::get('/', [App\Http\Controllers\c_login::class, 'landingPage'])->name('user.login');
 // Login Logout
 Route::get('/auth', [App\Http\Controllers\c_login::class, 'index']);
@@ -69,14 +73,33 @@ Route::controller(c_pengguna::class)->middleware('auth')->group(function () {
     Route::get('dm/pengguna/destroy/{id}', 'destroy')->name('dm.pengguna.destroy');
 });
 
-// Unit
-Route::controller(c_unit::class)->middleware('auth')->group(function () {
-    Route::get('dm/unit', 'index')->name('dm.unit.index');
-    Route::get('dm/unit/create', 'create')->name('dm.unit.create');
-    Route::post('dm/unit/store', 'store')->name('dm.unit.store');
-    Route::get('dm/unit/edit/{id}', 'edit')->name('dm.unit.edit');
-    Route::post('dm/unit/update/{id}', 'update')->name('dm.unit.update');
-    Route::get('dm/unit/destroy/{id}', 'destroy')->name('dm.unit.destroy');
+// // Unit
+// Route::controller(c_unit::class)->middleware('auth')->group(function () {
+//     Route::get('dm/unit', 'index')->name('dm.unit.index');
+//     Route::get('dm/unit/create', 'create')->name('dm.unit.create');
+//     Route::post('dm/unit/store', 'store')->name('dm.unit.store');
+//     Route::get('dm/unit/edit/{id}', 'edit')->name('dm.unit.edit');
+//     Route::post('dm/unit/update/{id}', 'update')->name('dm.unit.update');
+//     Route::get('dm/unit/destroy/{id}', 'destroy')->name('dm.unit.destroy');
+// });
+
+// Supir
+Route::controller(c_supir::class)->middleware('auth')->group(function () {
+    Route::get('supir/kelola', 'index')->name('supir.kelola.index');
+    Route::get('supir/kelola/create', 'create')->name('supir.kelola.create');
+    Route::post('supir/kelola/store', 'store')->name('supir.kelola.store');
+    Route::get('supir/kelola/edit/{id_supir}', 'edit')->name('supir.kelola.edit');
+    Route::post('supir/kelola/update/{id_supir}', 'update')->name('supir.kelola.update');
+    Route::get('supir/kelola/destroy/{id_supir}', 'destroy')->name('supir.kelola.destroy');
+
+    Route::get('supir/aktivitas', 'tampilAktivitas')->name('supir.aktivitas.index');
+    Route::get('supir/aktivitas/create', 'createAktivitas')->name('supir.aktivitas.create');
+    Route::post('supir/aktivitas/store', 'storeAktivitas')->name('supir.aktivitas.store');
+    Route::get('supir/aktivitas/edit/{id_aktivitas}', 'editAktivitas')->name('supir.aktivitas.edit');
+    Route::post('supir/aktivitas/update/{id_aktivitas}', 'updateAktivitas')->name('supir.aktivitas.update');
+
+        // js
+        Route::get('ubahstatussupir/{id_supir}', 'ubahStatus_Supir')->name('ubahstatussupir');
 });
 
 // Peminjaman
@@ -94,7 +117,7 @@ Route::controller(c_peminjaman::class)->middleware('auth')->group(function () {
         Route::get('modalcetak/{id}', 'modalCetak')->name('modalcetak');
         Route::get('modalapproval/{id}', 'modalApproval')->name('modalapproval');
         Route::get('tampilpeminjaman', 'tablePeminjaman')->name('tablepeminjaman');
-        Route::get('hari/{id}', 'hari')->name('hari');
+        Route::get('hari', 'hari')->name('hari');
 
     // user
     Route::get('dm/peminjaman', 'index')->name('dm.peminjaman.index');
@@ -109,13 +132,34 @@ Route::controller(c_peminjaman::class)->middleware('auth')->group(function () {
         Route::get('filteruser', 'filterUser')->name('filteruser');
         Route::get('detailbmn/{id}', 'detailBMN')->name('detailbmn');
         Route::get('resetkeranjang', 'resetKeranjang')->name('resetkeranjang');
+        Route::get('modalsupir', 'modalSupir')->name('modalsupir');
     
 
 });
 
+Route::controller(c_pengembalian::class)->middleware('auth')->group(function () {
+    // admin
+    Route::get('pengembalian/index', 'viewPengembalian')->name('pengembalian.index');
+        // js
+        Route::get('tampilpengembalian', 'tablePengembalian')->name('tablepengembalian');
+        Route::get('detailpengembalianadmin/{id}', 'detailPengembalian_Admin')->name('detailpengembalianadmin');
+        Route::get('konfirmasipengembalian/{id}', 'ubahStatus_Pengembalian')->name('ubahstatuspengembalian');
+
+    // user
+    Route::get('pengembalian/lapor', 'index')->name('pengembalian.lapor.index');
+    Route::post('pengembalian/lapor/store', 'storePengembalian')->name('pengembalian.lapor.store');
+    Route::post('pengembalian/laporulang/store', 'storePengembalian_Ulang')->name('pengembalian.laporulang.store');
+        // js
+        Route::get('jspengembalian', 'pengembalian')->name('jspengembalian');
+        Route::get('detailpengembalian/{id}', 'detailPengembalian_User')->name('detailpengembalianuser');
+        Route::get('laporpengembalian/{id}', 'laporPengembalian')->name('dm.pengembalian.lapor');
+        Route::get('laporpengembalianulang/{id}', 'laporPengembalian_Ulang')->name('dm.pengembalianulang.lapor');
+});
+
+
+
 Route::controller(c_history::class)->middleware('auth')->group(function () {
     Route::get('history', 'index')->name('history.index');
-    // Route::get('history/detail/{id}', 'detailHistory')->name('history.detail');
 
     // js
     Route::get('jshistory', 'history')->name('jshistory');

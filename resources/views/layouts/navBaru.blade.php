@@ -1,34 +1,25 @@
-<ul>
- @guest
- <li><a class="getstarted scrollto" href="{{url('/auth')}}">Masuk</a></li>
- @endguest
-  @auth
-  <li><a class="nav-link scrollto " href="{{url('dashboard')}}">Beranda</a></li>
-  {{-- <li><a class="nav-link scrollto " href="{{route('dm.peminjaman.index')}}">Peminjaman</a></li> --}}
-  <li class="dropdownx"><a href="#"><span>Peminjaman</span> <i class="bi bi-chevron-down"></i></a>
-    <ul>
-      <li><a href="{{route('dm.peminjaman.index')}}">Barang dan Ruangan</a></li>
-      <li><a href="#">Kendaraan</a></li>
-    </ul>
-  </li>
-  <li><a class="nav-link scrollto" href="#services">Pengembalian</a></li>
-  <li class="dropdown"><a class="getstarted scrollto" href="#"><img src="{{asset('foto/dm/pengguna/'. Auth::user()->foto)}}" style="width:15%;float:right">{{Auth::user()->username}}<i class="bi bi-chevron-down"></i></a>
-    <ul>
-      <li><a href="#"></a></li>
-      <li><a href="#">Profil</a></li>
-      <li><a href="{{route('history.index')}}">Riwayat Peminjaman </a></li>
-      <li>
-        <a class="dropdown-item" href="{{ route('user.logout') }}"
-        onclick="event.preventDefault();
-                      document.getElementById('logout-form').submit();">
-       {{ __('Keluar') }}
-       </a>
-      <form id="logout-form" action="{{route('user.logout')}}" method="POST">
-        @csrf
-      </form>
-        
-    </ul>
-  </li>
-  @endauth
-</ul>
-<i class="bi bi-list mobile-nav-toggle"></i>
+<div class="navbar-wrapper container">
+    <div class="navbar-content sidenav-horizontal" id="layout-sidenav">
+        <ul class="nav pcoded-inner-navbar sidenav-inner">
+            <li class="nav-item pcoded-menu-caption">
+                <label>Navigation</label>
+            </li>
+            <li class="nav-item">
+                <a href="{{url('dashboard')}}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-home"></i></span><span class="pcoded-mtext">Beranda</span></a>
+            </li>
+            <li class="nav-item">
+                <a href="{{route('dm.peminjaman.index')}}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-home"></i></span><span class="pcoded-mtext">Peminjaman</span></a>
+            </li>
+            <li class="nav-item">
+                <a href="{{route('pengembalian.lapor.index')}}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-home"></i></span><span class="pcoded-mtext">Pengembalian</span></a>
+            </li>
+            {{-- <li class="nav-item pcoded-hasmenu">
+                <a href="#!" class="nav-link "><span class="pcoded-micon"><i class="feather icon-lock"></i></span><span class="pcoded-mtext">Authentication</span></a>
+                <ul class="pcoded-submenu">
+                    <li><a href="auth-signup.html" target="_blank">Sign up</a></li>
+                    <li><a href="auth-signin.html" target="_blank">Sign in</a></li>
+                </ul>
+            </li> --}}
+        </ul>
+    </div>
+</div>

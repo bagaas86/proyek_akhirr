@@ -1,20 +1,20 @@
 <center>
     <div id="tanggal">
-        <div class="row" style="margin-left: 4em;margin-right:4em">
-            <div class="col col-6 col-md-6">
-                <label for="">Dari</label>
-                <input id="fromdate" type="datetime-local" class="form-control" placeholder="Masukkan"  name="fromdate" value="{{old('fromdate')}}" onchange="submit()"  required>
+       
+            <div class="col col-12 col-md-4">
+                <input id="fromdate" type="text" class="form-control" placeholder="--Tanggal Awal Peminjaman--"  name="fromdate" value="{{old('fromdate')}}" onchange="submit()"  onfocus="(this.type='datetime-local')"
+                onblur="(this.type='text')" required>
             </div>
-            <div class="col col-6 col-md-6">
-                <label for="">Sampai</label>
-                <input id="todate" type="datetime-local" class="form-control" placeholder="Masukkan" name="todate" value="{{old('todate')}}" onchange="submit()"  required>
+            <div class="col col-12 col-md-4">
+                <input id="todate" type="text" class="form-control" placeholder="--Tanggal Selesai Peminjaman--" name="todate" value="{{old('todate')}}" onchange="submit()" onfocus="(this.type='datetime-local')"
+                onblur="(this.type='text')" required>
             </div>
-        </div>
+      
     </div>
    
 
     <div class="col col-md-4 col-12 mt-2" id="pilihKategori">
-        <select class="form-select form-select" aria-label=".form-select-sm example" id="kategori" onchange="submit()">
+        <select class="form-control" aria-label=".form-select-sm example" id="kategori" onchange="submit()">
             <option value="All" selected disabled>-- Pilih Kategori --</option>
             {{-- <option value="All">Semua Kategori</option> --}}
             <option value="Barang">Barang</option>
@@ -55,6 +55,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalCenterTitle">Modal Title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             </div>
             <div class="modal-body">
                 <p class="mb-0" id="page"></p>
@@ -66,6 +67,7 @@
     </div>
 </div>
 {{-- endModal --}}
+
 
 <script>
      function submit(){
@@ -83,7 +85,6 @@
          success: function(data, status) {
              $("#tableItem").html(data),
              document.getElementById("pilihKategori").style.display="block";
-             document.getElementById("pengajuan").style.display="none";
              document.getElementById("tableItem").style.display="block";
              document.getElementById("selanjutnya").style.display="block";
              document.getElementById("kembali").style.display="none";
@@ -111,7 +112,6 @@
              type: "get",
              url: "{{ url('resetkeranjang') }}",
          success: function(data, status) {
-            console.log('success')
              }
          });
      }

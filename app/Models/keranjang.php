@@ -80,6 +80,11 @@ class keranjang extends Model
         return DB::table('keranjangs')->join('items','keranjangs.id_item','=','items.id_item')->where('id_peminjaman', $id_peminjaman)->orderBy('items.kategori_item','ASC')->get();
     }
 
+    public function detailPeminjamanSupir($id_peminjaman)
+    {
+        return DB::table('keranjangs')->join('supir','keranjangs.id_supir','=','supir.id_supir')->where('id_peminjaman', $id_peminjaman)->get();
+    }
+
     public function detailPeminjamanRuangan($id_peminjaman)
     {
         return DB::table('keranjangs')->join('items','keranjangs.id_item','=','items.id_item')->where('items.kategori_item', "Ruangan")->where('id_peminjaman', $id_peminjaman)->orderBy('items.kategori_item','ASC')->get();
@@ -142,6 +147,12 @@ class keranjang extends Model
         ->where("items.kategori_item", "Kendaraan")
         ->where("keranjangs.id_peminjaman", null)
         ->count();
+    }
+
+    public function detailSupir($id_peminjaman)
+    {
+        return DB::table('keranjangs')->join('supir','keranjangs.id_supir','=','supir.id_supir')
+        ->where('id_peminjaman', $id_peminjaman)->first();
     }
 
 

@@ -30,6 +30,11 @@ $diff = Carbon\Carbon::parse($waktu_awal)->diffInDays(Carbon\Carbon::parse($wakt
                                         <td style="width:50%">{{$peminjaman->no_identitas}}</td>  
                                     </tr>
                                     <tr style="vertical-align:top;font-size:12px">
+                                        <td style="width:40%;font-weight:bold">Nama Kegiatan</td>
+                                        <td style="width:5%">:</td>
+                                        <td style="width:50%">{{$peminjaman->nama_kegiatan}}</td>  
+                                    </tr>
+                                    <tr style="vertical-align:top;font-size:12px">
                                         <td style="width:40%;font-weight:bold">Waktu Pengajuan</td>
                                         <td style="width:5%">:</td>
                                         <td style="width:50%">{{$waktu_pengajuan}}</td>  
@@ -62,10 +67,10 @@ $diff = Carbon\Carbon::parse($waktu_awal)->diffInDays(Carbon\Carbon::parse($wakt
                             </div>
                             <div class="table">
                                 <div class="row">
-                                    @if($peminjaman->jenis_peminjaman == "Kendaraan" OR $peminjaman->jenis_peminjaman == "Barang Kendaraan" OR $peminjaman->jenis_peminjaman == "Ruangan Kendaraan" OR $peminjaman->jenis_peminjaman == "Barang Ruangan Kendaraan")
-                                    <div class="col col-md-3">
+                                    @if($peminjaman->jenis_peminjaman == "Kendaraan" OR $peminjaman->jenis_peminjaman == "Barang,Kendaraan" OR $peminjaman->jenis_peminjaman == "Ruangan,Kendaraan" OR $peminjaman->jenis_peminjaman == "Barang,Ruangan,Kendaraan" OR $peminjaman->jenis_peminjaman == "Kendaraan,Supir")
+                                    <div class="col col-md-6">
                                         <div class="card-header h-50">
-                                            <img src="{{asset('foto/dm/pengguna/default.png')}}" class="img-rounded" style="width:25%">
+                                            <img src="{{asset('foto/dm/pengguna/default.png')}}" class="img-rounded" style="width:15%">
                                             <h6>Wakil Direktur I</h6>
                                         </div>
                                         <div class="card-body">
@@ -80,9 +85,9 @@ $diff = Carbon\Carbon::parse($waktu_awal)->diffInDays(Carbon\Carbon::parse($wakt
                                      
                                     </div>
                             
-                                    <div class="col col-md-3">
+                                    <div class="col col-md-6">
                                         <div class="card-header h-50">
-                                            <img src="{{asset('foto/dm/pengguna/default.png')}}" class="img-rounded" style="width:25%">
+                                            <img src="{{asset('foto/dm/pengguna/default.png')}}" class="img-rounded" style="width:15%">
                                             <h6>Wakil Direktur II</h6>
                                         </div>
                                         <div class="card-body">
@@ -98,7 +103,7 @@ $diff = Carbon\Carbon::parse($waktu_awal)->diffInDays(Carbon\Carbon::parse($wakt
                                     </div>
                                 
                                     @endif
-                                    <div class="col col-md-3">
+                                    <div class="col col-md-4">
                                         <div class="card-header h-50">
                                             <img src="{{asset('foto/dm/pengguna/default.png')}}" class="img-rounded" style="width:25%">
                                             <h6>Kepala Bagian</h6>
@@ -114,7 +119,7 @@ $diff = Carbon\Carbon::parse($waktu_awal)->diffInDays(Carbon\Carbon::parse($wakt
                                         </div>
                                      
                                     </div>
-                                    <div class="col col-md-3">
+                                    <div class="col col-md-4">
                                         <div class="card-header h-50">
                                             <img src="{{asset('foto/dm/pengguna/default.png')}}" class="img-rounded" style="width:25%">
                                             <h6>Staff Umum</h6>
@@ -130,6 +135,25 @@ $diff = Carbon\Carbon::parse($waktu_awal)->diffInDays(Carbon\Carbon::parse($wakt
                                         </div>
                                      
                                     </div>
+                                
+                                    @if($peminjaman->jenis_peminjaman == "Kendaraan,Supir")
+                                    <div class="col col-md-4">
+                                        <div class="card-header h-50">
+                                            <img src="{{asset('foto/dm/pengguna/default.png')}}" class="img-rounded" style="width:25%">
+                                            <h6>Pengelola Supir</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            @if($approval->pengelola_supir == "Proses" )
+                                            <i class="bi bi-hourglass-top" style="font-size:36px;color:yellow"></i>
+                                            @elseif($approval->pengelola_supir == "Ditolak")
+                                            <i class="bi bi-x" style="font-size:36px;color:red"></i>
+                                            @elseif($approval->pengelola_supir == "Disetujui")
+                                            <i class="bi bi-check" style="font-size:36px;color:green"></i>
+                                            @endif
+                                        </div>
+                                     
+                                    </div>
+                                    @endif
                                   
                                   
                                    
@@ -160,10 +184,24 @@ $diff = Carbon\Carbon::parse($waktu_awal)->diffInDays(Carbon\Carbon::parse($wakt
                                     </tr>
                                     @endforeach
                                 </table> 
-                            </div>  
+                            </div> 
+                            @if($peminjaman->jenis_peminjaman == "Kendaraan,Supir" OR $peminjaman->jenis_peminjaman == "Barang,Kendaraan,Supir" OR $peminjaman->jenis_peminjaman == "Ruangan,Kendaraan,Supir" OR $peminjaman->jenis_peminjaman == "Barang,Ruangan,Kendaraan,Supir") 
+                            <div  style="text-align:left" class="table">
+                                <table>
+                                    <tr style="border-bottom:1pt solid rgb(205, 205, 205);">
+                                        <th style="width:70%">Nama Supir</th>
+                                    </tr>
+                                    @foreach($supir as $data)
+                                    <tr style="height:30px">
+                                        <td style="width:70%">{{$data->nama_supir}}</td>
+                                    </tr>
+                                    @endforeach
+                                </table> 
+                            </div> 
+                            @endif 
                         </div>
                     </div>
-                    <div class="card mt-2">
+                    {{-- <div class="card mt-2">
                         <div class="card-body">
                             <div class="header" style="text-align: center">
                                 <h4>Berita Acara</h4>
@@ -179,7 +217,7 @@ $diff = Carbon\Carbon::parse($waktu_awal)->diffInDays(Carbon\Carbon::parse($wakt
                                 </div>
                               </div>  
                         </div>
-                    </div>
+                    </div> --}}
                 </div>
 
             

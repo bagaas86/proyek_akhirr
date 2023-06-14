@@ -45,8 +45,9 @@ class c_history extends Controller
     {
         $data =[
             'keranjang' => $this->keranjang->detailPeminjaman($id_peminjaman),
-            'peminjaman'=> $this->peminjaman->detailPeminjaman($id_peminjaman),
-            'approval' => $this->approval->detailData($id_peminjaman)
+            'peminjaman'=> $this->peminjaman->detailPeminjaman2($id_peminjaman),
+            'approval' => $this->approval->detailData($id_peminjaman),
+            'supir' => $this->keranjang->detailPeminjamanSupir($id_peminjaman),
         ];
         
         return view('user.history.detail', $data);

@@ -1,3 +1,50 @@
+{{-- <style>
+    .confirmation-slider {
+  padding:10px;
+  margin-top:20px;
+  /* border-top:1px solid rgba(0,0,0,0.1);
+ 	background:#ebebeb; */
+  text-align:center;
+}
+
+#status {
+  background:#fff;
+  border:1px solid #ccc;
+  border-radius:26px;
+  height:52px;
+}
+
+@keyframes fadein {
+ 	from{ opacity:0; }
+  to{ opacity:1; }
+}
+
+.delete-notice { display:none; user-select:none; font-size:20px; line-height:50px; color:#ED4545; animation:fadein 4s ease; }
+
+#confirm {
+  appearance:none!important;
+  background:transparent;
+  height:50px;
+  padding:0 5px;
+  width:100%;
+}
+
+#confirm::-webkit-slider-thumb {
+  appearance:none!important;
+  height:40px;
+  width:160px;
+  border:1px solid #3079ED;
+  border-radius:20px;
+  cursor:e-resize;
+  background:no-repeat center center;
+  background-image:url(data:image/gif;base64,R0lGODlhIAAXAJEDAD1740KC7Ttx0////yH5BAEAAAMALAAAAAAgABcAAAJInI9poO0/hAiwOjmtPliwbXUeWIkSRTam9CHrC7NJTK9oVOfYp/ejDwzWAkKaofhqIU2tFG7lnDGj0k6T+pRgFbstd+SdXR0FADs=), linear-gradient(top,#4D90FE,#4787ED);
+ }
+
+#confirm:hover::-webkit-slider-thumb {
+ border-color:#2f5bb7;
+ 
+ }
+</style> --}}
 @php
 $waktu_pengajuan = date('d-m-Y H:i', strtotime($peminjaman->waktu_pengajuan));
 $waktu_awal = date('d-m-Y H:i', strtotime($peminjaman->waktu_awal));
@@ -8,7 +55,7 @@ $lama = $diff+1;
 <div class="container" style="color:black">
         <div class="col col-12 col-md-12 mt-4">
             <div style="color:white" class="text-center title">
-              <h3>Detail Peminjaman</h3>
+              <h3>Detail Pelaporan Pengembalian</h3>
             </div>
             <div class="row">
                 <div class="col col-12 col-md-12">
@@ -106,10 +153,54 @@ $lama = $diff+1;
                     </div>
                 </div>
             </div>
+
+            <div class="col col-12 col-md-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="header" style="text-align: center">
+                            <h5>Pelaporan Pengembalian</h5>
+                        </div>
+                        <div class="col col-12 col-md-12 mt-4">
+                            <label for="">Deskripsi Pengembalian<small style="color:red">*</small></label>
+                            <textarea style="height:100px;background-color:white;border:1px solid grey" type="text" class="form-control" placeholder="Masukkan" readonly>{{$peminjaman->deskripsi_pengembalian}}</textarea>
+                        </div>
+                        <div class="col col-12 col-md-12 mt-4">
+                            <label for="">Bukti Pengembalian<small style="color:red">*</small></label>
+                            <center>
+                                <div>
+                                    <img src="{{asset('foto/pengembalian/'. $peminjaman->bukti_pengembalian)}}" alt="">
+                                </div>
+                              
+                            </center>
+                          
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
             
         </div>
+        {{-- <div class="confirmation-slider">
+            <div id="status">
+                  <input id="confirm" type="range" value="0" min="0" max="100" />
+              <span class="delete-notice">File deleted.</span>
+            </div>
+          </div> --}}
 
     </div>
 </div>
+
+{{-- <script>
+    $("#confirm").on('change',function() {
+  var slidepos = $(this).val();
+  if(slidepos > 99){
+
+   	// User slided the slider
+    $("#confirm").fadeOut();
+    $(".delete-notice").fadeIn();
+  }
+});
+
+</script> --}}
 
 

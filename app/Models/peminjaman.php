@@ -31,13 +31,9 @@ class peminjaman extends Model
 
     public function myData($id)
     {
-        return DB::table('peminjaman')->join('approvals', 'peminjaman.id_peminjaman','=','approvals.id_peminjaman')->where('peminjaman.id_user', $id)->get();
+        return DB::table('peminjaman')->join('approvals', 'peminjaman.id_peminjaman','=','approvals.id_peminjaman')->where('peminjaman.id_user', $id)->orderBy('waktu_pengajuan', 'DESC')->get();
     }
-    
-    public function detailPeminjaman($id_peminjaman)
-    {
-        return DB::table('peminjaman')->where('id_peminjaman', $id_peminjaman)->first();
-    }
+
 
     public function detailPeminjaman2($id_peminjaman)
     {
@@ -50,7 +46,8 @@ class peminjaman extends Model
         return DB::table('peminjaman')->join('users', 'peminjaman.id_user','=','users.id')
         ->join('approvals', 'peminjaman.id_peminjaman','=','approvals.id_peminjaman')
         ->whereBetween('waktu_awal', [$dari, $sampai])
-        ->whereBetween('waktu_akhir', [$dari, $sampai])->get();
+        ->whereBetween('waktu_akhir', [$dari, $sampai])
+        ->get();
     }
 
     public function tampilPeminjamans($dari, $sampai, $filter)
@@ -60,18 +57,45 @@ class peminjaman extends Model
         ->where('peminjaman.jenis_peminjaman', 'LIKE', '%'.$filter.'%')
         // ->where('peminjaman.jenis_peminjaman', $filter)
         ->whereBetween('waktu_awal', [$dari, $sampai])
+        ->whereBetween('waktu_akhir', [$dari, $sampai])
+        ->get();
+    }
+
+    public function tampilPengembalian($dari, $sampai)
+    {
+        return DB::table('peminjaman')
+        ->join('users', 'peminjaman.id_user','=','users.id')
+        ->orwhere('peminjaman.status_peminjaman', "Pengajuan Diterima")
+        ->orwhere('peminjaman.status_peminjaman', "Proses Pengembalian")
+        ->orwhere('peminjaman.status_peminjaman', "Pengembalian Ditolak")
+        ->orwhere('peminjaman.status_peminjaman', "Pengembalian Diterima")
+        ->whereBetween('waktu_awal', [$dari, $sampai])
         ->whereBetween('waktu_akhir', [$dari, $sampai])->get();
     }
 
+    public function tampilPengembalians($dari, $sampai, $filter)
+    {
+        return DB::table('peminjaman')
+        ->join('users', 'peminjaman.id_user','=','users.id')
+        ->where('peminjaman.jenis_peminjaman', 'LIKE', '%'.$filter.'%')
+        // ->where('peminjaman.jenis_peminjaman', $filter)
+        ->whereBetween('waktu_awal', [$dari, $sampai])
+        ->whereBetween('waktu_akhir', [$dari, $sampai])->get();
+    }
 
-    public function tampilPeminjaman()
+    public function myPengembalian($id)
     {
-        return DB::table('peminjaman')->join('users', 'peminjaman.id_user','=','users.id')->join('approvals', 'peminjaman.id_peminjaman','=','approvals.id_peminjaman')->where('level', 'Ormawa')->get();
+        return DB::table('peminjaman')
+        ->where('peminjaman.id_user', $id)
+        ->where('peminjaman.status_peminjaman', "Pengajuan Diterima")
+        ->Orwhere('peminjaman.status_peminjaman', "Proses Pengembalian")
+        ->Orwhere('peminjaman.status_peminjaman', "Pengembalian Ditolak")
+        ->Orwhere('peminjaman.status_peminjaman', "Pengembalian Diterima")
+        ->orderBy('waktu_pengajuan', 'DESC')->get();
     }
-    public function tampilPeminjamanDosen()
-    {
-        return DB::table('peminjaman')->join('users', 'peminjaman.id_user','=','users.id')->join('approvals', 'peminjaman.id_peminjaman','=','approvals.id_peminjaman')->where('level', 'Dosen')->get();
-    }
+
+
+
 
 
 

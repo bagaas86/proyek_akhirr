@@ -2,144 +2,232 @@
 <html lang="en">
 
 <head>
-  <meta charset="utf-8">
-  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>SIP3 BMN</title>
+    <!-- HTML5 Shim and Respond.js IE11 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 11]>
+    	<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    	<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    	<![endif]-->
+    <!-- Meta -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="">
+    <meta name="author" content="Phoenixcoded" />
+    <!-- Favicon icon -->
+    <link rel="icon" href="{{asset('template')}}/dist/assets/images/favicon.ico" type="image/x-icon">
 
-  <title>SIP3 BMN</title>
-  <meta content="" name="description">
-  <meta content="" name="keywords">
+    <!-- prism css -->
+    <link rel="stylesheet" href="{{asset('template')}}/dist/assets/css/plugins/prism-coy.css">
+    <!-- vendor css -->
+    <link rel="stylesheet" href="{{asset('template')}}/dist/assets/css/style.css">
 
-  <!-- Favicons -->
-  <link href="{{asset('templateBaru')}}/assets/img/favicon.png" rel="icon">
-  <link href="{{asset('templateBaru')}}/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+        {{-- bootstrap icons --}}
+        <link href="{{asset('templateBaru')}}/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
 
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Krub:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
-
-  <!-- Vendor CSS Files -->
-  <link href="{{asset('templateBaru')}}/assets/vendor/aos/aos.css" rel="stylesheet">
-  <link href="{{asset('templateBaru')}}/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <link href="{{asset('templateBaru')}}/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-  <link href="{{asset('templateBaru')}}/assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
-  <link href="{{asset('templateBaru')}}/assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
-  <link href="{{asset('templateBaru')}}/assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
-
-  <!-- Template Main CSS File -->
-  <link href="{{asset('templateBaru')}}/assets/css/style.css" rel="stylesheet">
-
-
-  
-  {{-- Ajax JS --}}
+    {{-- Ajax JS --}}
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.3/dist/sweetalert2.all.min.js"></script>
   <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.3/dist/sweetalert2.min.css" rel="stylesheet">
 
   <script src="https://code.jquery.com/jquery-3.6.1.js" integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI=" crossorigin="anonymous"></script>
   <meta name="csrf-token" content="{{ csrf_token() }}">
+    
+    
 
-  <!-- =======================================================
-  * Template Name: Bikin
-  * Updated: Mar 10 2023 with Bootstrap v5.2.3
-  * Template URL: https://bootstrapmade.com/bikin-free-simple-landing-page-template/
-  * Author: BootstrapMade.com
-  * License: https://bootstrapmade.com/license/
-  ======================================================== -->
 </head>
 
 <body>
-
-  <!-- ======= Header ======= -->
-  <header id="header" class="fixed-top">
-    <div class="container d-flex align-items-center justify-content-between">
-
-      {{-- <h1 class="logo"><a href="index.html">Bikin</a></h1> --}}
-      <!-- Uncomment below if you prefer to use an image logo -->
-       <a href="index.html" class="logo"><img src="{{asset('templateBaru')}}/assets/img/logo.png" alt="" class="img-fluid"></a>
-
-      <nav id="navbar" class="navbar">
-       @include('layouts.navBaru')
-      </nav><!-- .navbar -->
-
-    </div>
-  </header><!-- End Header -->
-  <br>
-  <br>
-  <!-- ======= Hero Section ======= -->
-  <section id="hero" class="d-flex align-items-center">
-    @yield('content')
-  </section><!-- End Hero -->
-
-  @if(Route::current()->getName() == 'dashboard' OR Route::current()->getName() == 'user.login' )
-  <main id="main">
-    <!-- ======= Clients Section ======= -->
-    <section id="clients" class="clients">
-      <div class="container" data-aos="zoom-in">
-
-       @yield('clients')
-
-      </div>
-    </section><!-- End Clients Section -->
-
-    <!-- ======= Services Section ======= -->
-    <section id="services" class="services">
-      <div class="container" data-aos="fade-up">
-
-      @yield('services')
-
-      </div>
-    </section><!-- End Services Section -->
-
-    <!-- ======= Contact Section ======= -->
-    <section id="contact" class="contact section-bg">
-      <div class="container" data-aos="fade-up">
-
-       @yield('contact')
-
-      </div>
-    </section><!-- End Contact Section -->
-
-  </main><!-- End #main -->
-  @endif
-
-  <!-- ======= Footer ======= -->
-  {{-- <footer id="footer">
-
-    <div class="container d-md-flex py-4">
-
-      <div class="me-md-auto text-center text-md-start">
-        <div class="copyright">
-          &copy; Copyright <strong><span>Bikin</span></strong>. All Rights Reserved
+    <!-- [ Pre-loader ] start -->
+    <div class="loader-bg">
+        <div class="loader-track">
+            <div class="loader-fill"></div>
         </div>
-        <div class="credits">
-          <!-- All the links in the footer should remain intact. -->
-          <!-- You can delete the links only if you purchased the pro version. -->
-          <!-- Licensing information: https://bootstrapmade.com/license/ -->
-          <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/bikin-free-simple-landing-page-template/ -->
-          Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
-        </div>
-      </div>
-      <div class="social-links text-center text-md-right pt-3 pt-md-0">
-        <a href="#" class="twitter"><i class="bx bxl-twitter"></i></a>
-        <a href="#" class="facebook"><i class="bx bxl-facebook"></i></a>
-        <a href="#" class="instagram"><i class="bx bxl-instagram"></i></a>
-        <a href="#" class="google-plus"><i class="bx bxl-skype"></i></a>
-        <a href="#" class="linkedin"><i class="bx bxl-linkedin"></i></a>
-      </div>
     </div>
-  </footer><!-- End Footer --> --}}
+    <!-- [ Pre-loader ] End -->
+    <!-- [ navigation menu ] start -->
+    <nav class="pcoded-navbar theme-horizontal menu-light brand-blue">
+        @include('layouts.navBaru')
+    </nav>
+    <!-- [ navigation menu ] end -->
+    <!-- [ Header ] start -->
+    <header class="navbar pcoded-header navbar-expand-lg navbar-light header-blue">
+        <div class="container">
+            <div class="m-header">
+                <a class="mobile-menu" id="mobile-collapse" href="#!"><span></span></a>
+                <a href="#!" class="b-brand">
+                    <!-- ========   change your logo hear   ============ -->
+                    <img src="{{asset('templateBaru')}}/assets/img/logo.png" style="width:200px" alt="" class="logo">
+                    <img src="{{asset('template')}}/dist/assets/images/logo-icon.png" alt="" class="logo-thumb">
+                </a>
+                <a href="#!" class="mob-toggler">
+                    <i class="feather icon-more-vertical"></i>
+                </a>
+            </div>
+            @auth
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ml-auto">
+                    <li>
+                        <div class="dropdown drp-user">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <img class="img-radius" src="{{asset('foto/dm/pengguna/'. Auth::user()->foto)}}" style="width:100%">
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right profile-notification">
+                                <div class="pro-head">
+                                    <img src="{{asset('foto/dm/pengguna/'. Auth::user()->foto)}}" class="img-radius" alt="User-Profile-Image">
+                                    <span>{{Auth::user()->name}}</span>
+                                    <a href="auth-signin.html" class="dud-logout" title="Logout">
+                                        <i class="feather icon-log-out"></i>
+                                    </a>
+                                </div>
+                                <ul class="pro-body">
+                                    <li><a href="user-profile.html" class="dropdown-item"><i class="feather icon-user"></i> Profile</a></li>
+                                    <li><a href="{{route('history.index')}}" class="dropdown-item"><i class="feather icon-mail"></i> History Peminjaman</a></li>
+                                    <li><a href="auth-signin.html" class="dropdown-item"><i class="feather icon-lock"></i> Lock Screen</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            @endauth
+        </div>
+    </header>
+    <!-- [ Header ] end -->
 
-  <div id="preloader"></div>
-  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+    <!-- [ Main Content ] start -->
+    <div class="pcoded-main-container">
+        <div class="pcoded-wrapper container">
+            <div class="pcoded-content">
+                <div class="pcoded-inner-content">
+                    <div class="main-body">
+                        <div class="page-wrapper">
+                            <div class="page-header">
+                                @yield('navigasi')
+                            </div>
+                            <!-- [ Main Content ] start -->
+                            <div class="row">
+                                <!-- [ horizontal-layout ] start -->
+                                <div class="col-sm-12">
+                                    <div class="card">
+                                        <div class="card-body">
+                                           @yield('content')
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- [ horizontal-layout ] end -->
+                            </div>
+                            <!-- [ Main Content ] end -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- [ Main Content ] end -->
 
-  <!-- Vendor JS Files -->
-  <script src="{{asset('templateBaru')}}/assets/vendor/aos/aos.js"></script>
-  <script src="{{asset('templateBaru')}}/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="{{asset('templateBaru')}}/assets/vendor/glightbox/js/glightbox.min.js"></script>
-  <script src="{{asset('templateBaru')}}/assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
-  <script src="{{asset('templateBaru')}}/assets/vendor/swiper/swiper-bundle.min.js"></script>
-  <script src="{{asset('templateBaru')}}/assets/vendor/php-email-form/validate.js"></script>
+        <!-- Warning Section start -->
+        <!-- Older IE warning message -->
+        <!--[if lt IE 11]>
+            <div class="ie-warning">
+                <h1>Warning!!</h1>
+                <p>You are using an outdated version of Internet Explorer, please upgrade
+                   <br/>to any of the following web browsers to access this website.
+                </p>
+                <div class="iew-container">
+                    <ul class="iew-download">
+                        <li>
+                            <a href="http://www.google.com/chrome/">
+                                <img src="{{asset('template')}}/dist/assets/images/browser/chrome.png" alt="Chrome">
+                                <div>Chrome</div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.mozilla.org/en-US/firefox/new/">
+                                <img src="{{asset('template')}}/dist/assets/images/browser/firefox.png" alt="Firefox">
+                                <div>Firefox</div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="http://www.opera.com">
+                                <img src="{{asset('template')}}/dist/assets/images/browser/opera.png" alt="Opera">
+                                <div>Opera</div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.apple.com/safari/">
+                                <img src="{{asset('template')}}/dist/assets/images/browser/safari.png" alt="Safari">
+                                <div>Safari</div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="http://windows.microsoft.com/en-us/internet-explorer/download-ie">
+                                <img src="{{asset('template')}}/dist/assets/images/browser/ie.png" alt="">
+                                <div>IE (11 & above)</div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <p>Sorry for the inconvenience!</p>
+            </div>
+        <![endif]-->
+        <!-- Warning Section Ends -->
 
-  <!-- Template Main JS File -->
-  <script src="{{asset('templateBaru')}}/assets/js/main.js"></script>
+        <!-- Required Js -->
+        <script src="{{asset('template')}}/dist/assets/js/vendor-all.min.js"></script>
+        <script src="{{asset('template')}}/dist/assets/js/plugins/bootstrap.min.js"></script>
+        <script src="{{asset('template')}}/dist/assets/js/ripple.js"></script>
+        <script src="{{asset('template')}}/dist/assets/js/pcoded.min.js"></script>
+
+
+    <!-- prism Js -->
+    <script src="{{asset('template')}}/dist/assets/js/plugins/prism.js"></script>
+
+    
+
+
+
+    <script src="{{asset('template')}}/dist/assets/js/horizontal-menu.js"></script>
+    <script>
+        (function() {
+            if ($('#layout-sidenav').hasClass('sidenav-horizontal') || window.layoutHelpers.isSmallScreen()) {
+                return;
+            }
+            try {
+                window.layoutHelpers._getSetting("Rtl")
+                window.layoutHelpers.setCollapsed(
+                    localStorage.getItem('layoutCollapsed') === 'true',
+                    false
+                );
+            } catch (e) {}
+        })();
+        $(function() {
+            $('#layout-sidenav').each(function() {
+                new SideNav(this, {
+                    orientation: $(this).hasClass('sidenav-horizontal') ? 'horizontal' : 'vertical'
+                });
+            });
+            $('body').on('click', '.layout-sidenav-toggle', function(e) {
+                e.preventDefault();
+                window.layoutHelpers.toggleCollapsed();
+                if (!window.layoutHelpers.isSmallScreen()) {
+                    try {
+                        localStorage.setItem('layoutCollapsed', String(window.layoutHelpers.isCollapsed()));
+                    } catch (e) {}
+                }
+            });
+        });
+        $(document).ready(function() {
+            $("#pcoded").pcodedmenu({
+                themelayout: 'horizontal',
+                MenuTrigger: 'hover',
+                SubMenuTrigger: 'hover',
+            });
+        });
+    </script>
+
+    <script src="{{asset('template')}}/dist/assets/js/analytics.js"></script>
 
 </body>
 

@@ -9,6 +9,8 @@ use App\Models\item;
 use App\Models\keranjang;
 use App\Models\kendaraan;
 use App\Models\approval;
+use App\Models\supir;
+use App\Models\aktivitas;
 use DB;
 use Auth;
 use PDF;
@@ -23,6 +25,8 @@ class c_peminjaman extends Controller
         $this->keranjang = new keranjang();
         $this->kendaraan = new kendaraan();
         $this->approval = new approval();
+        $this->supir = new supir();
+        $this->aktivitas = new aktivitas();
     }
 
     // Controller Admin
@@ -36,6 +40,7 @@ class c_peminjaman extends Controller
         $data = [
             'keranjang' => $this->keranjang->detailPeminjaman($id_peminjaman),
             'peminjaman'=> $this->peminjaman->detailPeminjaman2($id_peminjaman),
+            'supir' => $this->keranjang->detailPeminjamanSupir($id_peminjaman),
         ];
         return view ('admin.peminjaman.detail' ,$data);
     }
@@ -121,7 +126,6 @@ class c_peminjaman extends Controller
             
             // ];
             // $this->beritaacara->editData($id, $beritaRuangan);
-
             return response()->download($pdf);
         }       
       
@@ -129,9 +133,10 @@ class c_peminjaman extends Controller
 
     public function tablePeminjaman(Request $request)
     {
+      
         $filter = $request->filter;
-        $dari = $request->dari;
-        $sampai = $request->sampai;
+        $dari = $request->dari." "."00:00:00";
+        $sampai = $request->sampai." "."23:59:59";
         if($filter == "Semua")
         {
             $data =[
@@ -167,8 +172,24 @@ class c_peminjaman extends Controller
             $data = [
                 'wakil_direktur_2'=> "Disetujui",
             ];
+        }elseif($status == "Pengelola Supir"){
+            $data = [
+                'pengelola_supir'=> "Disetujui",
+            ];
+
+            $peminjaman = $this->peminjaman->detailPeminjaman2($id_peminjaman);
+            $supirAktivitas = $this->keranjang->detailSupir($id_peminjaman);
+            $tambahAktivitas = [
+                'id_peminjaman' => $id_peminjaman,
+                'id_supir' => $supirAktivitas->id_supir,
+                'nama_aktivitas' => $peminjaman->nama_kegiatan,
+                'mulai_aktivitas' => $peminjaman->waktu_awal,
+                'selesai_aktivitas' => $peminjaman->waktu_akhir,
+            ];
+            $this->aktivitas->addData($tambahAktivitas);
         }
         $this->approval->updatePeminjaman($id_peminjaman, $data);
+        $approval = $this->otomatis($id_peminjaman);
       
     }
 
@@ -191,6 +212,10 @@ class c_peminjaman extends Controller
         }elseif($status == "Wakil Direktur 2"){
             $data = [
                 'wakil_direktur_2'=> "Ditolak",
+            ];
+        }elseif($status == "Pengelola Supir"){
+            $data = [
+                'pengelola_supir'=> "Ditolak",
             ];
         }
         $this->approval->updatePeminjaman($id_peminjaman, $data);
@@ -267,16 +292,18 @@ class c_peminjaman extends Controller
         // filename
         date_default_timezone_set("Asia/Jakarta");
         $tahun = date("Y");
-        $now = date("Y-m-d h:i");
+        $now = date("Y-m-d H:i");
         $file_pengenal = $request->foto_identitas;
         $file_surat_pengajuan = $request->surat_pengajuan;
+
+        $fromdate = date('Y-m-d H:i:s', strtotime($request->fromdate));
+        $todate = date('Y-m-d H:i:s', strtotime($request->todate));
 
         // validasi
         $request->validate([
             'fromdate' => 'required',
             'todate' => 'required',
             'nama_pj' => 'required',
-            'no_identitas' => 'required',
             'foto_identitas' => 'required|mimes:jpg,png,bmp',
             'nama_kegiatan' => 'required',
             'no_hp' => 'required',
@@ -284,7 +311,6 @@ class c_peminjaman extends Controller
             'fromdate.required'=>'Waktu Awal Peminjaman Wajib terisi',
             'todate.required'=>'Waktu Akhir Peminjaman Wajib terisi',
             'nama_pj.required'=>'Nama Penanggung Jawab Wajib Terisi',
-            'no_identitas.required'=>'Nomor Identitas Wajib terisi',
             'no_hp.required'=>'Nomor Handphone Wajib terisi',
             'foto_identitas.required'=>'Foto Identitas wajib terisi',
             'foto_identitas.mimes'=>'Foto Identitas Harus berformat jpg, png, atau bmp',
@@ -299,8 +325,8 @@ class c_peminjaman extends Controller
                 'id_peminjaman'=> $id_peminjaman,
                 'id_user'=> $id_user,
                 'jenis_peminjaman' => $request->jenis_peminjaman,
-                'waktu_awal'=> $request->fromdate,
-                'waktu_akhir'=> $request->todate,
+                'waktu_awal'=> $fromdate,
+                'waktu_akhir'=> $todate,
                 'nama_pj'=> $request->nama_pj,
                 'no_identitas'=> $request->no_identitas,
                 'no_hp'=> $request->no_hp,
@@ -314,6 +340,7 @@ class c_peminjaman extends Controller
     
             $data2 = [
                 'id_peminjaman'=> $id_peminjaman, 
+                'id_supir' => $request->id_supir,
             ];
             $this->keranjang->finish($id_user, $data2);
 
@@ -328,8 +355,8 @@ class c_peminjaman extends Controller
                     'id_peminjaman'=> $id_peminjaman,
                     'id_user'=> $id_user,
                     'jenis_peminjaman' => $request->jenis_peminjaman,
-                    'waktu_awal'=> $request->fromdate,
-                    'waktu_akhir'=> $request->todate,
+                    'waktu_awal'=> $fromdate,
+                    'waktu_akhir'=> $todate,
                     'nama_pj'=> $request->nama_pj,
                     'no_identitas'=> $request->no_identitas,
                     'no_hp'=> $request->no_hp,
@@ -343,6 +370,7 @@ class c_peminjaman extends Controller
     
                 $data2 = [
                     'id_peminjaman'=> $id_peminjaman, 
+                    'id_supir' => $request->id_supir,
                 ];
                 $this->keranjang->finish($id_user, $data2);
 
@@ -360,8 +388,8 @@ class c_peminjaman extends Controller
                 'id_peminjaman' => $id_peminjaman,
                 'id_user'=> $id_user,
                 'jenis_peminjaman' => $request->jenis_peminjaman,
-                'waktu_awal'=> $request->fromdate,
-                'waktu_akhir'=> $request->todate,
+                'waktu_awal'=> $fromdate,
+                'waktu_akhir'=> $todate,
                 'nama_pj'=> $request->nama_pj,
                 'no_identitas'=> $request->no_identitas,
                 'no_hp'=> $request->no_hp,
@@ -375,6 +403,7 @@ class c_peminjaman extends Controller
 
                 $data2 = [
                     'id_peminjaman'=> $id_peminjaman, 
+                    'id_supir' => $request->id_supir,
                 ];
                 $this->keranjang->finish($id_user, $data2);
 
@@ -388,8 +417,8 @@ class c_peminjaman extends Controller
                 'id_peminjaman' => $id_peminjaman,
                 'id_user'=> $id_user,
                 'jenis_peminjaman' => $request->jenis_peminjaman,
-                'waktu_awal'=> $request->fromdate,
-                'waktu_akhir'=> $request->todate,
+                'waktu_awal'=> $fromdate,
+                'waktu_akhir'=> $todate,
                 'nama_pj'=> $request->nama_pj,
                 'no_identitas'=> $request->no_identitas,
                 'no_hp'=> $request->no_hp,
@@ -402,6 +431,7 @@ class c_peminjaman extends Controller
                $this->peminjaman->addData($data);
                 $data2 = [
                     'id_peminjaman'=> $id_peminjaman, 
+                    'id_supir' => $request->id_supir,
                 ];
                 $this->keranjang->finish($id_user, $data2);
 
@@ -421,6 +451,7 @@ class c_peminjaman extends Controller
                 'wakil_direktur_2'=> "Proses",
                 'kepala_bagian'=> "Proses",
                 'staff_umum'=> "Disetujui",
+                'pengelola_supir'=> "Proses",
                ];
         }elseif($sebagai == "Kepala Bagian"){
             $data_approval = [
@@ -429,6 +460,7 @@ class c_peminjaman extends Controller
                 'wakil_direktur_2'=> "Proses",
                 'kepala_bagian'=> "Disetujui",
                 'staff_umum'=> "Proses",
+                'pengelola_supir'=> "Proses",
                ];
         }elseif($sebagai == "Wakil Direktur 1"){
             $data_approval = [
@@ -437,6 +469,7 @@ class c_peminjaman extends Controller
                 'wakil_direktur_2'=> "Proses",
                 'kepala_bagian'=> "Proses",
                 'staff_umum'=> "Proses",
+                'pengelola_supir'=> "Proses",
                ];
         }elseif($sebagai == "Wakil Direktur 2"){
             $data_approval = [
@@ -445,6 +478,16 @@ class c_peminjaman extends Controller
                 'wakil_direktur_2'=> "Disetujui",
                 'kepala_bagian'=> "Proses",
                 'staff_umum'=> "Proses",
+                'pengelola_supir'=> "Proses",
+               ];
+        }elseif($sebagai == "Pengelola Supir"){
+            $data_approval = [
+                'id_peminjaman'=> $id_peminjaman,
+                'wakil_direktur_1'=> "Proses",
+                'wakil_direktur_2'=> "Proses",
+                'kepala_bagian'=> "Proses",
+                'staff_umum'=> "Proses",
+                'pengelola_supir'=> "Proses",
                ];
         }else{
             $data_approval = [
@@ -453,10 +496,36 @@ class c_peminjaman extends Controller
                 'wakil_direktur_2'=> "Proses",
                 'kepala_bagian'=> "Proses",
                 'staff_umum'=> "Proses",
+                'pengelola_supir'=> "Proses",
                ];
         }
         $this->approval->addData($data_approval);
+      
     }
+
+    public function otomatis($id_peminjaman)
+    {
+        $ubahStatus = $this->approval->detailData($id_peminjaman);
+        if($ubahStatus->jenis_peminjaman == "Barang" OR $ubahStatus->jenis_peminjaman == "Ruangan" OR $ubahStatus->jenis_peminjaman == "Barang,Ruangan" )
+        {
+            if($ubahStatus->staff_umum == "Disetujui" AND $ubahStatus->kepala_bagian == "Disetujui")
+            {
+                $data = [
+                    'status_peminjaman' => "Pengajuan Diterima"
+                ];
+                $this->peminjaman->updatePeminjaman($id_peminjaman, $data);
+            }
+        }elseif($ubahStatus->jenis_peminjaman == "Barang,Ruangan,Kendaraan" OR $ubahStatus->jenis_peminjaman == "Barang,Kendaraan" OR $ubahStatus->jenis_peminjaman == "Ruangan,Kendaraan" OR $ubahStatus->jenis_peminjaman == "Kendaraan" OR $ubahStatus->jenis_peminjaman == "Barang,Ruangan,Kendaraan,Supir" OR $ubahStatus->jenis_peminjaman == "Barang,Kendaraan,Supir" OR $ubahStatus->jenis_peminjaman == "Ruangan,Kendaraan,Supir" OR $ubahStatus->jenis_peminjaman == "Kendaraan,Supir")
+        {
+            if($ubahStatus->staff_umum == "Disetujui" AND $ubahStatus->kepala_bagian == "Disetujui" AND $ubahStatus->wakil_direktur_1 == "Disetujui" AND $ubahStatus->wakil_direktur_2 == "Disetujui")
+            {
+                $data = [
+                    'status_peminjaman' => "Pengajuan Diterima"
+                ];
+                $this->peminjaman->updatePeminjaman($id_peminjaman, $data);
+            }
+        }
+    }   
 
     // Ajax
 
@@ -466,14 +535,20 @@ class c_peminjaman extends Controller
         $this->keranjang->resetKeranjang($id);
     }
 
-    public function hari($id)
+    public function hari(Request $request)
     {
-        $data = strtotime($id);
+        $data1 = strtotime($request->bulan1);
+        $data2 = strtotime($request->bulan2);
         $kalender = CAL_GREGORIAN;
-        $bulan = date('m', $data);
-        $tahun = date('Y', $data);
+        $bulan = date('m', $data1);
+        $tahun = date('Y', $data1);
+
+        $bulan2 = date('m', $data2);
+        $tahun2 = date('Y', $data2);
+
         $hari = cal_days_in_month($kalender, $bulan, $tahun);
-        return $hari;
+        $hari2 = cal_days_in_month($kalender, $bulan2, $tahun2);
+        return $hari2;
     }
     
     public function loadItem(Request $request)
@@ -586,6 +661,65 @@ class c_peminjaman extends Controller
         ];
     
         return view('user.peminjaman.detailbmn', $data);
+    }
+
+    public function modalSupir(Request $request)
+    {
+        $fromdate = date('Y-m-d H:i:s', strtotime($request->fromdate));
+        $todate = date('Y-m-d H:i:s', strtotime($request->todate));
+        // $check = $this->supir->checkSupir($fromdate, $todate);
+        $driversWithoutActivities = DB::table('supir')
+        ->leftJoin('aktivitas', 'supir.id_supir', '=', 'aktivitas.id_supir')
+        ->where(function ($query) use ($fromdate,$todate) {
+            $query->whereNotBetween('aktivitas.mulai_aktivitas', [$fromdate,$todate])
+                  ->whereNotBetween('aktivitas.selesai_aktivitas', [$fromdate,$todate]);
+                //   ->OrWhere(function ($query) use ($fromdate,$todate) {
+                //       $query->whereNot('aktivitas.mulai_aktivitas', '>=', $fromdate)
+                //             ->whereNot('aktivitas.selesai_aktivitas', '<=',$todate);
+                //   });
+        })
+        ->orWhereNull('aktivitas.id_supir')
+        ->select('supir.*')
+        ->distinct()
+        ->get();
+
+        $data = [
+            'supir' => $driversWithoutActivities,
+        ];
+    
+        return view ('user.peminjaman.checkSupir', $data);
+    // foreach ($driversWithoutActivities as $driver) {
+    //     echo "$driver->id_supir tidak memiliki aktivitas pada rentang tanggal $fromdate sampai $todate.<br>";
+    // }
+
+    
+    
+    
+    
+    
+    
+    
+        //  $check = $this->supir->allData();
+        //  $count = count($check);
+        // if($check->isEmpty()){
+        //     $data = [
+        //         'supir'=> $this->supir->allData(),
+        //     ];
+        //     return $data;
+        // }
+        // else{
+        //     for ($i=0; $i < $count; $i++) { 
+        //         foreach ($check as $data) {
+        //             $x = $data->id_supir;
+                 
+        //         }
+              
+        //     }
+           
+            
+            
+
+        // }
     }
 
     public function penyebut($nilai) {
