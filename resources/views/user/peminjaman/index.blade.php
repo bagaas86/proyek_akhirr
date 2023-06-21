@@ -16,7 +16,7 @@
     <div class="row">
         <div class="col col-12 col-md-12">
             <div class="container text-center" data-aos="fade-up">
-                <h1>Sistem Informasi Peminjaman Barang Milik Negara</h1>
+                <h4>Sistem Informasi Peminjaman Barang Milik Negara</h4>
               </div>
             <div id="read">
               

@@ -5,11 +5,12 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Models\peminjaman;
+use App\Models\pengembalian;
 use App\Models\item;
 use App\Models\keranjang;
 use App\Models\kendaraan;
 use App\Models\approval;
-use App\Models\supir;
+// use App\Models\supir;
 use App\Models\aktivitas;
 use DB;
 use Auth;
@@ -21,11 +22,12 @@ class c_peminjaman extends Controller
     public function __construct()
     {
         $this->peminjaman = new peminjaman();
+        $this->pengembalian = new pengembalian();
         $this->item = new item();
         $this->keranjang = new keranjang();
         $this->kendaraan = new kendaraan();
         $this->approval = new approval();
-        $this->supir = new supir();
+        // $this->supir = new supir();
         $this->aktivitas = new aktivitas();
     }
 
@@ -178,15 +180,26 @@ class c_peminjaman extends Controller
             ];
 
             $peminjaman = $this->peminjaman->detailPeminjaman2($id_peminjaman);
-            $supirAktivitas = $this->keranjang->detailSupir($id_peminjaman);
-            $tambahAktivitas = [
-                'id_peminjaman' => $id_peminjaman,
-                'id_supir' => $supirAktivitas->id_supir,
-                'nama_aktivitas' => $peminjaman->nama_kegiatan,
-                'mulai_aktivitas' => $peminjaman->waktu_awal,
-                'selesai_aktivitas' => $peminjaman->waktu_akhir,
-            ];
-            $this->aktivitas->addData($tambahAktivitas);
+            // $supirAktivitas = $this->keranjang->detailSupir($id_peminjaman);
+            $supirAktivitas = $this->keranjang->sendAktivitas($id_peminjaman);
+            foreach ($supirAktivitas as $supir) {
+                $tambahAktivitas = [
+                    'id_peminjaman' => $supir->id_peminjaman,
+                    'id_supir' => $supir->id_supir,
+                    'nama_aktivitas' => $peminjaman->nama_kegiatan,
+                    'mulai_aktivitas' => $peminjaman->waktu_awal,
+                    'selesai_aktivitas' => $peminjaman->waktu_akhir,
+                ];
+                $this->aktivitas->addData($tambahAktivitas);
+            }
+            // $tambahAktivitas = [
+            //     'id_peminjaman' => $id_peminjaman,
+            //     'id_supir' => $supirAktivitas->id_supir,
+            //     'nama_aktivitas' => $peminjaman->nama_kegiatan,
+            //     'mulai_aktivitas' => $peminjaman->waktu_awal,
+            //     'selesai_aktivitas' => $peminjaman->waktu_akhir,
+            // ];
+            // $this->aktivitas->addData($tambahAktivitas);
         }
         $this->approval->updatePeminjaman($id_peminjaman, $data);
         $approval = $this->otomatis($id_peminjaman);
@@ -272,14 +285,18 @@ class c_peminjaman extends Controller
         $checkBarang = $this->keranjang->checkBarang1($id);
         $checkRuangan = $this->keranjang->checkRuangan1($id);
         $checkKendaraan = $this->keranjang->checkKendaraan1($id);
+        $checkSupir = $this->keranjang->checkSupir1($id);
         $data = [
             'check1' => $checkBarang,
             'check2' => $checkRuangan,
             'check3' => $checkKendaraan,
+            'check4' => $checkSupir,
             'keranjang'=> $this->keranjang->keranjangBarang($id),
             'ruangan'=> $this->keranjang->keranjangRuangan($id),
             'kendaraan'=> $this->keranjang->keranjangKendaraan($id),
+            'supir'=> $this->keranjang->keranjangSupir($id),
         ];
+        
         return view ('user.peminjaman.list',$data);
     }
 
@@ -340,7 +357,6 @@ class c_peminjaman extends Controller
     
             $data2 = [
                 'id_peminjaman'=> $id_peminjaman, 
-                'id_supir' => $request->id_supir,
             ];
             $this->keranjang->finish($id_user, $data2);
 
@@ -370,7 +386,6 @@ class c_peminjaman extends Controller
     
                 $data2 = [
                     'id_peminjaman'=> $id_peminjaman, 
-                    'id_supir' => $request->id_supir,
                 ];
                 $this->keranjang->finish($id_user, $data2);
 
@@ -403,7 +418,6 @@ class c_peminjaman extends Controller
 
                 $data2 = [
                     'id_peminjaman'=> $id_peminjaman, 
-                    'id_supir' => $request->id_supir,
                 ];
                 $this->keranjang->finish($id_user, $data2);
 
@@ -431,7 +445,6 @@ class c_peminjaman extends Controller
                $this->peminjaman->addData($data);
                 $data2 = [
                     'id_peminjaman'=> $id_peminjaman, 
-                    'id_supir' => $request->id_supir,
                 ];
                 $this->keranjang->finish($id_user, $data2);
 
@@ -514,6 +527,12 @@ class c_peminjaman extends Controller
                     'status_peminjaman' => "Pengajuan Diterima"
                 ];
                 $this->peminjaman->updatePeminjaman($id_peminjaman, $data);
+
+                $pengembalian = [
+                    'id_peminjaman' => $id_peminjaman,
+                    'status_pengembalian' => "Belum Dikembalikan",
+                   ];
+                   $this->pengembalian->addData($pengembalian);
             }
         }elseif($ubahStatus->jenis_peminjaman == "Barang,Ruangan,Kendaraan" OR $ubahStatus->jenis_peminjaman == "Barang,Kendaraan" OR $ubahStatus->jenis_peminjaman == "Ruangan,Kendaraan" OR $ubahStatus->jenis_peminjaman == "Kendaraan" OR $ubahStatus->jenis_peminjaman == "Barang,Ruangan,Kendaraan,Supir" OR $ubahStatus->jenis_peminjaman == "Barang,Kendaraan,Supir" OR $ubahStatus->jenis_peminjaman == "Ruangan,Kendaraan,Supir" OR $ubahStatus->jenis_peminjaman == "Kendaraan,Supir")
         {
@@ -523,9 +542,18 @@ class c_peminjaman extends Controller
                     'status_peminjaman' => "Pengajuan Diterima"
                 ];
                 $this->peminjaman->updatePeminjaman($id_peminjaman, $data);
+
+                $pengembalian = [
+                    'id_peminjaman' => $id_peminjaman,
+                    'status_pengembalian' => "Belum Dikembalikan",
+                   ];
+                   $this->pengembalian->addData($pengembalian);
             }
         }
+
     }   
+
+
 
     // Ajax
 
@@ -635,6 +663,27 @@ class c_peminjaman extends Controller
       
     }
 
+    public function tambahSupir(Request $request)
+    {
+        $id_user = $request->id_user;
+        $id_supir = $request->id_supir;
+        $checkKeranjangSupir = $this->keranjang->checkKeranjangSupir($id_supir, $id_user);
+        if($checkKeranjangSupir == 0)
+        {
+            $data =[
+                'id_user'=>$request->id_user,
+                'id_supir'=> $request->id_supir,
+                'jumlah'=> "1",
+            ];
+            $this->keranjang->addData($data);
+            $data = 1;
+            return $data;
+        }else
+         $data = 2;
+         return $data;
+      
+    }
+
     public function ubahJumlah(Request $request)
     {
         $id_keranjang = $request->id_keranjang;
@@ -665,27 +714,31 @@ class c_peminjaman extends Controller
 
     public function modalSupir(Request $request)
     {
+      
         $fromdate = date('Y-m-d H:i:s', strtotime($request->fromdate));
         $todate = date('Y-m-d H:i:s', strtotime($request->todate));
         // $check = $this->supir->checkSupir($fromdate, $todate);
         $driversWithoutActivities = DB::table('supir')
         ->leftJoin('aktivitas', 'supir.id_supir', '=', 'aktivitas.id_supir')
         ->where(function ($query) use ($fromdate,$todate) {
-            $query->whereNotBetween('aktivitas.mulai_aktivitas', [$fromdate,$todate])
-                  ->whereNotBetween('aktivitas.selesai_aktivitas', [$fromdate,$todate]);
+            $query->whereBetween('aktivitas.mulai_aktivitas', [$fromdate,$todate])
+                  ->whereBetween('aktivitas.selesai_aktivitas', [$fromdate,$todate]);
                 //   ->OrWhere(function ($query) use ($fromdate,$todate) {
                 //       $query->whereNot('aktivitas.mulai_aktivitas', '>=', $fromdate)
                 //             ->whereNot('aktivitas.selesai_aktivitas', '<=',$todate);
                 //   });
         })
         ->orWhereNull('aktivitas.id_supir')
-        ->select('supir.*')
+        // ->select('supir.*')
         ->distinct()
         ->get();
 
+        $ready = $this->aktivitas->readySupir($driversWithoutActivities);
+        dd($ready);
         $data = [
             'supir' => $driversWithoutActivities,
         ];
+   
     
         return view ('user.peminjaman.checkSupir', $data);
     // foreach ($driversWithoutActivities as $driver) {

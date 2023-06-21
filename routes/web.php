@@ -10,7 +10,7 @@ use App\Http\Controllers\c_history;
 use App\Http\Controllers\c_unit;
 use App\Http\Controllers\c_supir;
 use App\Http\Controllers\c_pengembalian;
-
+use App\Http\Controllers\c_laporan;
 
 /*
 |--------------------------------------------------------------------------
@@ -127,6 +127,7 @@ Route::controller(c_peminjaman::class)->middleware('auth')->group(function () {
         Route::get('listbarang', 'listBarang')->name('listbarang');
         Route::get('loaditem', 'loadItem')->name('loaditem');
         Route::get('tambahitem', 'tambahItem')->name('tambahitem');
+        Route::get('tambahsupir', 'tambahSupir')->name('tambahsupir');
         Route::get('ubahjumlah', 'ubahJumlah')->name('ubahjumlah');
         Route::get('hapusbarang/{id}', 'hapusBarang')->name('hapusbarang');
         Route::get('filteruser', 'filterUser')->name('filteruser');
@@ -164,6 +165,15 @@ Route::controller(c_history::class)->middleware('auth')->group(function () {
     // js
     Route::get('jshistory', 'history')->name('jshistory');
     Route::get('detailhistory/{id}', 'detailHistory')->name('detailhistory');
+});
+
+
+Route::controller(c_laporan::class)->middleware('auth')->group(function () {
+    Route::get('laporan', 'index')->name('laporan.index');
+
+    Route::get('profil/chartlahan', 'chartPanen')->name('profil.chartlahan');
+
+   
 });
 
 

@@ -54,9 +54,9 @@
                     <td>
                         <a href="#" onclick="modalEdit({{$data->id_supir}})" class="btn btn-warning btn-sm"><i class="fa fa-edit"></i></a>
                         @if($data->status_supir == "Aktif")
-                        <a href="#"  class="btn btn-danger btn-sm" onclick="ubahStatus_Supir({{$data->id_supir}})" id="status{{$data->id_supir}}" data-custom-value="Tidak Aktif"><i class="bi bi-x"></i> Nonaktifkan</a>
+                        <a href="#"  class="btn btn-danger btn-sm" onclick="modalNonaktif({{$data->id_supir}})"><i class="bi bi-x"></i> Nonaktifkan</a>
                         @elseif($data->status_supir == "Tidak Aktif")
-                        <a href="#"  class="btn btn-success btn-sm" onclick="ubahStatus_Supir({{$data->id_supir}})" id="status{{$data->id_supir}}" data-custom-value="Aktif"><i class="bi bi-check"></i> Aktifkan</a>
+                        <a href="#"  class="btn btn-success btn-sm" onclick="modalAktif({{$data->id_supir}})" ><i class="bi bi-check"></i> Aktifkan</a>
                         @endif
                     </td>
                 </tr>
@@ -126,15 +126,38 @@
         })
     }
 
-    function modalEdit(id_unit) 
+    function modalEdit(id_supir) 
     {
-        $.get("{{ url('supir/kelola/edit') }}/" + id_unit, {}, function(data, status){
+        $.get("{{ url('supir/kelola/edit') }}/" + id_supir, {}, function(data, status){
             $("#exampleModalCenterTitle2").html(`Edit Supir`)
             $("#page2").html(data);
             $("#modalFooter2").html(``)
             $("#exampleModalCenter2").modal('show');
         })
     }
+
+    function modalNonaktif(id_supir) 
+    {
+       
+            $("#exampleModalCenterTitle2").html(`Aktifkan Supir`)
+            $("#page2").html(`Apakah Anda Yakin Untuk Menonaktifkan Supir?`);
+            $("#modalFooter2").html(`
+            <a style="color:white" class="btn  btn-secondary" data-dismiss="modal">Tutup</a>
+            <a href="#" class="btn btn-danger" onclick="ubahStatus_Supir(`+id_supir+`)" id="status`+id_supir+`" data-custom-value="Tidak Aktif"><i class="bi bi-x"></i> Nonaktifkan</a>`)
+            $("#exampleModalCenter2").modal('show');
+    }
+
+    function modalAktif(id_supir) 
+    {
+       
+            $("#exampleModalCenterTitle2").html(`Aktifkan Supir`)
+            $("#page2").html(`Apakah Anda Yakin Untuk Aktifkan Supir?`);
+            $("#modalFooter2").html(` 
+            <a style="color:white" class="btn  btn-secondary" data-dismiss="modal">Tutup</a>
+            <a href="#"  class="btn btn-success" onclick="ubahStatus_Supir(`+id_supir+`)" id="status`+id_supir+`" data-custom-value="Aktif"><i class="bi bi-check"></i> Aktifkan</a>`)
+            $("#exampleModalCenter2").modal('show');
+    }
+
 
     function ubahStatus_Supir(id_supir) { 
         var status = $("#status"+id_supir).data("custom-value");

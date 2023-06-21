@@ -44,9 +44,9 @@
                     <td>{{$data->plat_kendaraan}}</td>
                     <td>{{$data->warna_kendaraan}}</td>
                     <td style="width:20%">
-                        <a href="{{route('dm.barang.detail', $data->id_item)}}" class="btn btn-primary"><i class="fa fa-eye"></i></a>
-                        <a href="{{route('dm.barang.edit', $data->id_item)}}" class="btn btn-warning"><i class="fa fa-edit"></i></a>
-                        <a href="#" data-toggle="modal" data-target="#delete{{$data->id_item}}" class="btn btn-danger"><i class="fa fa-trash"></i></a></td>
+                        <a href="{{route('dm.kendaraan.detail', $data->id_item)}}" class="btn btn-primary btn-sm"><i class="fa fa-eye"></i></a>
+                        <a href="{{route('dm.kendaraan.edit', $data->id_item)}}" class="btn btn-warning btn-sm"><i class="fa fa-edit"></i></a>
+                        <a href="#" data-toggle="modal" data-target="#delete{{$data->id_item}}" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></a></td>
                 </tr>
            @endforeach
             </tbody>

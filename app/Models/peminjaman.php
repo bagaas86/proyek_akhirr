@@ -10,6 +10,7 @@ class peminjaman extends Model
 {
     use HasFactory;
 
+
     public function addData($data)
     {
         DB::table('peminjaman')->insert($data);
@@ -61,27 +62,7 @@ class peminjaman extends Model
         ->get();
     }
 
-    public function tampilPengembalian($dari, $sampai)
-    {
-        return DB::table('peminjaman')
-        ->join('users', 'peminjaman.id_user','=','users.id')
-        ->orwhere('peminjaman.status_peminjaman', "Pengajuan Diterima")
-        ->orwhere('peminjaman.status_peminjaman', "Proses Pengembalian")
-        ->orwhere('peminjaman.status_peminjaman', "Pengembalian Ditolak")
-        ->orwhere('peminjaman.status_peminjaman', "Pengembalian Diterima")
-        ->whereBetween('waktu_awal', [$dari, $sampai])
-        ->whereBetween('waktu_akhir', [$dari, $sampai])->get();
-    }
-
-    public function tampilPengembalians($dari, $sampai, $filter)
-    {
-        return DB::table('peminjaman')
-        ->join('users', 'peminjaman.id_user','=','users.id')
-        ->where('peminjaman.jenis_peminjaman', 'LIKE', '%'.$filter.'%')
-        // ->where('peminjaman.jenis_peminjaman', $filter)
-        ->whereBetween('waktu_awal', [$dari, $sampai])
-        ->whereBetween('waktu_akhir', [$dari, $sampai])->get();
-    }
+  
 
     public function myPengembalian($id)
     {

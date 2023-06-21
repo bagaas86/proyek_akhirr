@@ -24,6 +24,11 @@ class keranjang extends Model
         return DB::table('keranjangs')->where('id_peminjaman', null)->where('id_item', $id_item)->where('id_user', $id_user)->count();
     }
 
+    public function checkKeranjangSupir($id_supir, $id_user)
+    {
+        return DB::table('keranjangs')->where('id_peminjaman', null)->where('id_supir', $id_supir)->where('id_user', $id_user)->count();
+    }
+
     public function checkBarang($id_peminjaman)
     {
         return DB::table('keranjangs')->join('items','keranjangs.id_item','=','items.id_item')->where('id_peminjaman', $id_peminjaman)->where("items.kategori_item", "Barang")->count();
@@ -58,6 +63,14 @@ class keranjang extends Model
         ->join('items','keranjangs.id_item','=','items.id_item')
         ->join('kendaraan', 'keranjangs.id_item','=','kendaraan.id_item')
         ->where('items.kategori_item','Kendaraan')->where('keranjangs.id_peminjaman',null)->where('keranjangs.id_user', $id)->get();
+    }
+
+    public function keranjangSupir($id)
+    {
+        return DB::table('keranjangs')
+        ->join('users','keranjangs.id_user','=','users.id')
+        ->join('supir','keranjangs.id_supir','=','supir.id_supir')
+        ->where('keranjangs.id_peminjaman',null)->where('keranjangs.id_user', $id)->get();
     }
 
     public function deleteData($id_keranjang)
@@ -147,6 +160,21 @@ class keranjang extends Model
         ->where("items.kategori_item", "Kendaraan")
         ->where("keranjangs.id_peminjaman", null)
         ->count();
+    }
+
+    public function checkSupir1($id)
+    {
+        return DB::table('keranjangs')->join('supir','keranjangs.id_supir','=','supir.id_supir')
+        ->where('id_user', $id)
+        ->where("keranjangs.id_peminjaman", null)
+        ->count();
+    }
+
+    public function sendAktivitas($id_peminjaman)
+    {
+        return DB::table('keranjangs')->join('supir','keranjangs.id_supir','=','supir.id_supir')
+        ->where("keranjangs.id_peminjaman", $id_peminjaman)
+        ->get();
     }
 
     public function detailSupir($id_peminjaman)

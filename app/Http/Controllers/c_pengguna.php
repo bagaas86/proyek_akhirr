@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Models\pengguna;
-use App\Models\unit;
 use DB;
 use File;
 
@@ -14,7 +13,6 @@ class c_pengguna extends Controller
     public function __construct()
     {
         $this->pengguna = new pengguna();
-        $this->unit = new unit();
        
     }
     public function index()

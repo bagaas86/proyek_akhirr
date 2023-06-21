@@ -15,6 +15,11 @@ class supir extends Model
     {
         return DB::table('supir')->where('status_supir', "Aktif")->get();
     }
+
+    public function getSupir()
+    {
+        return DB::table('supir')->get();
+    }
     
     // create
     public function addData($data)

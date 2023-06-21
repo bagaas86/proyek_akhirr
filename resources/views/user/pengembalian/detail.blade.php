@@ -1,15 +1,15 @@
 @php
-$waktu_pengajuan = date('d-m-Y h:i', strtotime($peminjaman->waktu_pengajuan));
-$waktu_awal = date('d-m-Y h:i', strtotime($peminjaman->waktu_awal));
-$waktu_akhir = date('d-m-Y h:i', strtotime($peminjaman->waktu_akhir));
+$waktu_pengajuan = date('d-m-Y h:i', strtotime($pengembalian->waktu_pengajuan));
+$waktu_awal = date('d-m-Y h:i', strtotime($pengembalian->waktu_awal));
+$waktu_akhir = date('d-m-Y h:i', strtotime($pengembalian->waktu_akhir));
 $diff = Carbon\Carbon::parse($waktu_awal)->diffInDays(Carbon\Carbon::parse($waktu_akhir))                      
 @endphp
 
     <a style="margin-left:1em" href="#" onclick="read()" class="btn btn-primary btn-sm"><i class="bi bi-arrow-left-square"></i></a>
-    @if($check <> 1)
-    <a style="margin-left:1em" href="#" onclick="lapor({{$peminjaman->id_peminjaman}})" class="btn btn-primary btn-sm">Lapor Pengembalian</a>
-    @elseif($peminjaman->status_peminjaman == "Pengembalian Ditolak")
-    <a style="margin-left:1em" href="#" onclick="laporUlang({{$peminjaman->id_peminjaman}})" class="btn btn-primary btn-sm">Lapor Ulang</a>
+    @if($pengembalian->status_pengembalian == "Belum Dikembalikan")
+    <a style="margin-left:1em" href="#" onclick="laporUlang({{$pengembalian->id_peminjaman}})" class="btn btn-primary btn-sm">Lapor Pengembalian</a>
+    @elseif($pengembalian->status_pengembalian == "Pengembalian Ditolak")
+    <a style="margin-left:1em" href="#" onclick="laporUlang({{$pengembalian->id_peminjaman}})" class="btn btn-primary btn-sm">Lapor Ulang</a>
     @endif
         <div class="col col-12 col-md-12">
             <div class="text-center title">
@@ -27,17 +27,17 @@ $diff = Carbon\Carbon::parse($waktu_awal)->diffInDays(Carbon\Carbon::parse($wakt
                                     <tr style="vertical-align:top;font-size:12px">
                                         <td style="width:40%;font-weight:bold">Nama PJ</td>
                                         <td style="width:5%">:</td>
-                                        <td style="width:50%">{{$peminjaman->nama_pj}}</td>  
+                                        <td style="width:50%">{{$pengembalian->nama_pj}}</td>  
                                     </tr>
                                     <tr style="vertical-align:top;font-size:12px">
                                         <td style="width:40%;font-weight:bold">No. Identitas</td>
                                         <td style="width:5%">:</td>
-                                        <td style="width:50%">{{$peminjaman->no_identitas}}</td>  
+                                        <td style="width:50%">{{$pengembalian->no_identitas}}</td>  
                                     </tr>
                                     <tr style="vertical-align:top;font-size:12px">
                                         <td style="width:40%;font-weight:bold">Nama Kegiatan</td>
                                         <td style="width:5%">:</td>
-                                        <td style="width:50%">{{$peminjaman->nama_kegiatan}}</td>  
+                                        <td style="width:50%">{{$pengembalian->nama_kegiatan}}</td>  
                                     </tr>
                                     <tr style="vertical-align:top;font-size:12px">
                                         <td style="width:40%;font-weight:bold">Waktu Pengajuan</td>
@@ -63,7 +63,7 @@ $diff = Carbon\Carbon::parse($waktu_awal)->diffInDays(Carbon\Carbon::parse($wakt
                                     <tr style="vertical-align:top;font-size:12px">
                                         <td style="width:40%;font-weight:bold">Status Pengembalian</td>
                                         <td style="width:5%">:</td>
-                                        <td style="width:50%">{{$peminjaman->status_peminjaman}}</td>  
+                                        <td style="width:50%">{{$pengembalian->status_peminjaman}}</td>  
                                     </tr>
                                 </table> 
                             </div>  
@@ -96,7 +96,7 @@ $diff = Carbon\Carbon::parse($waktu_awal)->diffInDays(Carbon\Carbon::parse($wakt
                     </div>
                 </div>
 
-                @if($check == 1)
+                @if($pengembalian->status_pengembalian == "Proses Pengembalian" OR $pengembalian->status_pengembalian == "Pengembalian Ditolak" OR $pengembalian->status_pengembalian == "Pengembalian Diterima")
                 <div class="col col-12 col-md-4">
                     <div class="card mt-2">
                         <div class="card-body">

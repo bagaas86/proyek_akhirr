@@ -7,11 +7,11 @@
               <div class="row">
                   <div class="card-body col col-10 col-md-10">
                   <h6>{{$data->nama_kegiatan}}                        
-                    @if($data->status_peminjaman =="Pengajuan Diterima")
+                    @if($data->status_pengembalian =="Belum Dikembalikan")
                     <span class="badge bg-warning">Belum Dikembalikan</span>
-                    @elseif($data->status_peminjaman == "Proses Pengembalian")
-                    <span class="badge bg-primary text-white">Menunggu Persetujuan Pengembalian</span>
-                    @elseif($data->status_peminjaman == "Pengembalian Ditolak")
+                    @elseif($data->status_pengembalian == "Proses Pengembalian")
+                    <span class="badge bg-primary text-white">Menunggu Persetujuan</span>
+                    @elseif($data->status_pengembalian == "Pengembalian Ditolak")
                     <span class="badge bg-danger">Pengembalian Ditolak</span>
                     @else
                     <span class="badge bg-success">Pengembalian Disetujui</span>

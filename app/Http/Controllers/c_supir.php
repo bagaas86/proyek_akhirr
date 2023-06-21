@@ -20,7 +20,7 @@ class c_supir extends Controller
     public function index()
     {
         $data = [
-            'supir' => $this->supir->allData(),
+            'supir' => $this->supir->getSupir(),
         ];
         return view('admin.supir.index', $data);
     }

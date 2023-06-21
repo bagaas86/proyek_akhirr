@@ -60,7 +60,7 @@
                 <a class="mobile-menu" id="mobile-collapse" href="#!"><span></span></a>
                 <a href="#!" class="b-brand">
                     <!-- ========   change your logo hear   ============ -->
-                    <img src="{{asset('templateBaru')}}/assets/img/logo.png" style="width:200px" alt="" class="logo">
+                    <img src="{{asset('template')}}/dist/assets/images/logoBMNPOLSUB.png" style="width:200px" alt="" class="logo">
                     <img src="{{asset('template')}}/dist/assets/images/logo-icon.png" alt="" class="logo-thumb">
                 </a>
                 <a href="#!" class="mob-toggler">

@@ -34,7 +34,7 @@
                 <div class="row">
                     <div class="col col-md-6 col-12">
                         <div class="form-group">
-                            <label for="nama_item">Nama Barang</label>
+                            <label for="nama_item">Nama Barang</label><small style="color:red;font-size:12px">*</small>
                             <input type="text" class="form-control @error('nama_item') is-invalid @enderror" id="nama_item" name="nama_item" placeholder="Masukkan Nama Barang" value="{{old('nama_item')}}">
                             @error('nama_item')
                             <span class="invalid-feedback" role="alert">
@@ -46,7 +46,7 @@
                     </div>
                     <div class="col col-md-4 col-12">
                         <div class="form-group">
-                            <label for="jumlah_barang">Lokasi Barang</label>
+                            <label for="jumlah_barang">Lokasi Barang</label><small style="color:red;font-size:12px">*</small>
                             <select name="lokasi_item" class="form-control @error('lokasi_item') is-invalid @enderror">
                                 <option value="" selected disabled>-- Pilih Lokasi Barang --</option>
                                 <option value="Kampus 1" @if(old('lokasi_item')== "Kampus 1") selected @endif>Kampus 1</option>
@@ -62,40 +62,41 @@
                     </div>
                     <div class="col col-md-2 col-12">
                         <div class="form-group">
-                            <label for="jumlah_item">Jumlah Barang</label>
+                            <label for="jumlah_item">Jumlah Barang</label><small style="color:red;font-size:12px">*</small>
                             <input type="number" class="form-control @error('jumlah_item') is-invalid @enderror" id="jumlah_item" name="jumlah_item" placeholder="Jumlah Barang" value="{{old('jumlah_item')}}">
+                            @error('jumlah_item')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
                         </div>
-                        @error('jumlah_item')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                        @enderror
+                     
                     </div>
                     <div class="col col-md-8 col-12">
                         <div class="form-group">
-                            <label for="deskripsi_item">Deskripsi Barang</label>
+                            <label for="deskripsi_item">Deskripsi Barang</label><small style="color:red;font-size:12px">*</small>
                             <textarea type="number" class="form-control @error('deskripsi_item') is-invalid @enderror" id="deskripsi_item" name="deskripsi_item" placeholder="Deskripsi Barang...">{{old('deskripsi_item')}}</textarea>
+                            @error('deskripsi_item')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
                         </div>
-                        @error('deskripsi_item')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                        @enderror
                     </div>
                     <div class="col col-md-4 col-12">
                         <div class="form-group">
-                            <label for="deskripsi_barang">Kondisi Barang</label>
+                            <label for="deskripsi_barang">Kondisi Barang</label><small style="color:red;font-size:12px">*</small>
                             <select name="kondisi_item" class="form-control @error('kondisi_item') is-invalid @enderror">
                                 <option value="" selected disabled>-- Pilih Kondisi Barang --</option>
                                 <option value="Ready" @if(old('kondisi_item') == "Ready") selected @endif>Baik</option>
                                 <option value="Rusak" @if(old('kondisi_item') == "Rusak") selected @endif>Rusak</option>
                             </select>
+                            @error('kondisi_item')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
                         </div>
-                        @error('kondisi_item')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                        @enderror
                     </div>
                     <div class="col col-md-6 col-12">
                         <div class="form-group">

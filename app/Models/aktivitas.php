@@ -38,4 +38,15 @@ class aktivitas extends Model
     {
         return DB::table('aktivitas')->where('id_aktivitas', $id_aktivitas)->update($data);
     }
+
+
+    public function readySupir($driversWithoutActivities)
+    {
+        $j = $driversWithoutActivities;
+            return DB::table('aktivitas')->when($j, function($queri, $j) {
+              foreach ($j as $data) {
+                    $queri->whereNot('id_supir', $data->id_supir);
+              }
+            })->get();
+    }
 }

@@ -98,6 +98,7 @@
 
 <!-- Apex Chart -->
 <script src="{{asset('template')}}/dist/assets/js/plugins/apexcharts.min.js"></script>
+{{-- <script src="{{asset('template')}}/dist/assets/js/pages/chart-apex.js"></script> --}}
 
 
 <!-- custom-chart js -->

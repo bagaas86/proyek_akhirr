@@ -63,11 +63,11 @@ class c_pengembalian extends Controller
         if($filter == "Semua")
         {
             $data =[
-                'pengembalian'=> $this->peminjaman->tampilPengembalian($dari, $sampai),
+                'pengembalian'=> $this->pengembalian->tampilPengembalian($dari, $sampai),
             ];
         }else{
             $data =[
-                'pengembalian'=> $this->peminjaman->tampilPengembalians($dari, $sampai, $filter),
+                'pengembalian'=> $this->pengembalian->tampilPengembalians($dari, $sampai, $filter),
             ];
         }
 
@@ -78,10 +78,10 @@ class c_pengembalian extends Controller
     {
         $status = $request->status;
         $data = [
-            'status_peminjaman'=> $status
+            'status_pengembalian'=> $status
         ];
       
-        $this->peminjaman->updatePeminjaman($id_peminjaman, $data);
+        $this->pengembalian->editData($id_peminjaman, $data);
     }
 
 
@@ -102,7 +102,7 @@ class c_pengembalian extends Controller
         $id = Auth::user()->id;
 
         $data =[
-            'pengembalian' => $this->peminjaman->myPengembalian($id),
+            'pengembalian' => $this->pengembalian->myPengembalian($id),
         ];
         return view('user.pengembalian.pengembalian', $data);
     }
@@ -111,24 +111,12 @@ class c_pengembalian extends Controller
     {
         $data =[
             'keranjang' => $this->keranjang->detailPeminjaman($id_peminjaman),
-            'peminjaman'=> $this->peminjaman->detailPeminjaman2($id_peminjaman),
             'check' => $this->pengembalian->checkPengembalian($id_peminjaman),
             'pengembalian'=> $this->pengembalian->detailPeminjaman($id_peminjaman),
         ];
-        
+
         return view('user.pengembalian.detail', $data);
     }
-
-    public function laporPengembalian($id_peminjaman)
-    {
-        $data =[
-            'keranjang' => $this->keranjang->detailPeminjaman($id_peminjaman),
-            'peminjaman'=> $this->peminjaman->detailPeminjaman2($id_peminjaman),
-            'supir' => $this->keranjang->detailPeminjamanSupir($id_peminjaman),
-        ];
-        return view('user.pengembalian.lapor', $data);
-    }
-
     public function simpangambar($data, $name)
     {
         $img = str_replace('data:image/png;base64,', '', $data);
@@ -139,28 +127,6 @@ class c_pengembalian extends Controller
         
         file_put_contents($file, $data);
         return $filename;
-    }
-
-    public function storePengembalian(Request $request)
-    {
-        date_default_timezone_set("Asia/Jakarta");
-        $now = date("Y-m-d H:i:s");
-        $name = "pengembalian_".$request->id_peminjaman.".png";
-        $filename = $this->simpangambar($request->bukti_pengembalian, $name);
-
-        $data = [
-            'id_peminjaman' => $request->id_peminjaman,
-            'deskripsi_pengembalian' => $request->deskripsi_pengembalian,
-            'bukti_pengembalian' => $filename,
-            'waktu_pengembalian' => $now,
-        ];
-        $this->pengembalian->addData($data);
-
-        $data_peminjaman = [
-            'status_peminjaman' => "Proses Pengembalian",
-        ];
-        $this->peminjaman->updatePeminjaman($request->id_peminjaman,$data_peminjaman);
-        return redirect()->route('pengembalian.lapor.index');
     }
 
     public function laporPengembalian_Ulang($id_peminjaman)
@@ -185,13 +151,9 @@ class c_pengembalian extends Controller
             'deskripsi_pengembalian' => $request->deskripsi_pengembalian,
             'bukti_pengembalian' => $filename,
             'waktu_pengembalian' => $now,
+            'status_pengembalian' => "Proses Pengembalian",
         ];
         $this->pengembalian->editData($request->id_peminjaman,$data);
-
-        $data_peminjaman = [
-            'status_peminjaman' => "Proses Pengembalian",
-        ];
-        $this->peminjaman->updatePeminjaman($request->id_peminjaman,$data_peminjaman);
         return redirect()->route('pengembalian.lapor.index');
     }
 

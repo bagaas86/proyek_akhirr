@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('bukti_pengembalian')->nullable();
             $table->string('waktu_pengembalian')->nullable();
             $table->string('status_pengembalian')->nullable();
+            $table->text('ulasan')->nullable();
         });
     }
 

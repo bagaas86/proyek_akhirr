@@ -8,7 +8,7 @@ $diff = Carbon\Carbon::parse($waktu_awal)->diffInDays(Carbon\Carbon::parse($wakt
     <a style="margin-left:1em" href="#" onclick="read()" class="btn btn-primary btn-sm"><i class="bi bi-arrow-left-square"></i></a>
         <div class="col col-12 col-md-12">
             <div class="text-center title">
-                <h3>Detail History Peminjaman Saya</h3>
+                <h3><b>DETAIL HISTORY PEMINJAMAN SAYA</b></h3>
             </div>
             <div class="row">
                 <div class="col col-12 col-md-8">
@@ -65,9 +65,10 @@ $diff = Carbon\Carbon::parse($waktu_awal)->diffInDays(Carbon\Carbon::parse($wakt
                             <div class="header" style="text-align: center">
                                 <h4>Persetujuan Peminjaman</h4>
                             </div>
+                            <center>
                             <div class="table">
                                 <div class="row">
-                                    @if($peminjaman->jenis_peminjaman == "Kendaraan" OR $peminjaman->jenis_peminjaman == "Barang,Kendaraan" OR $peminjaman->jenis_peminjaman == "Ruangan,Kendaraan" OR $peminjaman->jenis_peminjaman == "Barang,Ruangan,Kendaraan" OR $peminjaman->jenis_peminjaman == "Kendaraan,Supir")
+                                    @if($peminjaman->jenis_peminjaman == "Kendaraan" OR $peminjaman->jenis_peminjaman == "Barang,Kendaraan" OR $peminjaman->jenis_peminjaman == "Ruangan,Kendaraan" OR $peminjaman->jenis_peminjaman == "Barang,Ruangan,Kendaraan" OR $peminjaman->jenis_peminjaman == "Barang,Ruangan,Kendaraan,Supir" OR $peminjaman->jenis_peminjaman == "Barang,Kendaraan,Supir" OR $peminjaman->jenis_peminjaman == "Ruangan,Kendaraan,Supir" OR $peminjaman->jenis_peminjaman == "Kendaraan,Supir")
                                     <div class="col col-md-6">
                                         <div class="card-header h-50">
                                             <img src="{{asset('foto/dm/pengguna/default.png')}}" class="img-rounded" style="width:15%">
@@ -136,7 +137,7 @@ $diff = Carbon\Carbon::parse($waktu_awal)->diffInDays(Carbon\Carbon::parse($wakt
                                      
                                     </div>
                                 
-                                    @if($peminjaman->jenis_peminjaman == "Kendaraan,Supir")
+                                    @if($peminjaman->jenis_peminjaman == "Barang,Ruangan,Kendaraan,Supir" OR $peminjaman->jenis_peminjaman == "Barang,Kendaraan,Supir" OR $peminjaman->jenis_peminjaman == "Ruangan,Kendaraan,Supir" OR $peminjaman->jenis_peminjaman == "Kendaraan,Supir")
                                     <div class="col col-md-4">
                                         <div class="card-header h-50">
                                             <img src="{{asset('foto/dm/pengguna/default.png')}}" class="img-rounded" style="width:25%">
@@ -159,6 +160,7 @@ $diff = Carbon\Carbon::parse($waktu_awal)->diffInDays(Carbon\Carbon::parse($wakt
                                    
                                 </div>
                             </div>  
+                        </center>
                         </div>
                     </div>
                 </div>

@@ -116,6 +116,43 @@
          });
      }
 
+     function tambahsupir(id_supir){
+      var id_user = $("#id_user").val();
+      var x = $('#inputt').val();
+       var z = x+",Supir";
+      $.ajax({
+              type: "get",
+              url: "{{ url('tambahsupir') }}",
+              data: {
+              "id_supir": id_supir,
+              "id_user": id_user,
+              },
+              success: function(data, status) {
+              if(data == 1){
+                Swal.fire(
+                    {
+                        icon: 'success',
+                        title: 'Berhasil',
+                        text: 'Supirr Berhasil Ditambahkan!'
+                        }
+                    ),
+                    list();
+                    $('#outputt').val(z);
+              }if(data == 2){
+                Swal.fire(
+                    {
+                        icon: 'error',
+                        title: 'Gagal',
+                        text: 'Supirr Sudah Ada!'
+                        }
+                    )
+              }
+             
+              }
+             
+          });
+     }
+
 
      function tambahitem(id_item){
       var id_user = $("#id_user").val();
@@ -135,6 +172,7 @@
                         text: 'Item Berhasil Ditambahkan!'
                         }
                     )
+                
               }if(data == 2){
                 Swal.fire(
                     {
@@ -191,6 +229,7 @@
                 }
             });
         }
+        
     
     function modalDetail(id_item) {
         $.get("{{ url('detailbmn') }}/" + id_item, {}, function(data, status) {
@@ -199,6 +238,12 @@
             $("#exampleModalCenter").modal('show');
            })  
     }
+
+    function modalClose()
+    {
+        $(".close").click();
+    }
+
 
 
 

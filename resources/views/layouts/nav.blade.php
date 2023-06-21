@@ -72,16 +72,16 @@
                 <a href="{{route('dm.peminjaman.index')}}" class="nav-link "><span class="pcoded-micon"><i class="bi bi-cart-plus"></i></span><span class="pcoded-mtext">Peminjaman</span></a>
             </li>
             <li class="nav-item">
-                <a href="#" class="nav-link "><span class="pcoded-micon"><i class="fa fa-file"></i></span><span class="pcoded-mtext">Laporan</span></a>
+                <a href="{{route('laporan.index')}}" class="nav-link "><span class="pcoded-micon"><i class="fa fa-file"></i></span><span class="pcoded-mtext">Laporan</span></a>
             </li>
             @endif
 
             @if(Auth::user()->sebagai == "Pengelola Supir")
             <li class="nav-item">
-                <a href="{{route('supir.kelola.index')}}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-home"></i></span><span class="pcoded-mtext">Kelola Supir</span></a>
+                <a href="{{route('supir.kelola.index')}}" class="nav-link "><span class="pcoded-micon"><i class="bi bi-person-badge"></i></span><span class="pcoded-mtext">Kelola Supir</span></a>
             </li>
             <li class="nav-item">
-                <a href="{{route('supir.aktivitas.index')}}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-home"></i></span><span class="pcoded-mtext">Kelola Aktivitas Supir</span></a>
+                <a href="{{route('supir.aktivitas.index')}}" class="nav-link "><span class="pcoded-micon"><i class="bi bi-car-front-fill"></i></span><span class="pcoded-mtext">Kelola Aktivitas Supir</span></a>
             </li>
             <li class="nav-item">
                 <a href="{{route('peminjaman.pengajuan.index')}}" class="nav-link "><span class="pcoded-micon"><i class="bi bi-file-earmark-arrow-down"></i></span><span class="pcoded-mtext">Peminjaman Supir</span></a>

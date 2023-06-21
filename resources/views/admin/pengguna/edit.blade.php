@@ -69,7 +69,7 @@
                             {{-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> --}}
                         </div>
                     </div>
-                    <div class="col col-md-6 col-12">
+                    {{-- <div class="col col-md-6 col-12">
                         <div class="form-group">
                             <label for="level">Bagian/Unit</label>
                             <select name="id_unit" class="form-control @error('id_unit') is-invalid @enderror">
@@ -84,19 +84,16 @@
                             </span>
                             @enderror
                         </div>
-                    </div>
+                    </div> --}}
 
-                    <div class="col col-md-3 col-12">
+                    {{-- <div class="col col-md-3 col-12">
                         <div class="form-group">
                             <label for="level">Level Akun</label>
                             <select name="level" class="form-control @error('level') is-invalid @enderror"  id="sebagai" onchange="jabatan()" >
-                                {{-- <option value="" selected disabled>-- Pilih Level Akun --</option> --}}
-                                {{-- <option value="Wadir 1" @if(old('level')== "Wadir 1") selected @endif>Wakil Direktur 1</option>
-                                <option value="Wadir 2" @if(old('level')== "Wadir 2") selected @endif>Wakil Direktur 2</option>
-                                <option value="Kabag" @if(old('level')== "Kabag") selected @endif>Kepala Bagian</option> --}}
-                                <option value="Normal" @if($pengguna->level == "Normal") selected @endif>Normal</option>
-                                <option value="Dosen" @if($pengguna->level == "Dosen") selected @endif>Dosen/Staff</option>
-                                <option value="Ormawa" @if($pengguna->level == "Ormawa") selected @endif>Ormawa</option>
+                                <option value="" selected disabled>-- Pilih Level Akun --</option> 
+                                <option value="Wakil Direktur 1" @if(old('level')== "Wadir 1") selected @endif>Wakil Direktur 1</option>
+                                <option value="Wakil Direktur 2" @if(old('level')== "Wadir 2") selected @endif>Wakil Direktur 2</option>
+                                <option value="Kepala Bagian" @if(old('level')== "Kabag") selected @endif>Kepala Bagian</option>
                                 
                             </select>
                             @error('level')
@@ -105,7 +102,7 @@
                             </span>
                             @enderror
                         </div>
-                    </div>
+                    </div> --}}
                     
 
 

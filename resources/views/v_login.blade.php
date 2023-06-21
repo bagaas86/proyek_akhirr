@@ -50,11 +50,21 @@
                      @csrf
 						<div class="form-group mb-3">
 							<label class="floating-label" for="Email">Username</label>
-							<input type="text" class="form-control" id="Email" placeholder="" name="username">
+							<input type="text" class="form-control  @error('username') is-invalid @enderror" id="Email" placeholder="" name="username">
+							@error('username')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
 						</div>
 						<div class="form-group mb-4">
 							<label class="floating-label" for="Password">Password</label>
-							<input type="password" class="form-control" id="Password" placeholder="" name="password">
+							<input type="password" class="form-control  @error('password') is-invalid @enderror" id="Password" placeholder="" name="password">
+							@error('password')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
 						</div>
 						<button class="btn btn-block btn-primary mb-4">Masuk</button>
                   <form>

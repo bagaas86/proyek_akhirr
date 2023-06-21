@@ -1,9 +1,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/webcamjs/1.0.25/webcam.min.js"></script>
 <div class="container">
+    <a style="margin-left:1em" href="#" onclick="detail({{$peminjaman->id_peminjaman}})" class="btn btn-primary btn-sm"><i class="bi bi-arrow-left-square"></i></a>
     <div class="text-center title">
-        <h3>Pelaporan Ulang Pengembalian Peminjaman</h3>
+        <h3>Pelaporan Pengembalian Peminjaman</h3>
     </div>
-    
     <div class="row">
         <div class="col col-12 col-md-12">
             <div class="card mt-2">
@@ -42,12 +42,13 @@
                     <input type="text" class="form-control" placeholder="Deskripsi Pengembalian" id="deskripsi_pengembalian" name="deskripsi_pengembalian" value="{{old('deskripsi_pengembalian')}}" required>
                 </div>
                 <div class="col col-12 col-md-12 mt-2">
-                        <a href="#" class="btn btn-block btn-warning" onclick="fotokegiatan()">
+                        <a href="#" id="klik" class="btn btn-block btn-warning" onclick="fotokegiatan()">
                           <i class="bi bi-camera"></i> Bukti</a>
+                          <span id="alertBukti" style="color:red;display:none;">Bukti Wajib Diisi</span>
                 </div>
                 <div class="col col-12 col-md-12 mt-2">
                 <div id="hasil_buktiPengembalian" class="overflow-hidden d-flex justify-content-center mt-3"></div>
-                <input type="text" id="bukti_pengembalian" name="bukti_pengembalian" hidden>
+                <input type="text" id="bukti_pengembalian" name="bukti_pengembalian" hidden required>
                 </div>
             <div style="text-align: center">
                 <button class="btn btn-block btn-primary mt-4">Kirim Pelaporan Pengembalian</button>
@@ -114,6 +115,7 @@
         $("#bukti_pengembalian").val(dataURL);
         //'<img src="'+dataURL+'"/>'
         $(".close").click();
+        $('#klik').html('<i class="bi bi-check" aria-hidden="true"> Foto Berhasil Diunggah');
       }
 
       function vidOff() {

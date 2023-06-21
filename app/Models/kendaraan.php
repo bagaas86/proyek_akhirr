@@ -17,4 +17,8 @@ class kendaraan extends Model
     {
         return DB::table('kendaraan')->where('id_item', $id_item)->first();
     }
+    public function editData($id_item, $data_kendaraan)
+    {
+        return DB::table('kendaraan')->where('id_item', $id_item)->update($data_kendaraan);
+    }
 }

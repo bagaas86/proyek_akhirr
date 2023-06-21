@@ -5,12 +5,12 @@
         <div class="row align-items-center">
             <div class="col-md-12">
                 <div class="page-header-title">
-                    <h5 class="m-b-10">Edit Data Master Pengguna</h5>
+                    <h5 class="m-b-10">Create Data Master Kendaraan</h5>
                 </div>
                 <ul class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{{url('dashboard')}}"><i class="feather icon-home"></i></a></li>
-                    <li class="breadcrumb-item"><a href="{{URL::previous()}}">Data Master Pengguna</a></li>
-                    <li class="breadcrumb-item"><a href="#!">Edit Data Master Pengguna</a></li>
+                    <li class="breadcrumb-item"><a href="{{URL::previous()}}">Data Master Kendaraan</a></li>
+                    <li class="breadcrumb-item"><a href="#!">Create Data Master Kendaraan</a></li>
                 </ul>
             </div>
         </div>
@@ -25,33 +25,73 @@
 <div class="card">
     <div class="xformdm">
         <center>
-            <h5>Edit Data Master Barang</h5>
+            <h5>Edit Data Master Kendaraan</h5>
         </center>
         <div class="form mt-4">
-            <form enctype="multipart/form-data" action="{{route('dm.pengguna.update', $pengguna->id)}}" method="POST" >
+            <form enctype="multipart/form-data" action="{{route('dm.kendaraan.update', $kendaraan->id_item)}}" method="POST" >
                 @csrf
+                <input type="text" value="{{$kendaraan->id_item}}" name="id_item" hidden>
                 <div class="row">
                     <div class="col col-md-7 col-12">
                         <div class="form-group">
-                            <label for="nama_barang">Nama Pengguna</label>
-                            <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" placeholder="Masukkan Nama Pengguna" value="{{old('name', $pengguna->name)}}">
-                            @error('name')
+                            <label for="nama_barang">Merk Kendaraan</label>
+                            <input type="text" class="form-control @error('nama_item') is-invalid @enderror" id="nama_item" name="nama_item" placeholder="Masukkan Merk Kendaraan" value="{{$kendaraan->nama_item}}">
+                            @error('nama_item')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>
                             @enderror
-                            {{-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> --}}
                         </div>
                     </div>
                     <div class="col col-md-5 col-12">
                         <div class="form-group">
-                            <label for="level">Level Akun</label>
-                            <select name="level" class="form-control @error('level') is-invalid @enderror">
-                                <option value="" selected disabled>-- Pilih Level Akun --</option>
-                                <option value="Dosen" @if($pengguna->level == "Dosen") selected @endif>Dosen</option>
-                                <option value="Ormawa" @if($pengguna->level == "Ormawa") selected @endif>Ormawa</option>
+                            <label for="level">Tipe Kendaraan</label>
+                            <select name="tipe_kendaraan" class="form-control @error('tipe_kendaraan') is-invalid @enderror">
+                                <option value="" selected disabled>-- Pilih Tipe Kendaraan --</option>
+                                <option value="Kendaraan Bermotor Roda 4" @if($kendaraan->tipe_kendaraan == "Kendaraan Bermotor Roda 4") selected @endif>Kendaraan Bermotor Roda 4</option>
+                                <option value="Kendaraan Bermotor Roda 2" @if($kendaraan->tipe_kendaraan == "Kendaraan Bermotor Roda 2") selected @endif>Kendaraan Bermotor Roda 2</option>
+                                
                             </select>
-                            @error('level')
+                            @error('tipe_kendaraan')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="col col-md-7 col-12">
+                        <div class="form-group">
+                            <label for="nama_barang">Warna Kendaraan</label>
+                            <input type="text" class="form-control @error('warna_kendaraan') is-invalid @enderror" id="warna_kendaraan" name="warna_kendaraan" placeholder="Masukkan Warna Kendaraan" value="{{$kendaraan->warna_kendaraan}}">
+                            @error('warna_kendaraan')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
+                            {{-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> --}}
+                        </div>
+                    </div>
+                    <div class="col col-md-2 col-12">
+                        <div class="form-group">
+                            <label for="password">Plat Nomor</label>
+                            <input type="text" class="form-control @error('plat_kendaraan') is-invalid @enderror" id="plat_kendaraan" name="plat_kendaraan" placeholder="Masukkan Plat Nomor Kendaraan" value="{{$kendaraan->plat_kendaraan}}">
+                            @error('plat_kendaraan')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
+                            {{-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> --}}
+                        </div>
+                    </div>
+                    <div class="col col-md-3 col-12">
+                        <div class="form-group">
+                            <label for="level">Kondisi Kendaraan</label>
+                            <select name="kondisi_item" class="form-control @error('kondisi_item') is-invalid @enderror">
+                                <option value="" selected disabled>-- Pilih Kondisi Kendaraan --</option>
+                                <option value="Ready" @if($kendaraan->kondisi_item == "Ready") selected @endif>Siap Digunakan</option>
+                                <option value="Rusak" @if($kendaraan->kondisi_item == "Rusak") selected @endif>Rusak</option>
+                            </select>
+                            @error('kondisi_item')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>
@@ -60,9 +100,9 @@
                     </div>
                     <div class="col col-md-12 col-12">
                         <div class="form-group">
-                            <label for="nama_barang">Username</label>
-                            <input type="text" class="form-control @error('username') is-invalid @enderror" id="username" name="username" placeholder="Masukkan Username" value="{{$pengguna->username}}" readonly>
-                            @error('username')
+                            <label for="password">Informasi Tambahan</label>
+                            <input type="text" class="form-control @error('deskripsi_item') is-invalid @enderror" id="deskripsi_item" name="deskripsi_item" placeholder="Masukkan Informasi Tambahan" value="{{$kendaraan->deskripsi_item}}">
+                            @error('deskripsi_item')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>
@@ -72,28 +112,16 @@
                     </div>
                     <div class="col col-md-12 col-12">
                         <div class="form-group">
-                            <label for="password">Password Baru</label>
-                            <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password" placeholder="Masukkan Password Jika Ingin Memperbarui">
-                            @error('password')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                            @enderror
-                            {{-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> --}}
+                            <label for="foto">Foto Kendaraan</label>
+                            <img id="imageResult" style="width:25%"  class="img-thumbnail btn" src="{{asset('foto/dm/kendaraan/'. $kendaraan->foto_item)}}">
+                            <a class="btn btn-secondary" onclick="gantifoto()"><i class="fa fa-edit"></i>Ubah</a>
+                            <input onchange="readURL(this);" type="file" id="filefotobarang" name="foto_item" hidden>
                         </div>
-                    </div>
-                    <div class="col col-md-6 col-12">
-                        <div class="form-group">
-                        <label for="foto">Foto Profil</label>
-                        </div>
-                        <img id="imageResult" style="width:50%" class="img-thumbnail btn" src="{{asset('foto/dm/pengguna/'. $pengguna->foto)}}">
-                        <a class="btn btn-secondary" style="color:white" onclick="gantifoto()"><i class="fa fa-pencil"></i> Ubah</a>
-                        <input onchange="readURL(this);" type="file" id="filefotopengguna" name="foto" hidden>
                     </div>
                 </div>
               
                 <div class="text-center">
-                    <button type="submit" class="btn btn-primary">Simpan</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
                   </div>
             </form>
         </div>
@@ -103,20 +131,20 @@
 @endsection
 
 <script>
-     function gantifoto(){
-    $("#filefotopengguna").click();
+    function gantifoto(){
+   $("#filefotobarang").click();
+    }
+ function readURL(input) {
+     if (input.files && input.files[0]) {
+         var reader = new FileReader();
+ 
+         reader.onload = function (e) {
+             $('#imageResult')
+                 .attr('src', e.target.result);
+         };
+         reader.readAsDataURL(input.files[0]);
      }
-  function readURL(input) {
-      if (input.files && input.files[0]) {
-          var reader = new FileReader();
-  
-          reader.onload = function (e) {
-              $('#imageResult')
-                  .attr('src', e.target.result);
-          };
-          reader.readAsDataURL(input.files[0]);
-      }
-  }
+ }
 </script>
 
 

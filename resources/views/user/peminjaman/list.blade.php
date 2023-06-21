@@ -78,6 +78,31 @@
             </div>
             @endif
 
+            @if($check4 <> null)
+            <div class="card mt-2">
+                <div class="card-body">
+                    <div class="header" style="text-align: center">
+                        <h4>Supir</h4>
+                    </div>
+                    <div class="2">
+                        <table>
+                            <tr style="border-bottom:1pt solid rgb(205, 205, 205);">
+                                <th style="width:40%">Nama Supir</th> 
+                                <th style="width:10%;padding-left:30px;">Aksi</th>   
+                            </tr>
+                            @foreach($supir as $data_supir)
+                            <tr style="height:50px">
+                                <td style="width:40%">{{$data_supir->nama_supir}}</td>
+                                <td style="width:10%;padding-left:30px;"><a href="#" class="btn btn-danger btn-sm" id="delete{{$data_supir->id_keranjang}}" onclick="hapusBarang({{$data_supir->id_keranjang}})"> <i class="bi bi-trash"></i> </a></td>
+                            </tr>
+                            @endforeach
+                        </table> 
+                    </div>
+                      
+                </div>
+            </div>
+            @endif
+
             @if($check1 == null AND $check2 == null AND $check3 == null)
             <div class="col-md-12">
 				<div class="card">
@@ -96,7 +121,15 @@
 
      <div class="col col-12 col-md-12 mt-2" style="display:none">
         <label for=""><b>Jenis Peminjaman</b><small style="color:red">*</small></label>
-        @if($check1 <> null AND $check2 <> null AND $check3 <> null)
+        @if($check1 <> null AND $check2 <> null AND $check3 <> null AND $check4 <> null)
+        <input type="text" id="inputt" name="jenis_peminjaman" class="form-control" readonly value="Barang,Ruangan,Kendaraan,Supir">
+        @elseif($check1 <> null AND $check3 <> null AND $check4 <> null)
+        <input type="text" id="inputt" name="jenis_peminjaman" class="form-control" readonly value="Barang,Kendaraan,Supir">
+        @elseif($check2 <> null AND $check3 <> null AND $check4 <> null)
+        <input type="text" id="inputt" name="jenis_peminjaman" class="form-control" readonly value="Ruangan,Kendaraan,Supir">
+        @elseif($check3 <> null AND $check4 <> null)
+        <input type="text" id="inputt" name="jenis_peminjaman" class="form-control" readonly value="Kendaraan,Supir">
+        @elseif($check1 <> null AND $check2 <> null AND $check3 <> null)
         <input type="text" id="inputt" name="jenis_peminjaman" class="form-control" readonly value="Barang,Ruangan,Kendaraan">
         @elseif($check1 <> null AND $check2 <> null)
         <input type="text" id="inputt" name="jenis_peminjaman" class="form-control" readonly value="Barang,Ruangan">
@@ -198,7 +231,7 @@
     function jenisPeminjaman(){
        var x = $('#inputt').val();
        $('#outputt').val(x);
-       if(x == "Barang,Kendaraan" || x == "Ruangan,Kendaraan" || x == "Kendaraan" )
+       if ( x == "Barang,Ruangan,Kendaraan" || x == "Barang,Ruangan,Kendaraan,Supir" || x == "Barang,Kendaraan,Supir" || x == "Ruangan,Kendaraan,Supir" || x == "Kendaraan,Supir" || x == "Barang,Kendaraan" || x == "Ruangan,Kendaraan" || x == "Kendaraan" )
        {
         document.getElementById("ceksupir").style.display="block";
        }

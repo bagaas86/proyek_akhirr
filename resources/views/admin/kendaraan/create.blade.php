@@ -35,7 +35,7 @@
                     <div class="col col-md-7 col-12">
                         <div class="form-group">
                             <label for="nama_barang">Merk Kendaraan</label>
-                            <input type="text" class="form-control @error('name') is-invalid @enderror" id="nama_item" name="nama_item" placeholder="Masukkan Merk Kendaraan" value="{{old('nama_item')}}">
+                            <input type="text" class="form-control @error('nama_item') is-invalid @enderror" id="nama_item" name="nama_item" placeholder="Masukkan Merk Kendaraan" value="{{old('nama_item')}}">
                             @error('nama_item')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>

@@ -26,7 +26,6 @@ return new class extends Migration
             $table->string('waktu_pengajuan')->nullable();
             $table->string('waktu_awal');
             $table->string('waktu_akhir');
-            $table->text('feedback')->nullable();
             $table->string('status_peminjaman')->nullable();
         
         });

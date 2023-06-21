@@ -45,20 +45,21 @@ class c_kendaraan extends Controller
 
     public function store(Request $request)
     {
-        // $request->validate([
-        //     'nama_item' => 'required|unique:items,nama_item',
-        //     'lokasi_item' => 'required',
-        //     'jumlah_item' => 'required',
-        //     'kondisi_item' => 'required',
-        //     'deskripsi_item' => 'required',
-        // ],[
-        //     'nama_item.required'=>'Nama Barang Wajib terisi',
-        //     'nama_item.unique'=>'Nama Barang Sudah Ada',
-        //     'lokasi_item.required'=>'Lokasi Barang Wajib terisi',
-        //     'jumlah_item.required'=>'Jumlah Barang wajib terisi',
-        //     'kondisi_item.required'=>'Kondisi Barang Wajib terisi',
-        //     'deskripsi_item.required'=>'Deskripsi Barang wajib terisi',
-        // ]);
+        $request->validate([
+            'nama_item' => 'required',
+            'tipe_kendaraan' => 'required',
+            'warna_kendaraan' => 'required',
+            'plat_kendaraan' => 'required',
+            'kondisi_item' => 'required',
+            'deskripsi_item' => 'required',
+        ],[
+            'nama_item.required'=>'Merk Kendaraan Wajib terisi',
+            'tipe_kendaraan.required'=>'Tipe Kendaraan Wajib terisi',
+            'warna_kendaraan.required'=>'Warna Kendaraan wajib terisi',
+            'plat_kendaraan.required'=>'Plat Kendaraan Wajib terisi',
+            'kondisi_item.required'=>'Kondisi Kendaraan wajib terisi',
+            'deskripsi_item.required' => 'Deskripsi Kendaraan wajib terisi',
+        ]);
 
             if($request->foto_item <> null){
                 $file = $request->foto_item;
@@ -111,4 +112,51 @@ class c_kendaraan extends Controller
             return redirect()->route('dm.kendaraan.index')->with('success','Kendaraan berhasil ditambahkan');
        
     }
+
+    public function edit($id_item)
+    {
+        $data =[
+            'kendaraan'=> $this->item->detailKendaraan($id_item)
+        ];
+        return view ('admin.kendaraan.edit', $data);
+    }
+
+    public function update(Request $request)
+    {
+        $request->validate([
+            'nama_item' => 'required',
+            'deskripsi_item' => 'required',
+        ],[
+            'nama_item.required'=>'Nama Kendaraan Wajib terisi',
+            'deskripsi_item.required'=>'Deskripsi Kendaraan wajib terisi',
+        ]);
+    
+   
+    // Ganti Foto
+    if($request->foto_item <> null){
+        $file = $request->foto_item;
+        $filename= $file->extension();   
+        $file->move(public_path('foto/dm/kendaraan'),$filename);
+        $data['foto_item'] = $filename;
+        $this->item->editData($request->id_item, $data);
+    }
+
+    //field form
+    $data = [
+        'nama_item'=> $request->nama_item,
+        'deskripsi_item'=> $request->deskripsi_item,
+    ];
+    $this->item->editData($request->id_item, $data);
+
+    $data_kendaraan = [
+        'merk_kendaraan'=> $request->nama_item,
+        'tipe_kendaraan'=> $request->tipe_kendaraan,
+        'plat_kendaraan'=> $request->plat_kendaraan,
+        'warna_kendaraan'=> $request->warna_kendaraan,
+    ];
+    $this->kendaraan->editData($request->id_item, $data_kendaraan);
+
+    return redirect()->route('dm.kendaraan.index')->with('success','Barang berhasil diupdate.');
+    }
+    
 }

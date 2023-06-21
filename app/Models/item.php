@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\DB;
 class item extends Model
 {
     use HasFactory;
+   
+
     public function allData()
     {
         return DB::table('items')->get();
@@ -79,6 +81,11 @@ class item extends Model
         return DB::table('items')->where('item_tersedia','<', '1')
         ->where('kategori_item', $filterUser)
         ->get();
+    }
+
+    public function detailKendaraan($id_item)
+    {
+        return DB::table('items')->join('kendaraan','items.id_item','=','kendaraan.id_item')->where('kendaraan.id_item', $id_item)->first();
     }
 
     public function checkItemNull()

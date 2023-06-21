@@ -5,7 +5,7 @@
                 <h6>{{$data->nama_supir}}</h6>
             </div>
             <div class="col col-md-2 col-3">
-                <a href="#" onclick="pilihSupir({{$data->id_supir}})" class="btn btn-sm btn-primary">Pilih</a>
+                <a href="#" onclick="tambahsupir({{$data->id_supir}})" class="btn btn-sm btn-primary">Pilih</a>
             </div>
         </div>
     

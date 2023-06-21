@@ -1,5 +1,5 @@
 <div class="text-center title">
-    <h3>History Peminjaman Saya</h3>
+    <h3><b>HISTORY PEMINJAMAN SAYA</b></h3>
   </div>
   <div class="col col-12 col-md-6 mx-auto">
      @foreach($history as $data)
@@ -9,11 +9,11 @@
                   <div class="card-body col col-2 col-md-2">
                         <div class="status">
                             @if($data->staff_umum =="Proses" OR $data->wakil_direktur_1 == "Proses" OR $data->wakil_direktur_2 == "Proses" OR $data->kepala_bagian == "Proses")
-                            <i class="badge bg-warning">Menunggu...</i>
+                            <span class="text-white badge bg-warning">Menunggu...</span>
                             @elseif($data->staff_umum =="Ditolak" OR $data->wakil_direktur_1 == "Ditolak" OR $data->wakil_direktur_2 == "Ditolak" OR $data->kepala_bagian == "Ditolak")
-                            <i class="badge bg-danger">Ditolak...</i>
+                            <span class="text-white badge bg-danger">Ditolak...</span>
                             @else
-                            <i class="badge bg-success">Disetujui</i>
+                            <span class="text-white badge bg-success">Disetujui</span>
                             @endif
                         </div>
                   </div>
@@ -21,11 +21,11 @@
                   <div class="card-body col col-2 col-md-2">
                     <div class="status">
                         @if($data->staff_umum =="Proses" OR $data->wakil_direktur_1 == "Proses" OR $data->wakil_direktur_2 == "Proses" OR $data->kepala_bagian == "Proses" OR $data->pengelola_supir == "Proses")
-                        <i class="badge bg-warning">Menunggu...</i>
+                        <span class="text-white badge bg-warning">Menunggu...</span>
                         @elseif($data->staff_umum =="Ditolak" OR $data->wakil_direktur_1 == "Ditolak" OR $data->wakil_direktur_2 == "Ditolak" OR $data->kepala_bagian == "Ditolak" OR $data->pengelola_supir == "Ditolak")
-                        <i class="badge bg-danger">Ditolak...</i>
+                        <span class="text-white badge bg-danger">Ditolak...</span>
                         @else
-                        <i class="badge bg-success">Disetujui</i>
+                        <span class="text-white badge bg-success">Disetujui</span>
                         @endif
                     </div>
                  </div>
@@ -33,11 +33,11 @@
                   <div class="card-body col col-2 col-md-2">
                       <div class="status">
                           @if($data->staff_umum =="Proses" OR $data->kepala_bagian == "Proses")
-                          <i class="badge bg-warning">Menunggu</i>
+                          <span class="text-white badge bg-warning">Menunggu</span>
                           @elseif($data->staff_umum =="Ditolak" OR $data->kepala_bagian == "Ditolak")
-                          <i class="badge bg-danger">Ditolak...</i>
+                          <span class="text-white badge bg-danger">Ditolak...</span>
                           @else
-                          <i class="badge bg-warning">Disetujui</i>
+                          <span class="text-white badge bg-success">Disetujui</span>
                           @endif
                       </div>
                   </div>

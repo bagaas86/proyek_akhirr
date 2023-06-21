@@ -91,12 +91,13 @@
                                 <option value="Ready" @if($item->kondisi_item == "Ready") selected @endif>Baik</option>
                                 <option value="Rusak" @if($item->kondisi_item == "Rusak") selected @endif>Rusak</option>
                             </select>
-                        </div>
-                        @error('kondisi_item')
+                            @error('kondisi_item')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
                         </span>
                         @enderror
+                        </div>
+                        
                     </div>
                     <div class="col col-md-6 col-12">
                         <div class="form-group">

@@ -23,7 +23,7 @@
         @php
         $jenis_peminjaman = explode("," , $data->jenis_peminjaman);
         date_default_timezone_set("Asia/Jakarta");
-        // $waktu_pengembalian = date('d M Y h:i', strtotime($data->waktu_pengembalian));
+        $waktu_pengembalian = date('d M Y h:i', strtotime($data->waktu_pengembalian));
         $waktu_awal = date('d M Y ', strtotime($data->waktu_awal));
         $waktu_akhir = date('d M Y ', strtotime($data->waktu_akhir));
         @endphp
@@ -31,27 +31,33 @@
             <td></td>
             <td style="width:15%">{{$data->nama_pj}}</td>
             <td style="width:10%">{{$data->sebagai}}</td>
-            <td>1</td>
+            <td>
+                @if($waktu_pengembalian <> "01 Jan 1970 07:00")
+                {{$waktu_pengembalian}}
+                @else 
+                -
+                @endif
+            </td>
             <td>{{$waktu_awal}} s/d {{$waktu_akhir}}</td>
             <td> @foreach($jenis_peminjaman as $badge)
                 <span class="badge badge-secondary">{{ $badge }}</span>
                 @endforeach
             </td>
             <td>
-              @if($data->status_peminjaman == "Pengajuan Diterima")
+              @if($data->status_pengembalian == "Belum Dikembalikan")
               <span class="badge badge-warning">Belum Dikembalikan</span>
-              @elseif($data->status_peminjaman == "Proses Pengembalian")
+              @elseif($data->status_pengembalian == "Proses Pengembalian")
               <span class="badge badge-primary">Pelaporan</span>
-              @elseif($data->status_peminjaman == "Pengembalian Ditolak")
+              @elseif($data->status_pengembalian == "Pengembalian Ditolak")
               <span class="badge badge-danger">Pengembalian Ditolak</span>
               @else
               <span class="badge badge-success">Pengembalian Disetujui</span>
               @endif
             </td>
             <td style="width:20%">
-                @if($data->status_peminjaman == "Proses Pengembalian")
+                @if($data->status_pengembalian == "Proses Pengembalian")
                 <a href="#" onclick="modalDetail({{$data->id_peminjaman}})" class="btn btn-primary btn-sm mt-2">Konfirmasi Pelaporan Pengembalian</a>
-                @elseif($data->status_peminjaman == "Pengembalian Ditolak")
+                @elseif($data->status_pengembalian == "Pengembalian Ditolak")
                 <a href="#" onclick="modalDetail2({{$data->id_peminjaman}})" class="btn btn-primary btn-sm mt-2">Lihat</a>
                 @endif
             </td>
