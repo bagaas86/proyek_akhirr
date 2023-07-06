@@ -10,12 +10,14 @@ use App\Models\item;
 use App\Models\keranjang;
 use App\Models\kendaraan;
 use App\Models\approval;
-// use App\Models\supir;
 use App\Models\aktivitas;
+use App\Models\pengguna;
+use App\Models\supir;
 use DB;
 use Auth;
 use PDF;
 use Carbon\Carbon;
+use Twilio\Rest\Client;
 
 class c_peminjaman extends Controller
 {
@@ -27,8 +29,9 @@ class c_peminjaman extends Controller
         $this->keranjang = new keranjang();
         $this->kendaraan = new kendaraan();
         $this->approval = new approval();
-        // $this->supir = new supir();
+        $this->pengguna = new pengguna();
         $this->aktivitas = new aktivitas();
+        $this->supir = new supir();
     }
 
     // Controller Admin
@@ -129,6 +132,30 @@ class c_peminjaman extends Controller
             // ];
             // $this->beritaacara->editData($id, $beritaRuangan);
             return response()->download($pdf);
+        }elseif($request->cek == "Kendaraan")
+        {
+            $data = [
+                'keranjang' => $this->keranjang->detailPeminjamanKendaraan($id_peminjaman),
+                'peminjaman'=> $this->peminjaman->detailPeminjaman2($id_peminjaman),
+                'from'=> $from, 
+                'to'=> $to, 
+                'selisih' => $diffInDays+1,
+                'jam_mulai'=> $jam_mulai,
+                'jam_selesai'=> $jam_selesai,
+                'tanggal' => $tanggal,
+                'bulan' => $bulan,
+                'tahun' => $tahun,
+                'now'=> $now,
+            ];
+              $pdf = PDF::loadView('admin.beritaacara.kendaraan', $data)->setPaper('legal', 'potrait');
+          
+              $path = public_path('pdf/');
+              $fileNameBarang =  'ba_barang'.'-'.$getData->nama_kegiatan.'-'.$now.'.'.'pdf' ;
+              $pdf->save($path . '/' . $fileNameBarang);
+              $pdf = public_path('pdf/'.$fileNameBarang);
+              return response()->download($pdf);
+                // return view('admin.beritaacara.kendaraan',$data);
+        
         }       
       
     }
@@ -209,26 +236,27 @@ class c_peminjaman extends Controller
     public function ubahStatusTolak(Request $request, $id_peminjaman)
     {
         $status = $request->status;
+        $alasan = $request->alasan;
 
         if($status == "Staff Umum"){
             $data = [
-                'staff_umum'=> "Ditolak",
+                'staff_umum'=> $alasan,
             ];
         }elseif($status == "Kepala Bagian"){
             $data = [
-                'kepala_bagian'=> "Ditolak",
+                'kepala_bagian'=> $alasan,
             ];
         }elseif($status == "Wakil Direktur 1"){
             $data = [
-                'wakil_direktur_1'=> "Ditolak",
+                'wakil_direktur_1'=> $alasan,
             ];
         }elseif($status == "Wakil Direktur 2"){
             $data = [
-                'wakil_direktur_2'=> "Ditolak",
+                'wakil_direktur_2'=> $alasan,
             ];
         }elseif($status == "Pengelola Supir"){
             $data = [
-                'pengelola_supir'=> "Ditolak",
+                'pengelola_supir'=> $alasan,
             ];
         }
         $this->approval->updatePeminjaman($id_peminjaman, $data);
@@ -302,6 +330,9 @@ class c_peminjaman extends Controller
 
     public function kirimPengajuan(Request $request)
     {
+       $nama_pj = $request->nama_pj;
+       $jenis_peminjaman = $request->jenis_peminjaman;
+
        $sebagai = Auth::user()->sebagai;
        $id_user = Auth::user()->id;
        $checkidPeminjaman = $this->peminjaman->checkID();
@@ -321,23 +352,23 @@ class c_peminjaman extends Controller
             'fromdate' => 'required',
             'todate' => 'required',
             'nama_pj' => 'required',
-            'foto_identitas' => 'required|mimes:jpg,png,bmp',
+            // 'foto_identitas' => 'mimes:jpg,png,bmp',
             'nama_kegiatan' => 'required',
-            'no_hp' => 'required',
+            // 'no_hp' => 'required',
         ],[
             'fromdate.required'=>'Waktu Awal Peminjaman Wajib terisi',
             'todate.required'=>'Waktu Akhir Peminjaman Wajib terisi',
             'nama_pj.required'=>'Nama Penanggung Jawab Wajib Terisi',
-            'no_hp.required'=>'Nomor Handphone Wajib terisi',
-            'foto_identitas.required'=>'Foto Identitas wajib terisi',
-            'foto_identitas.mimes'=>'Foto Identitas Harus berformat jpg, png, atau bmp',
+            // 'no_hp.required'=>'Nomor Handphone Wajib terisi',
+            // 'foto_identitas.required'=>'Foto Identitas wajib terisi',
+            // 'foto_identitas.mimes'=>'Foto Identitas Harus berformat jpg, png, atau bmp',
         ]);
 
        if($checkidPeminjaman == null){
          if($request->surat_pengajuan == null)
          {
-            $filename_pengenal = $request->nama_pj."-".$tahun.'.'. $file_pengenal->extension();   
-            $file_pengenal->move(public_path('foto/peminjaman/foto_identitas'),$filename_pengenal);
+            // $filename_pengenal = $request->nama_pj."-".$tahun.'.'. $file_pengenal->extension();   
+            // $file_pengenal->move(public_path('foto/peminjaman/foto_identitas'),$filename_pengenal);
             $data = [
                 'id_peminjaman'=> $id_peminjaman,
                 'id_user'=> $id_user,
@@ -347,7 +378,7 @@ class c_peminjaman extends Controller
                 'nama_pj'=> $request->nama_pj,
                 'no_identitas'=> $request->no_identitas,
                 'no_hp'=> $request->no_hp,
-                'foto_identitas'=> $filename_pengenal,
+                // 'foto_identitas'=> $filename_pengenal,
                 'nama_kegiatan'=> $request->nama_kegiatan,
                 'surat_pengajuan'=> "Tanpa Surat Pengajuan",
                 'status_peminjaman' => "Proses",
@@ -363,8 +394,8 @@ class c_peminjaman extends Controller
             $approval = $this->approval($sebagai, $id_peminjaman);
 
          }else{
-            $filename_pengenal = $request->nama_pj."-".$tahun.'.'. $file_pengenal->extension();   
-            $file_pengenal->move(public_path('foto/peminjaman/foto_identitas'),$filename_pengenal);
+            // $filename_pengenal = $request->nama_pj."-".$tahun.'.'. $file_pengenal->extension();   
+            // $file_pengenal->move(public_path('foto/peminjaman/foto_identitas'),$filename_pengenal);
             $filename_surat_pengajuan = $request->nama_kegiatan."-".$tahun.'.'. $file_surat_pengajuan->extension();   
             $file_surat_pengajuan->move(public_path('foto/peminjaman/surat_pengajuan'),$filename_surat_pengajuan);
                 $data = [
@@ -376,7 +407,7 @@ class c_peminjaman extends Controller
                     'nama_pj'=> $request->nama_pj,
                     'no_identitas'=> $request->no_identitas,
                     'no_hp'=> $request->no_hp,
-                    'foto_identitas'=> $filename_pengenal,
+                    // 'foto_identitas'=> $filename_pengenal,
                     'nama_kegiatan'=> $request->nama_kegiatan,
                     'surat_pengajuan'=> $filename_surat_pengajuan,
                     'status_peminjaman' => "Proses",
@@ -397,8 +428,8 @@ class c_peminjaman extends Controller
         $maxIdPeminjaman = $this->peminjaman->maxIdPeminjaman();
         $id_peminjaman = $maxIdPeminjaman + 1;
         if($request->surat_pengajuan == null){
-            $filename_pengenal = $request->nama_pj."-".$tahun.'.'. $file_pengenal->extension();   
-            $file_pengenal->move(public_path('foto/peminjaman/foto_identitas'),$filename_pengenal);
+            // $filename_pengenal = $request->nama_pj."-".$tahun.'.'. $file_pengenal->extension();   
+            // $file_pengenal->move(public_path('foto/peminjaman/foto_identitas'),$filename_pengenal);
             $data = [
                 'id_peminjaman' => $id_peminjaman,
                 'id_user'=> $id_user,
@@ -408,7 +439,7 @@ class c_peminjaman extends Controller
                 'nama_pj'=> $request->nama_pj,
                 'no_identitas'=> $request->no_identitas,
                 'no_hp'=> $request->no_hp,
-                'foto_identitas'=> $filename_pengenal,
+                // 'foto_identitas'=> $filename_pengenal,
                 'nama_kegiatan'=> $request->nama_kegiatan,
                 'surat_pengajuan'=> "Tanpa Surat Pengajuan",
                 'status_peminjaman' => "Proses",
@@ -423,8 +454,8 @@ class c_peminjaman extends Controller
 
                 $approval = $this->approval($sebagai, $id_peminjaman);
         }else{
-            $filename_pengenal = $request->nama_pj."-".$tahun.'.'. $file_pengenal->extension();   
-            $file_pengenal->move(public_path('foto/peminjaman/foto_identitas'),$filename_pengenal);
+            // $filename_pengenal = $request->nama_pj."-".$tahun.'.'. $file_pengenal->extension();   
+            // $file_pengenal->move(public_path('foto/peminjaman/foto_identitas'),$filename_pengenal);
             $filename_surat_pengajuan = $request->nama_kegiatan."-".$tahun.'.'. $file_surat_pengajuan->extension();   
             $file_surat_pengajuan->move(public_path('foto/peminjaman/surat_pengajuan'),$filename_surat_pengajuan);
             $data = [
@@ -436,7 +467,7 @@ class c_peminjaman extends Controller
                 'nama_pj'=> $request->nama_pj,
                 'no_identitas'=> $request->no_identitas,
                 'no_hp'=> $request->no_hp,
-                'foto_identitas'=> $filename_pengenal,
+                // 'foto_identitas'=> $filename_pengenal,
                 'nama_kegiatan'=> $request->nama_kegiatan,
                 'surat_pengajuan'=> $filename_surat_pengajuan,
                 'status_peminjaman' => "Proses",
@@ -449,11 +480,79 @@ class c_peminjaman extends Controller
                 $this->keranjang->finish($id_user, $data2);
 
                 $approval = $this->approval($sebagai, $id_peminjaman);
+               
         }
-       
+
+        // if($jenis_peminjaman == "Barang")
+        // {
+        //     $getNumber1 = $this->pengguna->whatsapp1();
+        //     foreach ($getNumber1 as $value) {
+        //         $this->sendWhatsapp($value->no_telepon);
+        //     }
+        // }
+      
+              
+            $whatsapp = $this->sendWhatsapp($nama_pj, $jenis_peminjaman, $fromdate, $todate);
            return redirect()->route('dashboard')->with('success','Pengajuan Berhasil Dikirim');
        }
     }
+
+    // public function sendWhatsapp($no_telepon)
+    // {
+    //     $token = '8233afc8ddee3653c46b286b9ee646bdad641929648039544f80a615edc2cd25';
+    //     $whatsapp_phone = $no_telepon;
+    //     $message = "1 Peminjaman Masuk! \n\n Perlu persetujuan anda";
+
+    //     $url = "https://sendtalk-api.taptalk.io/api/v1/message/send_whatsapp";
+
+    //     $data = [
+    //         "phone" => $whatsapp_phone,
+    //         "messageType" => "text",
+    //         "body" => $message
+    //     ];
+
+    //     $curl = curl_init($url);
+    //     curl_setopt($curl, CURLOPT_URL, $url);
+    //     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+
+    //     $headers = array(
+    //         "API-Key: $token",
+    //         "Content-Type: application/json",
+    //     );
+    //     curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+
+    //     //for debug only!
+    //     curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+    //     curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+    //     curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
+
+    //     curl_exec($curl);
+    //     curl_close($curl);
+
+
+
+    // }
+
+    public function sendWhatsapp($nama_pj, $jenis_peminjaman, $fromdate, $todate) 
+    {
+        $sid = "ACfb515188f6c67480edd55995f3f41f0c";
+        $token = "641b842a6c43d1c3a08f589abb69b355";
+        $twilioNumber = "+14155238886";
+        $recipientNumber = "+6282249025414";
+        $client = new Client($sid, $token);
+    
+        $message = $client->messages->create(
+            'whatsapp:' . $recipientNumber, // Replace with the recipient's WhatsApp number
+            [
+                'from' => 'whatsapp:' . $twilioNumber,
+                'body' => 'Hallo, 1 Pengajuan Peminjaman '.$jenis_peminjaman." dilakukan oleh".$nama_pj."\n\n Ayo masuk ke sistem untuk menyetujui peminjaman ini.", // Replace with your desired message
+            ]
+        );
+    
+        return response()->json(['message' => 'WhatsApp message sent successfully.', 'messageSid' => $message->sid]);
+    }
+
+    
 
     public function approval($sebagai, $id_peminjaman)
     {
@@ -668,11 +767,12 @@ class c_peminjaman extends Controller
         $id_user = $request->id_user;
         $id_supir = $request->id_supir;
         $checkKeranjangSupir = $this->keranjang->checkKeranjangSupir($id_supir, $id_user);
+
         if($checkKeranjangSupir == 0)
         {
             $data =[
                 'id_user'=>$request->id_user,
-                'id_supir'=> $request->id_supir,
+                'id_supir'=> $id_supir,
                 'jumlah'=> "1",
             ];
             $this->keranjang->addData($data);
@@ -718,26 +818,27 @@ class c_peminjaman extends Controller
         $fromdate = date('Y-m-d H:i:s', strtotime($request->fromdate));
         $todate = date('Y-m-d H:i:s', strtotime($request->todate));
         // $check = $this->supir->checkSupir($fromdate, $todate);
+        
+        
         $driversWithoutActivities = DB::table('supir')
         ->leftJoin('aktivitas', 'supir.id_supir', '=', 'aktivitas.id_supir')
         ->where(function ($query) use ($fromdate,$todate) {
-            $query->whereBetween('aktivitas.mulai_aktivitas', [$fromdate,$todate])
-                  ->whereBetween('aktivitas.selesai_aktivitas', [$fromdate,$todate]);
-                //   ->OrWhere(function ($query) use ($fromdate,$todate) {
-                //       $query->whereNot('aktivitas.mulai_aktivitas', '>=', $fromdate)
-                //             ->whereNot('aktivitas.selesai_aktivitas', '<=',$todate);
-                //   });
+            $query->whereNotBetween('aktivitas.mulai_aktivitas', [$fromdate,$todate])
+                  ->whereNotBetween('aktivitas.selesai_aktivitas', [$fromdate,$todate]);
         })
         ->orWhereNull('aktivitas.id_supir')
-        // ->select('supir.*')
+        ->select('supir.*')
         ->distinct()
         ->get();
 
+        // $driversWithoutActivities = DB::table('supir')->get();
+
+
         $ready = $this->aktivitas->readySupir($driversWithoutActivities);
-        dd($ready);
         $data = [
             'supir' => $driversWithoutActivities,
         ];
+
    
     
         return view ('user.peminjaman.checkSupir', $data);

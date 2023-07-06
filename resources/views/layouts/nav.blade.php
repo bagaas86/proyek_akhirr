@@ -69,9 +69,6 @@
             @endif
             @if(Auth::user()->sebagai == "Staff Umum" OR Auth::user()->sebagai == "Kabag")
             <li class="nav-item">
-                <a href="{{route('dm.peminjaman.index')}}" class="nav-link "><span class="pcoded-micon"><i class="bi bi-cart-plus"></i></span><span class="pcoded-mtext">Peminjaman</span></a>
-            </li>
-            <li class="nav-item">
                 <a href="{{route('laporan.index')}}" class="nav-link "><span class="pcoded-micon"><i class="fa fa-file"></i></span><span class="pcoded-mtext">Laporan</span></a>
             </li>
             @endif
@@ -87,6 +84,10 @@
                 <a href="{{route('peminjaman.pengajuan.index')}}" class="nav-link "><span class="pcoded-micon"><i class="bi bi-file-earmark-arrow-down"></i></span><span class="pcoded-mtext">Peminjaman Supir</span></a>
             </li>
             @endif
+
+            <li class="nav-item">
+                <a href="{{route('dm.peminjaman.index')}}" class="nav-link "><span class="pcoded-micon"><i class="bi bi-cart-plus"></i></span><span class="pcoded-mtext">Mode Peminjam</span></a>
+            </li>
         </ul>
     </div>
 </div>

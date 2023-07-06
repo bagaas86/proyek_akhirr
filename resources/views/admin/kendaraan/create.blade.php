@@ -25,7 +25,7 @@
 <div class="card">
     <div class="xformdm">
         <center>
-            <h5>Tambah Data Master Kendaraan</h5>
+            <h5>Tambah Data Master Kendaraan</h5> {{$id_item}}
         </center>
         <div class="form mt-4">
             <form enctype="multipart/form-data" action="{{route('dm.kendaraan.store')}}" method="POST" >

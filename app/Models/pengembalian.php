@@ -68,6 +68,7 @@ class pengembalian extends Model
         return DB::table('pengembalian')
         ->join('peminjaman','pengembalian.id_peminjaman','=','peminjaman.id_peminjaman')
         ->join('users', 'peminjaman.id_user','=','users.id')
+        ->where('peminjaman.id_user', $id)
         ->orderBy('waktu_pengajuan', 'DESC')->get();
     }
 

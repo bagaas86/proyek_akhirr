@@ -16,7 +16,7 @@ $diff = Carbon\Carbon::parse($waktu_awal)->diffInDays(Carbon\Carbon::parse($wakt
                 <h3>Detail Pengembalian</h3>
             </div>
             <div class="row">
-                <div class="col col-12 col-md-8">
+                <div class="col col-12 col-md-12">
                     <div class="card mt-2">
                         <div class="card-body">
                             <div class="header" style="text-align: center">
@@ -70,14 +70,14 @@ $diff = Carbon\Carbon::parse($waktu_awal)->diffInDays(Carbon\Carbon::parse($wakt
                         </div>
                     </div>
                 </div>
-                <div class="col col-12 col-md-4">
+                <div class="col col-12 col-md-12">
                     <div class="card mt-2">
                         <div class="card-body">
                             <div class="header" style="text-align: center">
                                 <h4>List Pengajuan Peminjaman</h4>
                             </div>
                             <div  style="text-align:left" class="table">
-                                <table>
+                                <table class="table table-responsive">
                                     <tr style="border-bottom:1pt solid rgb(205, 205, 205);">
                                         <th style="width:70%">Nama Item</th>
                                         <th style="width:10%">Kategori</th>
@@ -97,7 +97,7 @@ $diff = Carbon\Carbon::parse($waktu_awal)->diffInDays(Carbon\Carbon::parse($wakt
                 </div>
 
                 @if($pengembalian->status_pengembalian == "Proses Pengembalian" OR $pengembalian->status_pengembalian == "Pengembalian Ditolak" OR $pengembalian->status_pengembalian == "Pengembalian Diterima")
-                <div class="col col-12 col-md-4">
+                <div class="col col-12 col-md-8">
                     <div class="card mt-2">
                         <div class="card-body">
                             <div class="header" style="text-align: center">
@@ -120,6 +120,28 @@ $diff = Carbon\Carbon::parse($waktu_awal)->diffInDays(Carbon\Carbon::parse($wakt
                         </div>
                     </div>
                 </div>
+                @if($pengembalian->status_pengembalian == "Pengembalian Ditolak")
+                <div class="col col-12 col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col col-2 col-md-2">
+                                    <img src="{{asset('foto/dm/pengguna/default.png')}}" class="img-rounded" style="width:100%">
+                                </div>
+                                <div class="col col-10 col-md-10">
+                                    Bagian Umum
+                                </div>
+
+                            </div>
+                            <div style="height:10em;margin-top:2em;">
+                                <label for="">Balasan:</label>
+                                <h6 style="font-size:12px">{{$pengembalian->alasan}}</h6>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                @endif
                 @endif
 
             

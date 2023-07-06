@@ -20,8 +20,9 @@ return new class extends Migration
             $table->string('username')->unique();
             $table->string('no_identitas')->nullable();
             $table->string('sebagai');
-            // $table->string('sebagai');
+            $table->string('keterangan')->nullable();
             $table->string('foto')->nullable();
+            $table->string('no_telepon')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('status_user')->nullable();

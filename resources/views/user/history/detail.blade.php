@@ -8,10 +8,10 @@ $diff = Carbon\Carbon::parse($waktu_awal)->diffInDays(Carbon\Carbon::parse($wakt
     <a style="margin-left:1em" href="#" onclick="read()" class="btn btn-primary btn-sm"><i class="bi bi-arrow-left-square"></i></a>
         <div class="col col-12 col-md-12">
             <div class="text-center title">
-                <h3><b>DETAIL HISTORY PEMINJAMAN SAYA</b></h3>
+                <h4><b>DETAIL HISTORY PEMINJAMAN SAYA</b></h4>
             </div>
             <div class="row">
-                <div class="col col-12 col-md-8">
+                <div class="col col-12 col-md-12">
                     <div class="card mt-2">
                         <div class="card-body">
                             <div class="header" style="text-align: center">
@@ -69,88 +69,123 @@ $diff = Carbon\Carbon::parse($waktu_awal)->diffInDays(Carbon\Carbon::parse($wakt
                             <div class="table">
                                 <div class="row">
                                     @if($peminjaman->jenis_peminjaman == "Kendaraan" OR $peminjaman->jenis_peminjaman == "Barang,Kendaraan" OR $peminjaman->jenis_peminjaman == "Ruangan,Kendaraan" OR $peminjaman->jenis_peminjaman == "Barang,Ruangan,Kendaraan" OR $peminjaman->jenis_peminjaman == "Barang,Ruangan,Kendaraan,Supir" OR $peminjaman->jenis_peminjaman == "Barang,Kendaraan,Supir" OR $peminjaman->jenis_peminjaman == "Ruangan,Kendaraan,Supir" OR $peminjaman->jenis_peminjaman == "Kendaraan,Supir")
-                                    <div class="col col-md-6">
+                                    <div class="col col-12 col-md-4">
                                         <div class="card-header h-50">
-                                            <img src="{{asset('foto/dm/pengguna/default.png')}}" class="img-rounded" style="width:15%">
-                                            <h6>Wakil Direktur I</h6>
+                                            <img src="{{asset('foto/dm/pengguna/default.png')}}" class="img-rounded" style="width:25%">
+                                            @if($approval->wakil_direktur_1 == "Proses" )
+                                            <i class="bi bi-hourglass-top" style="font-size:18px;color:yellow"></i>
+                                            @elseif($approval->wakil_direktur_1 == "Disetujui")
+                                            <i class="bi bi-check" style="font-size:28px;color:green"></i>
+                                            @elseif($approval->wakil_direktur_1 <> "Proses" AND $approval->wakil_direktur_1 <> "Disetujui" )
+                                            <i class="bi bi-x" style="font-size:28px;color:red"></i>
+                                            @endif
+                                            <h6 style="font-size:12px">Wakil Direktur 1</h6>
+                                        
                                         </div>
                                         <div class="card-body">
-                                            @if($approval->wakil_direktur_1 == "Proses" )
-                                            <i class="bi bi-hourglass-top" style="font-size:36px;color:yellow"></i>
-                                            @elseif($approval->wakil_direktur_1 == "Ditolak")
-                                            <i class="bi bi-x" style="font-size:36px;color:red"></i>
-                                            @elseif($approval->wakil_direktur_1 == "Disetujui")
-                                            <i class="bi bi-check" style="font-size:36px;color:green"></i>
+                                           
+                                            @if($approval->wakil_direktur_1 <> "Proses" AND $approval->wakil_direktur_1 <> "Disetujui" )
+                                            <label for="">Alasan Penolakan</label>
+                                            <textarea type="text" class="form-control" readonly>{{$approval->wakil_direktur_1}}</textarea>
                                             @endif
+                                         
                                         </div>
                                      
                                     </div>
                             
-                                    <div class="col col-md-6">
+                                    <div class="col col-12 col-md-4">
                                         <div class="card-header h-50">
-                                            <img src="{{asset('foto/dm/pengguna/default.png')}}" class="img-rounded" style="width:15%">
-                                            <h6>Wakil Direktur II</h6>
+                                            <img src="{{asset('foto/dm/pengguna/default.png')}}" class="img-rounded" style="width:25%">
+                                            @if($approval->wakil_direktur_2 == "Proses" )
+                                            <i class="bi bi-hourglass-top" style="font-size:18px;color:yellow"></i>
+                                            @elseif($approval->wakil_direktur_2 == "Disetujui")
+                                            <i class="bi bi-check" style="font-size:28px;color:green"></i>
+                                            @elseif($approval->wakil_direktur_2 <> "Proses" AND $approval->wakil_direktur_2 <> "Disetujui" )
+                                            <i class="bi bi-x" style="font-size:28px;color:red"></i>
+                                            @endif
+                                            <h6 style="font-size:12px">Wakil Direktur 2</h6>
+                                        
                                         </div>
                                         <div class="card-body">
-                                            @if($approval->wakil_direktur_2 == "Proses" )
-                                            <i class="bi bi-hourglass-top" style="font-size:36px;color:yellow"></i>
-                                            @elseif($approval->wakil_direktur_2 == "Ditolak")
-                                            <i class="bi bi-x" style="font-size:36px;color:red"></i>
-                                            @elseif($approval->wakil_direktur_2 == "Disetujui")
-                                            <i class="bi bi-check" style="font-size:36px;color:green"></i>
+                                           
+                                            @if($approval->wakil_direktur_2 <> "Proses" AND $approval->wakil_direktur_2 <> "Disetujui" )
+                                            <label for="">Alasan Penolakan</label>
+                                            <textarea type="text" class="form-control" readonly>{{$approval->wakil_direktur_2}}</textarea>
                                             @endif
+                                         
                                         </div>
                                      
                                     </div>
                                 
                                     @endif
-                                    <div class="col col-md-4">
+                                    <div class="col col-12 col-md-4">
                                         <div class="card-header h-50">
                                             <img src="{{asset('foto/dm/pengguna/default.png')}}" class="img-rounded" style="width:25%">
-                                            <h6>Kepala Bagian</h6>
+                                            @if($approval->kepala_bagian == "Proses" )
+                                            <i class="bi bi-hourglass-top" style="font-size:18px;color:yellow"></i>
+                                            @elseif($approval->kepala_bagian == "Disetujui")
+                                            <i class="bi bi-check" style="font-size:28px;color:green"></i>
+                                            @elseif($approval->kepala_bagian <> "Proses" AND $approval->kepala_bagian <> "Disetujui" )
+                                            <i class="bi bi-x" style="font-size:28px;color:red"></i>
+                                            @endif
+                                            <h6 style="font-size:12px">Kepala Bagian</h6>
+                                        
                                         </div>
                                         <div class="card-body">
-                                            @if($approval->kepala_bagian == "Proses" )
-                                            <i class="bi bi-hourglass-top" style="font-size:36px;color:yellow"></i>
-                                            @elseif($approval->kepala_bagian == "Ditolak")
-                                            <i class="bi bi-x" style="font-size:36px;color:red"></i>
-                                            @elseif($approval->kepala_bagian == "Disetujui")
-                                            <i class="bi bi-check" style="font-size:36px;color:green"></i>
+                                           
+                                            @if($approval->kepala_bagian <> "Proses" AND $approval->kepala_bagian <> "Disetujui" )
+                                            <label for="">Alasan Penolakan</label>
+                                            <textarea type="text" class="form-control" readonly>{{$approval->kepala_bagian}}</textarea>
                                             @endif
+                                         
                                         </div>
                                      
                                     </div>
-                                    <div class="col col-md-4">
+                                    <div class="col col-12 col-md-4">
                                         <div class="card-header h-50">
                                             <img src="{{asset('foto/dm/pengguna/default.png')}}" class="img-rounded" style="width:25%">
-                                            <h6>Staff Umum</h6>
+                                            @if($approval->staff_umum == "Proses" )
+                                            <i class="bi bi-hourglass-top" style="font-size:18px;color:yellow"></i>
+                                            @elseif($approval->staff_umum == "Disetujui")
+                                            <i class="bi bi-check" style="font-size:28px;color:green"></i>
+                                            @elseif($approval->staff_umum <> "Proses" AND $approval->staff_umum <> "Disetujui" )
+                                            <i class="bi bi-x" style="font-size:28px;color:red"></i>
+                                            @endif
+                                            <h6 style="font-size:12px">Staff Umum</h6>
+                                        
                                         </div>
                                         <div class="card-body">
-                                            @if($approval->staff_umum == "Proses" )
-                                            <i class="bi bi-hourglass-top" style="font-size:36px;color:yellow"></i>
-                                            @elseif($approval->staff_umum == "Ditolak")
-                                            <i class="bi bi-x" style="font-size:36px;color:red"></i>
-                                            @elseif($approval->staff_umum == "Disetujui")
-                                            <i class="bi bi-check" style="font-size:36px;color:green"></i>
+                                           
+                                            @if($approval->staff_umum <> "Proses" AND $approval->staff_umum <> "Disetujui" )
+                                            <label for="">Alasan Penolakan</label>
+                                            <textarea type="text" class="form-control" readonly>{{$approval->staff_umum}}</textarea>
                                             @endif
+                                         
                                         </div>
                                      
                                     </div>
                                 
                                     @if($peminjaman->jenis_peminjaman == "Barang,Ruangan,Kendaraan,Supir" OR $peminjaman->jenis_peminjaman == "Barang,Kendaraan,Supir" OR $peminjaman->jenis_peminjaman == "Ruangan,Kendaraan,Supir" OR $peminjaman->jenis_peminjaman == "Kendaraan,Supir")
-                                    <div class="col col-md-4">
+                                    <div class="col col-12 col-md-4">
                                         <div class="card-header h-50">
                                             <img src="{{asset('foto/dm/pengguna/default.png')}}" class="img-rounded" style="width:25%">
-                                            <h6>Pengelola Supir</h6>
+                                            @if($approval->pengelola_supir == "Proses" )
+                                            <i class="bi bi-hourglass-top" style="font-size:18px;color:yellow"></i>
+                                            @elseif($approval->pengelola_supir == "Disetujui")
+                                            <i class="bi bi-check" style="font-size:28px;color:green"></i>
+                                            @elseif($approval->pengelola_supir <> "Proses" AND $approval->pengelola_supir <> "Disetujui" )
+                                            <i class="bi bi-x" style="font-size:28px;color:red"></i>
+                                            @endif
+                                            <h6 style="font-size:12px">Pengelola Supir</h6>
+                                        
                                         </div>
                                         <div class="card-body">
-                                            @if($approval->pengelola_supir == "Proses" )
-                                            <i class="bi bi-hourglass-top" style="font-size:36px;color:yellow"></i>
-                                            @elseif($approval->pengelola_supir == "Ditolak")
-                                            <i class="bi bi-x" style="font-size:36px;color:red"></i>
-                                            @elseif($approval->pengelola_supir == "Disetujui")
-                                            <i class="bi bi-check" style="font-size:36px;color:green"></i>
+                                           
+                                            @if($approval->pengelola_supir <> "Proses" AND $approval->pengelola_supir <> "Disetujui" )
+                                            <label for="">Alasan Penolakan</label>
+                                            <textarea type="text" class="form-control" readonly>{{$approval->pengelola_supir}}</textarea>
                                             @endif
+                                         
                                         </div>
                                      
                                     </div>
@@ -165,24 +200,22 @@ $diff = Carbon\Carbon::parse($waktu_awal)->diffInDays(Carbon\Carbon::parse($wakt
                     </div>
                 </div>
 
-                <div class="col col-12 col-md-4">
+                <div class="col col-12 col-md-6">
                     <div class="card mt-2">
                         <div class="card-body">
                             <div class="header" style="text-align: center">
                                 <h4>List Pengajuan Peminjaman</h4>
                             </div>
-                            <div  style="text-align:left" class="table">
-                                <table>
+                            <div class="table">
+                                <table style="width:100%">
                                     <tr style="border-bottom:1pt solid rgb(205, 205, 205);">
-                                        <th style="width:70%">Nama Item</th>
-                                        <th style="width:10%">Kategori</th>
-                                        <th style="width:15%">Jumlah</th>  
+                                        <th style="width:50%;font-size:12px">Nama Item</th>
+                                        <th style="width:10%;font-size:12px">Jumlah</th>  
                                     </tr>
                                     @foreach($keranjang as $data)
                                     <tr style="height:30px">
-                                        <td style="width:70%">{{$data->nama_item}}</td>
-                                        <td style="width:70%">{{$data->kategori_item}}</td>
-                                        <td style="width:15%">{{$data->jumlah}}</td>
+                                        <td style="width:50%;font-size:12px">{{$data->nama_item}}</td>
+                                        <td style="width:10%;font-size:12px">{{$data->jumlah}}</td>
                                     </tr>
                                     @endforeach
                                 </table> 
@@ -191,11 +224,11 @@ $diff = Carbon\Carbon::parse($waktu_awal)->diffInDays(Carbon\Carbon::parse($wakt
                             <div  style="text-align:left" class="table">
                                 <table>
                                     <tr style="border-bottom:1pt solid rgb(205, 205, 205);">
-                                        <th style="width:70%">Nama Supir</th>
+                                        <th style="width:50%;font-size:12px">Nama Supir</th>
                                     </tr>
                                     @foreach($supir as $data)
                                     <tr style="height:30px">
-                                        <td style="width:70%">{{$data->nama_supir}}</td>
+                                        <td style="width:50%;font-size:12px">{{$data->nama_supir}}</td>
                                     </tr>
                                     @endforeach
                                 </table> 

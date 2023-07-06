@@ -59,7 +59,7 @@
                     </td>
                     <td style="width:20%">{{$data->lokasi_item}}</td>
                     <td>
-                        <a href="{{route('dm.barang.detail', $data->id_item)}}" class="btn btn-primary btn-sm"><i class="fa fa-eye"></i></a>
+                        {{-- <a href="{{route('dm.barang.detail', $data->id_item)}}" class="btn btn-primary btn-sm"><i class="fa fa-eye"></i></a> --}}
                         <a href="{{route('dm.barang.edit', $data->id_item)}}" class="btn btn-warning btn-sm"><i class="fa fa-edit"></i></a>
                         <a href="#" onclick="modalDelete({{$data->id_item}})" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></a>
                     </td>

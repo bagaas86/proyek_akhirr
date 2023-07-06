@@ -23,7 +23,7 @@
         @php
         $jenis_peminjaman = explode("," , $data->jenis_peminjaman);
         date_default_timezone_set("Asia/Jakarta");
-        $waktu_pengajuan = date('d M Y h:i', strtotime($data->waktu_pengajuan));
+        $waktu_pengajuan = date('d M Y H:i', strtotime($data->waktu_pengajuan));
         $waktu_awal = date('d M Y ', strtotime($data->waktu_awal));
         $waktu_akhir = date('d M Y ', strtotime($data->waktu_akhir));
         @endphp
@@ -43,7 +43,7 @@
                 <span class="badge bg-warning">Menunggu Persetujuan Anda</span>
                 @elseif($data->staff_umum == "Disetujui")
                 <span class="badge bg-success">Disetujui Oleh Anda</span>
-                @elseif($data->staff_umum == "Ditolak")
+                @else
                 <span class="badge bg-danger">Ditolak</span>
                 @endif
                 @endif
@@ -53,7 +53,7 @@
                 <span class="badge bg-warning">Menunggu Persetujuan Anda</span>
                 @elseif($data->kepala_bagian == "Disetujui")
                 <span class="badge bg-success">Disetujui</span>
-                @elseif($data->kepala_bagian == "Ditolak")
+                @else
                 <span class="badge bg-danger">Ditolak</span>
                 @endif
                 @endif
@@ -63,7 +63,7 @@
                 <span class="badge bg-warning">Menunggu Persetujuan Anda</span>
                 @elseif($data->wakil_direktur_1 == "Disetujui")
                 <span class="badge bg-success">Disetujui</span>
-                @elseif($data->wakil_direktur_1 == "Ditolak")
+                @else
                 <span class="badge bg-danger">Ditolak</span>
                 @endif
                 @endif
@@ -73,7 +73,7 @@
                 <span class="badge bg-warning">Menunggu Persetujuan Anda</span>
                 @elseif($data->wakil_direktur_2 == "Disetujui")
                 <span class="badge bg-success">Disetujui</span>
-                @elseif($data->wakil_direktur_2 == "Ditolak")
+                @else
                 <span class="badge bg-danger">Ditolak</span>
                 @endif
                 @endif
@@ -83,7 +83,7 @@
                 <span class="badge bg-warning">Menunggu Persetujuan Anda</span>
                 @elseif($data->pengelola_supir == "Disetujui")
                 <span class="badge bg-success">Disetujui</span>
-                @elseif($data->pengelola_supir == "Ditolak")
+                @else
                 <span class="badge bg-danger">Ditolak</span>
                 @endif
                 @endif
@@ -203,11 +203,18 @@
 
         function ubahStatusTolak(id_peminjaman) { 
         var status = $("#status").val();
+        var alasan = $("#formAlasan").val();
+        console.log(alasan);
+        if(alasan == "")
+        {
+            document.getElementById("alertt").style.display="block";
+        }else{
             $.ajax({
                 type: "get",
                 url: "{{ url('ubahstatustolak') }}/" + id_peminjaman,
                 data :{
                     'status' : status,
+                    'alasan' : alasan,
                 },
                 success: function(data) {
                     tampil(),
@@ -216,6 +223,8 @@
                 }
             });
         }
+        }
+           
 
     function cetakBarang(id_peminjaman)
     {
@@ -271,6 +280,33 @@
             }
             });
     }
+
+    function cetakKendaraan(id_peminjaman)
+    {
+        var cek = $('#kendaraans').attr("data-custom-value");
+        $("#download").html(`Sedang Membuat Berita Acara, Harap Tunggu...`)
+        $.ajax({
+                type: "get",
+                url: "{{ url('peminjaman/pengajuan/cetak/') }}/" + id_peminjaman,
+                data: {
+                "cek": cek
+                 },
+                 xhrFields: {
+                responseType: 'blob',
+                },
+                success: function(response) {
+                    var blob = new Blob([response]);
+                    var link = document.createElement('a');
+                    link.href = window.URL.createObjectURL(blob);
+                    link.download = "Berita Acara Kendaraan.pdf";
+                    link.click()
+                    $("#download").html(`Berita Acara Selesai...`)
+                },
+                error: function(blob){
+                console.log(blob);
+            }
+            });
+    }
   
    
     
@@ -287,7 +323,9 @@
     function modalStatusTolak(id_peminjaman) 
     {
             $("#exampleModalCenterTitle").html(`Konfirmasi Peminjaman?`)
-            $("#page").html('Apakah Anda yakin Ingin Menolak Peminjaman?');
+            $("#page").html(`Apakah Anda yakin Ingin Menolak Peminjaman?
+            <input class="form-control" name="alasan" id="formAlasan" placeholder="Masukkan Alasan Penolakan">
+            <span style="color:red;display:none" id="alertt">Harap Bidang Ini Diisi</span>`);
             $("#modalFooter").html(`
             <a style="color:white" class="btn  btn-secondary" data-dismiss="modal">Tutup</a>
             <a style="color:white" href="#" onclick="ubahStatusTolak(`+id_peminjaman+`)" class="btn  btn-success">Tolak</a>)`)
@@ -313,6 +351,7 @@
             <a style="color:white" class="btn  btn-secondary" data-dismiss="modal">Tutup</a>)`)
             $("#exampleModalCenter").modal('show');
     }
+    
 
 
 

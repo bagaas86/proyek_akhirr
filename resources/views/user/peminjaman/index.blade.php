@@ -17,7 +17,7 @@
         <div class="col col-12 col-md-12">
             <div class="container text-center" data-aos="fade-up">
                 <h4>Sistem Informasi Peminjaman Barang Milik Negara</h4>
-              </div>
+            </div>
             <div id="read">
               
             </div>

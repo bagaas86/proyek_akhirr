@@ -86,47 +86,14 @@
                         </div>
                     </div> --}}
 
-                    {{-- <div class="col col-md-3 col-12">
-                        <div class="form-group">
-                            <label for="level">Level Akun</label>
-                            <select name="level" class="form-control @error('level') is-invalid @enderror"  id="sebagai" onchange="jabatan()" >
-                                <option value="" selected disabled>-- Pilih Level Akun --</option> 
-                                <option value="Wakil Direktur 1" @if(old('level')== "Wadir 1") selected @endif>Wakil Direktur 1</option>
-                                <option value="Wakil Direktur 2" @if(old('level')== "Wadir 2") selected @endif>Wakil Direktur 2</option>
-                                <option value="Kepala Bagian" @if(old('level')== "Kabag") selected @endif>Kepala Bagian</option>
-                                
-                            </select>
-                            @error('level')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                            @enderror
-                        </div>
-                    </div> --}}
-                    
-
-
                     <div class="col col-md-3 col-12">
                         <div class="form-group">
-                            <label for="level">Sebagai</label>
-                            <select  style="display:none" id="unitOrmawa" name="sebagai" class="form-control @error('sebagai') is-invalid @enderror">
-                                <option value="" selected disabled>-- Pilih Jabatan --</option>
-                                <option value="Ketua" @if($pengguna->sebagai == "Ketua") selected @endif >Ketua</option>
-                                <option value="Pengurus" @if($pengguna->sebagai == "Pengurus") selected @endif>Pengurus</option>
-                                <option value="Anggota" @if($pengguna->sebagai == "Anggota") selected @endif>Anggota</option>
-                            </select>
-                            <select  style="display:none" id="unitDosen" name="sebagai" class="form-control @error('sebagai') is-invalid @enderror">
-                                <option value="" selected disabled>-- Pilih Jabatan --</option>
-                                <option value="Ketua" @if($pengguna->sebagai == "Ketua") selected @endif >Ketua</option>
-                                <option value="Dosen" @if($pengguna->sebagai == "Dosen") selected @endif>Dosen</option>
-                                <option value="Staff" @if($pengguna->sebagai == "Staff") selected @endif>Staff</option>
-                            </select>
-                            <select  style="display:none" id="unitNormal" name="sebagai" class="form-control @error('sebagai') is-invalid @enderror">
-                                <option value="" selected disabled>-- Pilih Jabatan --</option>
-                                <option value="Wadir 1" @if($pengguna->sebagai == "Wadir 1") selected @endif>Wakil Direktur 1</option>
-                                <option value="Wadir 2" @if($pengguna->sebagai == "Wadir 2") selected @endif>Wakil Direktur 2</option>
-                                <option value="Kabag" @if($pengguna->sebagai == "Kabag") selected @endif>Kabag</option>
-                                <option value="Staff Umum" @if($pengguna->sebagai == "Staff Umum") selected @endif>Staff</option>
+                            <label for="level">Level Akun</label>
+                            <select name="sebagai" id="select2" class="form-control @error('sebagai') is-invalid @enderror" >
+                                @foreach($sebagai as $data)
+                                <option value="{{$data->sebagai}}" @if($data->sebagai == $pengguna->sebagai) selected @endif>{{$data->sebagai}}</option>
+                                @endforeach
+                                
                             </select>
                             @error('sebagai')
                             <span class="invalid-feedback" role="alert">
@@ -135,6 +102,10 @@
                             @enderror
                         </div>
                     </div>
+                    
+
+
+                   
                   
                     <div class="col col-md-12 col-12">
                         <div class="form-group">
@@ -155,34 +126,11 @@
 
 
 <script>
-      $(document).ready(function () {
-        function jabatan()
-    {
-        var sebagai = $("#sebagai").val();
-        if(sebagai == "Ormawa"){
-            document.getElementById("unitDosen").style.display="none";
-             document.getElementById("unitOrmawa").style.display="block";
-             document.getElementById("unitNormal").style.display="none";
-
-        }
-        if(sebagai == "Dosen")
-        {
-            document.getElementById("unitOrmawa").style.display="none";
-            document.getElementById("unitDosen").style.display="block";
-            document.getElementById("unitNormal").style.display="none";
-        }
-
-        if(sebagai == "Normal")
-        {
-            document.getElementById("unitOrmawa").style.display="none";
-            document.getElementById("unitDosen").style.display="none";
-            document.getElementById("unitNormal").style.display="block";
-        }
-     
-    }
+    $(document).ready(function() {
+    $('#select2').select2();
 });
+  
 </script>
-
 @endsection
 
 

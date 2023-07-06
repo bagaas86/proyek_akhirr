@@ -22,6 +22,13 @@
     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 </div>
 @endif
+
+<div id="show" style="display: none">
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        Sukses Memberikan Ulasan
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    </div>   
+</div>
 <div class="card">
     <div class="xtabledm">
         @php

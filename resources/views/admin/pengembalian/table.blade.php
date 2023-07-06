@@ -59,6 +59,9 @@
                 <a href="#" onclick="modalDetail({{$data->id_peminjaman}})" class="btn btn-primary btn-sm mt-2">Konfirmasi Pelaporan Pengembalian</a>
                 @elseif($data->status_pengembalian == "Pengembalian Ditolak")
                 <a href="#" onclick="modalDetail2({{$data->id_peminjaman}})" class="btn btn-primary btn-sm mt-2">Lihat</a>
+                @elseif($data->status_pengembalian == "Pengembalian Diterima")
+                
+                <a href="#" onclick="modalUlasan({{$data->id_peminjaman}})" class="btn btn-primary btn-sm mt-2">Ulasan</a>
                 @endif
             </td>
         </tr>
@@ -133,7 +136,7 @@
             $("#modalFooter2").html(`
             <a style="color:white"  onclick="modalDetail(`+id_peminjaman+`)" class="btn  btn-secondary">Tutup</a>
             <a style="color:white" href="#" id="statusterima`+id_peminjaman+`" onclick="konfirmasi(`+id_peminjaman+`)" data-custom-value="Pengembalian Diterima"  class="btn  btn-primary">Konfirmasi Pelaporan</a>
-            <a style="color:white" href="#" id="statustolak`+id_peminjaman+`" onclick="tolak(`+id_peminjaman+`)" data-custom-value="Pengembalian Ditolak"  class="btn  btn-danger">Tolak Pelaporan</a>`)
+            <a style="color:white" href="#" onclick="zz(`+id_peminjaman+`)"  class="btn  btn-danger">Tolak Pelaporan</a>`)
             $("#exampleModalCenter2").modal('show');
        
     }
@@ -156,14 +159,26 @@
             });
         }
 
+        function zz(id_peminjaman)
+        {
+            $("#exampleModalCenterTitle2").html(`Penolakan Pengembalian?`)
+            $("#page2").html(`
+            <input class="form-control" id="formAlasan" placeholder="Masukkan Alasan Penolakan">`);
+            $("#modalFooter2").html(`
+            <a style="color:white" class="btn  btn-secondary" data-dismiss="modal">Tutup</a>
+            <a style="color:white" href="#" id="statustolak`+id_peminjaman+`" onclick="tolak(`+id_peminjaman+`)" data-custom-value="Pengembalian Ditolak"  class="btn  btn-danger">Tolak Pelaporan</a>`)
+            $("#exampleModalCenter2").modal('show');
+        }
+
         function tolak(id_peminjaman) { 
         var status = $("#statustolak"+id_peminjaman).data("custom-value");
-        console.log(status)
+        var alasan = $("#formAlasan").val();
             $.ajax({
                 type: "get",
                 url: "{{ url('konfirmasipengembalian') }}/" + id_peminjaman,
                 data :{
                     'status' : status,
+                    'alasan' : alasan,
                 },
                 success: function(data) {
                     modalClose()
@@ -212,36 +227,38 @@
     //             }
     //         });
     //     }  
-   
-    function modalStatus(id_peminjaman) 
-    {
-            $("#exampleModalCenterTitle").html(`Konfirmasi Peminjaman?`)
-            $("#page").html('Apakah Anda yakin Ingin Menyetujui Peminjaman?');
-            $("#modalFooter").html(`
+
+    
+    function modalUlasan(id_peminjaman)
+        {
+            $("#exampleModalCenterTitle2").html(`Ulasan Pengguna`)
+            $("#page2").html(`
+            <label>Ulasan Pengguna</label>
+            <input class="form-control" id="formUlasan" placeholder="Masukkan Ulasan Untuk Pengguna">`);
+            $("#modalFooter2").html(`
             <a style="color:white" class="btn  btn-secondary" data-dismiss="modal">Tutup</a>
-            <a style="color:white" href="#" onclick="ubahStatus(`+id_peminjaman+`)" class="btn  btn-success">Setuju</a>)`)
-            $("#exampleModalCenter").modal('show');
-    }
+            <a style="color:white" href="#" id="ulasanPengguna" onclick="storeUlasan(`+id_peminjaman+`)" class="btn btn-primary">Kirim Ulasan</a>`)
+            $("#exampleModalCenter2").modal('show');
+        }
 
-    function modalStatusTolak(id_peminjaman) 
-    {
-            $("#exampleModalCenterTitle").html(`Konfirmasi Peminjaman?`)
-            $("#page").html('Apakah Anda yakin Ingin Menolak Peminjaman?');
-            $("#modalFooter").html(`
-            <a style="color:white" class="btn  btn-secondary" data-dismiss="modal">Tutup</a>
-            <a style="color:white" href="#" onclick="ubahStatusTolak(`+id_peminjaman+`)" class="btn  btn-success">Tolak</a>)`)
-            $("#exampleModalCenter").modal('show');
-    }
+        function storeUlasan(id_peminjaman) { 
+        var ulasan = $("#formUlasan").val();
+            $.ajax({
+                type: "get",
+                url: "{{ url('ulasan') }}/" + id_peminjaman,
+                data :{
+                    'ulasan' : ulasan,
+                    'id_peminjaman' : id_peminjaman,
+                },
+                success: function(data) {
+                    modalClose(),
+                    tampil(),
+                    modalDetail(id_peminjaman)
 
-    function modalFinish() 
-    {
-            $("#exampleModalCenterTitle").html(`Berhasil`)
-            $("#page").html('Berhasil');
-            $("#modalFooter").html(`
-            <a style="color:white" class="btn  btn-secondary" data-dismiss="modal">Tutup</a>)`)
-            $("#exampleModalCenter").modal('show');
-    }
 
+                }
+            });
+        }
  </script>
 
 

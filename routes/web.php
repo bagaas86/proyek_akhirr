@@ -68,9 +68,14 @@ Route::controller(c_pengguna::class)->middleware('auth')->group(function () {
     Route::get('dm/pengguna', 'index')->name('dm.pengguna.index');
     Route::get('dm/pengguna/create', 'create')->name('dm.pengguna.create');
     Route::post('dm/pengguna/store', 'store')->name('dm.pengguna.store');
+    Route::post('dm/pengguna/import1', 'import1')->name('dm.pengguna.import1');
     Route::get('dm/pengguna/edit/{id}', 'edit')->name('dm.pengguna.edit');
     Route::post('dm/pengguna/update/{id}', 'update')->name('dm.pengguna.update');
     Route::get('dm/pengguna/destroy/{id}', 'destroy')->name('dm.pengguna.destroy');
+
+        // user
+        Route::get('profilsaya', 'myProfil_User')->name('profil.user');
+        Route::post('editprofil','editProfil_User')->name('profil.user.edit');
 });
 
 // // Unit
@@ -145,6 +150,9 @@ Route::controller(c_pengembalian::class)->middleware('auth')->group(function () 
         Route::get('tampilpengembalian', 'tablePengembalian')->name('tablepengembalian');
         Route::get('detailpengembalianadmin/{id}', 'detailPengembalian_Admin')->name('detailpengembalianadmin');
         Route::get('konfirmasipengembalian/{id}', 'ubahStatus_Pengembalian')->name('ubahstatuspengembalian');
+        Route::get('ulasan/{id}', 'kirimUlasan')->name('kirimulasan');
+        Route::get('dataulasan/{id}', 'dataUlasan')->name('dataulasan');
+
 
     // user
     Route::get('pengembalian/lapor', 'index')->name('pengembalian.lapor.index');
@@ -172,6 +180,7 @@ Route::controller(c_laporan::class)->middleware('auth')->group(function () {
     Route::get('laporan', 'index')->name('laporan.index');
 
     Route::get('profil/chartlahan', 'chartPanen')->name('profil.chartlahan');
+    Route::get('profil/chartpeminjaman', 'chartPeminjaman')->name('profil.chartpeminjaman');
 
    
 });

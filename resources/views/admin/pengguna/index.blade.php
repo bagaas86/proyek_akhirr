@@ -21,9 +21,28 @@
     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 </div>
 @endif
+@if (session()->has('error'))
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+    {{session()->get('error')}}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+</div>
+@endif
+
+@if ($errors->any())
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+  @foreach($errors->all() as $error)
+  {{$error}}
+  @endforeach
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+</div>
+@endif
+
+
+
 <div class="card">
     <div class="xtabledm">
         <a href="{{route('dm.pengguna.create')}}" class="btn btn-primary btn-sm mb-2"><i class="fa fa-plus"></i>Tambah Pengguna</a>
+        <a href="#" class="btn btn-success btn-sm mb-2" data-toggle="modal" data-target="#import1"><i class="fa fa-plus"></i>Import Pengguna</a>
         <table id="myTable2" class="display">
             <thead>
                 <tr>
@@ -40,13 +59,12 @@
                 <tr>
                     <td></td>
                     <td id="name">{{$data->name}}</td>
-                    <td style="width:10%"><img src="{{asset('foto/dm/pengguna/'. $data->foto)}}" class="img-rounded" style="width:50%" alt=""></td>
+                    <td style="width:10%"><img src="{{asset('foto/dm/pengguna/'. $data->foto)}}" class="img-radius" style="width:50px;height:50px;" alt=""></td>
                     <td>{{$data->username}}</td>
                     <td>
                         <i class="badge bg-success">{{$data->sebagai}}</i>
                     </td>
                     <td>
-                        <a href="" class="btn btn-primary btn-sm"><i class="fa fa-eye"></i></a>
                         <a href="{{route('dm.pengguna.edit', $data->id)}}" class="btn btn-warning btn-sm"><i class="fa fa-edit"></i></a>
                         <a href="#"  class="btn btn-danger btn-sm" data-toggle="modal" data-target="#delete{{$data->id}}"><i class="fa fa-trash"></i></a>
                     </td>
@@ -81,8 +99,36 @@
 </div>
 @endforeach
 {{-- endModal Delete --}}
-@endsection
 
+
+
+
+<div id="import1" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Import Excel</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <form action="{{route('dm.pengguna.import1')}}" method="POST" enctype="multipart/form-data">
+            @csrf
+            <div class="modal-body">
+               <input type="file" name="excel" id="excel" class="form-control">
+               <span id="errorExcel" style="color: red;display:none;">Bidang ini harap diisi</span>
+            </div>
+            <div id="modalFooter" class="modal-footer">
+                <a style="color:white" class="btn  btn-secondary" data-dismiss="modal">Tutup</a>
+                <button id="send" type="submit" class="btn  btn-success" hidden>Import</button>
+            </form>
+                <a style="color:white" onclick="confirm()" class="btn  btn-success">Import</a>
+            </div>
+           
+        </div>
+    </div>
+</div>
+
+{{-- endModal Delete --}}
+@endsection
 @section('script')
 <script>
     $(document).ready(function () {
@@ -111,5 +157,21 @@
          });
      }).draw();
  });
+
  </script>
+
+ <script>
+     function confirm()
+    {
+        var excel = $("#excel").val()
+        if(excel == "")
+        {
+          document.getElementById('errorExcel').style.display="block";
+        }else{
+            document.getElementById("send").click()
+        }
+    }
+ </script>
+
+ 
 @endsection

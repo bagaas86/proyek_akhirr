@@ -20,7 +20,6 @@ return new class extends Migration
             $table->string('nama_pj')->nullable();  
             $table->string('no_identitas')->nullable();  
             $table->string('no_hp')->nullable(); 
-            $table->string('foto_identitas');
             $table->string('nama_kegiatan');
             $table->string('surat_pengajuan')->nullable();
             $table->string('waktu_pengajuan')->nullable();

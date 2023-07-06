@@ -1,7 +1,6 @@
 @extends('layouts.templateBaru')
-
 @section('content')
-<div class="container">
+
     <div class="row">
         <div id="pengembalian" class="col col-12 col-md-12">
         
@@ -17,7 +16,7 @@
         </div>
 
     </div>
-</div>
+
 
 <script>
     $(document).ready(function() {

@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 class pengguna extends Model
 {
     use HasFactory;
+
     public function allData()
     {
         return DB::table('users')->get();
@@ -29,5 +30,15 @@ class pengguna extends Model
     public function deleteData($id)
     {
         return DB::table('users')->where('id', $id)->delete();
+    }
+
+    public function whatsapp1()
+    {
+        return DB::table('users')->where('sebagai', "Kepala Bagian")->orwhere('sebagai', "Staff Umum")->get();
+    }
+
+    public function sebagai()
+    {
+        return DB::table('users')->distinct()->select('sebagai')->get();
     }
 }

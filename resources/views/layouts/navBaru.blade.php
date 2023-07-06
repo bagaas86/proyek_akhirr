@@ -5,7 +5,13 @@
                 <label>Navigation</label>
             </li>
             <li class="nav-item">
-                <a href="{{url('dashboard')}}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-home"></i></span><span class="pcoded-mtext">Beranda</span></a>
+                <a href="{{url('dashboard')}}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-home"></i></span><span class="pcoded-mtext">
+                    @if(Auth::user()->sebagai == "Staff Umum" OR Auth::user()->sebagai == "Kepala Bagian" OR Auth::user()->sebagai == "Wakil Direktur 1" OR Auth::user()->sebagai == "Wakil Direktur 2" OR Auth::user()->sebagai == "Pengelola Supir"  )
+                    Kembali ke Mode Admin
+                    @else
+                    Beranda
+                    @endif
+                </span></a>
             </li>
             <li class="nav-item">
                 <a href="{{route('dm.peminjaman.index')}}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-home"></i></span><span class="pcoded-mtext">Peminjaman</span></a>

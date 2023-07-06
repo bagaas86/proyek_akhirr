@@ -34,7 +34,7 @@ class c_kendaraan extends Controller
                 'id_item' => $id_item,
             ];
         }else{
-            $maxIditem = $this->item->maxIditem();
+            $maxIditem = $this->item->maxIditem(); 
             $id_item = $maxIditem + 1;
             $data = [
                 'id_item' => $id_item,
@@ -95,7 +95,7 @@ class c_kendaraan extends Controller
                     'kondisi_item'=> $request->kondisi_item,
                     'deskripsi_item'=> $request->deskripsi_item,
                     'kategori_item'=>"Kendaraan",
-                    'foto_item'=> "nbarang.png",
+                    'foto_item'=> "nkendaraan.png",
                     'item_tersedia'=>$request->jumlah_item,
                 ];
                 $this->item->addData($data);

@@ -14,7 +14,7 @@
         @endif
         @if($checkkendaraan <> 0)
         <div class="col col-md-4">
-            <a style="color:white" id="kendaraans" data-custom-value="Kendaraan" class="btn  btn-primary">Download Berita Acara Kendaraan</a>
+            <a style="color:white" onclick="cetakKendaraan({{$id_peminjaman}})" id="kendaraans" data-custom-value="Kendaraan" class="btn  btn-primary">Download Berita Acara Kendaraan</a>
         </div>  
         @endif
     </div>

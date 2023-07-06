@@ -1,6 +1,4 @@
 
-
-
 1.composer install
 2. composer update
 3. buat database di mysql (nama database di .env)

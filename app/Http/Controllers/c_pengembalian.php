@@ -10,6 +10,7 @@ use App\Models\item;
 use App\Models\keranjang;
 use App\Models\kendaraan;
 use App\Models\supir;
+use App\Models\ulasan;
 use DB;
 use Auth;
 use PDF;
@@ -26,6 +27,7 @@ class c_pengembalian extends Controller
         $this->keranjang = new keranjang();
         $this->kendaraan = new kendaraan();
         $this->supir = new supir();
+        $this->ulasan = new ulasan();
     }
 
     // Controller Admin
@@ -77,8 +79,10 @@ class c_pengembalian extends Controller
     public function ubahStatus_Pengembalian(Request $request, $id_peminjaman)
     {
         $status = $request->status;
+        $alasan = $request->alasan;
         $data = [
-            'status_pengembalian'=> $status
+            'status_pengembalian'=> $status,
+            'alasan'=> $alasan
         ];
       
         $this->pengembalian->editData($id_peminjaman, $data);
@@ -155,6 +159,29 @@ class c_pengembalian extends Controller
         ];
         $this->pengembalian->editData($request->id_peminjaman,$data);
         return redirect()->route('pengembalian.lapor.index');
+    }
+
+    public function kirimUlasan( Request $request)
+    {
+        $now = Carbon::now()->format('d-m-Y');
+        $get = $this->peminjaman->detailPeminjaman2($request->id_peminjaman);
+        $data = 
+        [
+            'id_peminjaman' => $request->id_peminjaman,
+            'ulasan' => $request->ulasan,
+            'id_user'=> $get->id_user,
+            'waktu_ulasan' => $now,
+        ];
+        
+        $this->ulasan->addData($data);
+    }
+
+    public function dataUlasan($id_user)
+    {
+        $data = [
+            'ulasan' => $this->ulasan->allData($id_user)
+        ];
+        return view ('admin.peminjaman.ulasan', $data);
     }
 
     

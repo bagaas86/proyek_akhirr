@@ -88,6 +88,7 @@ class c_supir extends Controller
       
         $this->supir->editData($id_supir, $data);
          return redirect()->route('supir.kelola.index')->with('success', 'Supir Berhasil diupdate.');
+
       
     }
 

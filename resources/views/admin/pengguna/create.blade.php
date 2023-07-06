@@ -1,4 +1,10 @@
 @extends('layouts.template')
+<style>
+    #select2{
+        width:1200px !important;
+    }
+  </style>
+
 @section('content')
 <div class="page-header">
     <div class="page-block">
@@ -74,10 +80,8 @@
                        <div class="col col-md-3 col-12">
                         <div class="form-group">
                             <label for="level">Sebagai</label>
-                            <select class="form-control @error('sebagai') is-invalid @enderror" name="sebagai">
-                                <option value="" selected disabled>-- Pilih Jabatan --</option>
-                                <option value="Manajemen Informatika" @if(old('sebagai')== "Manajemen Informatika") selected @endif >Manajemen Informatika</option>
-                                <option value="Agroindustri" @if(old('sebagai')== "Agroindustri") selected @endif>Agroindustri</option>
+                            <select id="select2" class="select2-container @error('sebagai') is-invalid @enderror" name="sebagai">
+                                <option value="" selected disabled>-- Pilih Unit/Jabatan --</option>
                                 <option value="Wakil Direktur 1" @if(old('sebagai')== "Wakil Direktur 1") selected @endif>Wakil Direktur 1</option>
                                 <option value="Wakil Direktur 2" @if(old('sebagai')== "Wakil Direktur 2") selected @endif>Wakil Direktur 2</option>
                                 <option value="Kepala Bagian" @if(old('sebagai')== "Kepala Bagian") selected @endif>Kepala Bagian</option>
@@ -111,33 +115,10 @@
 
 
 <script>
-     $(document).ready(function() {
-        $('select').selectpicker();
-        });
-    function jabatan()
-    {
-        var sebagai = $("#sebagai").val();
-        if(sebagai == "Ormawa"){
-            document.getElementById("unitDosen").style.display="none";
-             document.getElementById("unitOrmawa").style.display="block";
-             document.getElementById("unitNormal").style.display="none";
-
-        }
-        if(sebagai == "Dosen")
-        {
-            document.getElementById("unitOrmawa").style.display="none";
-            document.getElementById("unitDosen").style.display="block";
-            document.getElementById("unitNormal").style.display="none";
-        }
-
-        if(sebagai == "Normal")
-        {
-            document.getElementById("unitOrmawa").style.display="none";
-            document.getElementById("unitDosen").style.display="none";
-            document.getElementById("unitNormal").style.display="block";
-        }
-     
-    }
+    $(document).ready(function() {
+    $('.select2-container').select2();
+});
+  
 </script>
 
 @endsection

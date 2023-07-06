@@ -165,15 +165,15 @@
                                     <div class="row">
                                         <div class="col col-12 col-md-6">
                                             <label for="">Dari<small style="color:red">*</small></label>
-                                            <input id="fromdate1" type="datetime-local" class="form-control" placeholder="Masukkan" name="fromdate" value="" readonly>
+                                            <input id="fromdate1" type="datetime-local" class="form-control" placeholder="Masukkan" name="fromdate" value="" readonly required>
                                         </div>
                                         <div class="col col-12 col-md-6">
                                             <label for="">Sampai<small style="color:red">*</small></label>
-                                            <input id="todate1" type="datetime-local" class="form-control" placeholder="Masukkan" name="todate" value="" readonly>
+                                            <input id="todate1" type="datetime-local" class="form-control" placeholder="Masukkan" name="todate" value="" readonly required>
                                         </div>
                                          <div class="col col-12 col-md-12 mt-2">
                                             <label for=""><b>Jenis Peminjaman</b><small style="color:red">*</small></label>
-                                         <input class="form-control" type="text" id="outputt" name="jenis_peminjaman" value="">
+                                         <input class="form-control" type="text" id="outputt" name="jenis_peminjaman" value=""  readonly>
                                         </div>
                                       
                                         <div id="ceksupir" class="col col-12 col-md-12 mt-2">
@@ -187,15 +187,15 @@
                                         </div>
                                         <div class="col col-12 col-md-12 mt-2">
                                             <label for=""><b>Nama Penanggung Jawab</b><small style="color:red">*</small></label>
-                                            <input type="text" class="form-control" placeholder="Nama Penanggung Jawab" id="nama_pj" name="nama_pj" value="{{Auth::user()->name}}" readonly>
+                                            <input type="text" class="form-control" placeholder="Nama Penanggung Jawab" id="nama_pj" name="nama_pj" value="{{Auth::user()->name}}" readonly required>
                                         </div>
                                         <div class="col col-12 col-md-12 mt-2">
-                                            <label for=""><b>Nomor Identitas</b><small style="color:red">*</small></label>
+                                            <label for=""><b>Nomor Identitas</b></label>
                                             <input type="number" class="form-control" placeholder="Nomor Identitas" id="no_identitas" name="no_identitas" value="{{Auth::user()->no_identitas}}" readonly>
                                         </div>
                                         <div class="col col-12 col-md-12 mt-2">
-                                            <label for=""><b>Nomor HP</b><small style="color:red">*</small></label>
-                                            <input type="number" class="form-control" placeholder="Nomor HP" id="no_hp" name="no_hp" value="{{old('no_hp')}}"  required>
+                                            <label for=""><b>Nomor HP</b></label>
+                                            <input type="number" class="form-control" placeholder="Nomor HP" id="no_hp" name="no_hp" value="{{old('no_hp')}}"  required readonly>
                                         </div>
                                         <div class="col col-12 col-md-12 mt-2">
                                             <label for=""><b>Nama Kegiatan</b><small style="color:red">*</small></label>
@@ -205,16 +205,18 @@
                                             <label for=""><b>Upload Surat Pengajuan</b><small>(opsional)</small></label>
                                             <input type="file" class="form-control" placeholder="Nama Kegiatan" id="bukti" name="surat_pengajuan">
                                         </div>
-                                        <div class="col col-12 col-md-12 mt-2">
+                                        {{-- <div class="col col-12 col-md-12 mt-2">
                                             <label for=""><b>Upload Kartu Identitas</b><small style="color:red">*</small></label>
                                             <input type="file" class="form-control" placeholder="Nama Kegiatan" id="tanda_pengenal" name="foto_identitas" required>
-                                        </div>
+                                        </div> --}}
                                     </div>
                                     <div style="text-align: center">
-                                        <button class="btn btn-block btn-primary mt-4">Kirim Pengajuan</button>
+                                        <button id="send" type="submit" class="btn btn-block btn-primary mt-4" hidden>Kirim Pengajuan</button>
                                     </div>
                                 </form>
-                                
+                                <div style="text-align: center">
+                                    <a onclick="confirm()" class="btn btn-block btn-primary mt-4">Kirim Pengajuan</a>
+                                </div>
                 
                             </div>
                         </div>
@@ -228,6 +230,32 @@
     $( document ).ready(function() {
     jenisPeminjaman()
 });
+function confirm()
+    {
+        var jenis_peminjaman = $("#inputt").val()
+        var nama_kegiatan = $("#nama_kegiatan").val()
+        var fromdate1 = $("#fromdate1").val()
+        var todate1 = $("#todate1").val()
+        if(jenis_peminjaman == "Masukkan Barang Terlebih Dahulu" || nama_kegiatan == "" || fromdate1 == "" || todate1 == "" )
+        {
+            Swal.fire(
+                    {
+                        icon: 'error',
+                        title: 'Gagal',
+                        text: 'Gagal Mengirim. Harap Perhatikan Inputan form!'
+                        }
+                    )
+        }else{
+            document.getElementById("send").click(),
+            Swal.fire(
+                    {
+                        icon: 'success',
+                        title: 'Berhasil',
+                        text: 'Berhasil Mengirim Pengajuan Peminjaman!'
+                        }
+                    )
+        }
+    }
     function jenisPeminjaman(){
        var x = $('#inputt').val();
        $('#outputt').val(x);

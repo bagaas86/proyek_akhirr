@@ -71,18 +71,18 @@
                     <li>
                         <div class="dropdown drp-user">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <img class="img-radius" src="{{asset('foto/dm/pengguna/'. Auth::user()->foto)}}" style="width:100%">
+                                <img class="img-radius" src="{{asset('foto/dm/pengguna/'. Auth::user()->foto)}}" style="width:40px;height:40px;">
                             </a>
                             <div class="dropdown-menu dropdown-menu-right profile-notification">
                                 <div class="pro-head">
-                                    <img src="{{asset('foto/dm/pengguna/'. Auth::user()->foto)}}" class="img-radius" alt="User-Profile-Image">
+                                    <img src="{{asset('foto/dm/pengguna/'. Auth::user()->foto)}}" class="img-radius" style="width:40px;height:40px;" alt="User-Profile-Image">
                                     <span>{{Auth::user()->name}}</span>
                                     <a href="auth-signin.html" class="dud-logout" title="Logout">
                                         <i class="feather icon-log-out"></i>
                                     </a>
                                 </div>
                                 <ul class="pro-body">
-                                    <li><a href="user-profile.html" class="dropdown-item"><i class="feather icon-user"></i> Profile</a></li>
+                                    <li><a href="{{route('profil.user')}}" class="dropdown-item"><i class="feather icon-user"></i> Profile</a></li>
                                     <li><a href="{{route('history.index')}}" class="dropdown-item"><i class="feather icon-mail"></i> History Peminjaman</a></li>
                                     <li><a href="auth-signin.html" class="dropdown-item"><i class="feather icon-lock"></i> Lock Screen</a></li>
                                 </ul>

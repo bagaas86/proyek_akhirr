@@ -48,7 +48,7 @@
                         @endif
                     </td>
                     <td>
-                        <a href="" class="btn btn-primary btn-sm"><i class="fa fa-eye"></i></a>
+                        {{-- <a href="" class="btn btn-primary btn-sm"><i class="fa fa-eye"></i></a> --}}
                         <a href="{{route('dm.ruangan.edit', $data->id_item)}}" class="btn btn-warning btn-sm"><i class="fa fa-edit"></i></a>
                         <a href="#"  class="btn btn-danger btn-sm" data-toggle="modal" data-target="#delete{{$data->id_item}}"><i class="fa fa-trash"></i></a>
                     </td>

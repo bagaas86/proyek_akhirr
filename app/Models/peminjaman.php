@@ -10,6 +10,10 @@ class peminjaman extends Model
 {
     use HasFactory;
 
+    public function allData()
+    {
+        return DB::table('peminjaman')->get();
+    }
 
     public function addData($data)
     {

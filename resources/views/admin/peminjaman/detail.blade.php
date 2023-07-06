@@ -3,8 +3,10 @@ $waktu_pengajuan = date('d-m-Y H:i', strtotime($peminjaman->waktu_pengajuan));
 $waktu_awal = date('d-m-Y H:i', strtotime($peminjaman->waktu_awal));
 $waktu_akhir = date('d-m-Y H:i', strtotime($peminjaman->waktu_akhir));
 $diff = Carbon\Carbon::parse($waktu_awal)->diffInDays(Carbon\Carbon::parse($waktu_akhir));
-$lama = $diff+1;                      
+$lama = $diff+1;                  
 @endphp
+
+<input type="text" id="id_peminjaman" value="{{$peminjaman->id_peminjaman}}" hidden>
 <div class="container" style="color:black">
         <div class="col col-12 col-md-12 mt-4">
             <div style="color:white" class="text-center title">
@@ -18,49 +20,58 @@ $lama = $diff+1;
                                 <h5>Detail Pengajuan</h5>
                             </div>
                             <div class="1">
-                                <table>
-                                    <tr style="vertical-align:top;font-size:12px">
-                                        <td style="width:40%;font-weight:bold">Nama PJ</td>
-                                        <td style="width:5%">:</td>
-                                        <td style="width:50%">{{$peminjaman->nama_pj}}</td>  
-                                    </tr>
-                                    <tr style="vertical-align:top;font-size:12px">
-                                        <td style="width:40%;font-weight:bold">Unit/Organisasi</td>
-                                        <td style="width:5%">:</td>
-                                        <td style="width:50%">{{$peminjaman->sebagai}}</td>  
-                                    </tr>
-                                    <tr style="vertical-align:top;font-size:12px">
-                                        <td style="width:40%;font-weight:bold">No. Identitas</td>
-                                        <td style="width:5%">:</td>
-                                        <td style="width:50%">{{$peminjaman->no_identitas}}</td>  
-                                    </tr>
-                                    <tr style="vertical-align:top;font-size:12px">
-                                        <td style="width:40%;font-weight:bold">Nama Kegiatan</td>
-                                        <td style="width:5%">:</td>
-                                        <td style="width:50%">{{$peminjaman->nama_kegiatan}}</td>  
-                                    </tr>
-                                    <tr style="vertical-align:top;font-size:12px">
-                                        <td style="width:40%;font-weight:bold">Waktu Pengajuan</td>
-                                        <td style="width:5%">:</td>
-                                        <td style="width:50%">{{$waktu_pengajuan}}</td>  
-                                    </tr>
-                                    <tr style="vertical-align:top;font-size:12px">
-                                        <td style="width:40%;font-weight:bold">Waktu Peminjaman</td>
-                                        <td style="width:5%">:</td>
-                                        <td style="width:50%">{{$waktu_awal}} s/d {{$waktu_akhir}}</td>  
-                                    </tr>
-                                    <tr style="vertical-align:top;font-size:12px">
-                                        <td style="width:40%;font-weight:bold">Lama Peminjaman</td>
-                                        <td style="width:5%">:</td>
-                                        <td style="width:50%">
-                                            @if ($diff == 0)
-                                            1 Hari
-                                            @else
-                                            {{$lama}} Hari
-                                             @endif
-                                        </td>  
-                                    </tr>
-                                </table> 
+                                <div class="row">
+                                    <div class="col col-12 col-md-9">
+                                        <table>
+                                            <tr style="vertical-align:top;font-size:12px">
+                                                <td style="width:40%;font-weight:bold">Nama PJ</td>
+                                                <td style="width:5%">:</td>
+                                                <td style="width:50%">{{$peminjaman->nama_pj}}</td>  
+                                            </tr>
+                                            <tr style="vertical-align:top;font-size:12px">
+                                                <td style="width:40%;font-weight:bold">Unit/Organisasi</td>
+                                                <td style="width:5%">:</td>
+                                                <td style="width:50%">{{$peminjaman->sebagai}}</td>  
+                                            </tr>
+                                            <tr style="vertical-align:top;font-size:12px">
+                                                <td style="width:40%;font-weight:bold">No. Identitas</td>
+                                                <td style="width:5%">:</td>
+                                                <td style="width:50%">{{$peminjaman->no_identitas}}</td>  
+                                            </tr>
+                                            <tr style="vertical-align:top;font-size:12px">
+                                                <td style="width:40%;font-weight:bold">Nama Kegiatan</td>
+                                                <td style="width:5%">:</td>
+                                                <td style="width:50%">{{$peminjaman->nama_kegiatan}}</td>  
+                                            </tr>
+                                            <tr style="vertical-align:top;font-size:12px">
+                                                <td style="width:40%;font-weight:bold">Waktu Pengajuan</td>
+                                                <td style="width:5%">:</td>
+                                                <td style="width:50%">{{$waktu_pengajuan}}</td>  
+                                            </tr>
+                                            <tr style="vertical-align:top;font-size:12px">
+                                                <td style="width:40%;font-weight:bold">Waktu Peminjaman</td>
+                                                <td style="width:5%">:</td>
+                                                <td style="width:50%">{{$waktu_awal}} s/d {{$waktu_akhir}}</td>  
+                                            </tr>
+                                            <tr style="vertical-align:top;font-size:12px">
+                                                <td style="width:40%;font-weight:bold">Lama Peminjaman</td>
+                                                <td style="width:5%">:</td>
+                                                <td style="width:50%">
+                                                    @if ($diff == 0)
+                                                    1 Hari
+                                                    @else
+                                                    {{$lama}} Hari
+                                                     @endif
+                                                </td>  
+                                            </tr>
+                                        </table> 
+                                    </div>
+                                    <div class="col col-md-3 col-12">
+                                        <a href="#" onclick="lihatUlasan({{$peminjaman->id_user}})"> <img src="{{asset('foto/dm/pengguna/default.png')}}" class="img-rounded" style="width:100%"></a>
+                                    </div>
+
+                                </div>
+                          
                             </div>  
                         </div>
                     </div>
@@ -111,5 +122,20 @@ $lama = $diff+1;
 
     </div>
 </div>
+
+<script>
+    function lihatUlasan(id_user)
+    {
+        var id_peminjaman = $("#id_peminjaman").val();
+        $.get("{{ url('dataulasan') }}/" + id_user, {}, function(data, status){
+        $("#exampleModalCenterTitle2").html(`Ulasan Pengguna`)
+            $("#page2").html(data);
+            $("#modalFooter2").html(`
+            <a style="color:white" class="btn  btn-secondary" data-dismiss="modal">Tutup</a>
+            `)
+            $("#exampleModalCenter2").modal('show');
+        })
+    }
+</script>
 
 
