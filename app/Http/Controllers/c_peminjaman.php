@@ -680,63 +680,70 @@ class c_peminjaman extends Controller
     
     public function loadItem(Request $request)
     {
-        $todate = $request->todate;
-        $fromdate = $request->fromdate;
-        $filterUser = $request->kategori;
+        // $toDate = $request->todate;
+        // $fromDate = $request->fromdate;
+        $fromDate = Carbon::parse($request->fromdate)->translatedFormat('Y-m-d H:i:s');
+        $toDate = Carbon::parse($request->todate)->translatedFormat('Y-m-d H:i:s');
+        $filterUser = "Kendaraan";
 
-
-        $checkTbl_Items = $this->item->checkItemTersedia($filterUser);
-        $checkTbl_Items2 = $this->item->checkItemNull();
-
-        // $count=count($checkTbl_Items);
-        // if($count<>null)
-        // {
-        //     foreach ($checkTbl_Items as $item)
-        //     {
-        //         $looping_keranjang = $this->keranjang->joinKeranjang_Items($item->id_item, $fromdate, $todate);
-        //         $loop = count($looping_keranjang);
-        //         if($loop <> null){
-        //             foreach ($looping_keranjang as $check) { 
-        //                 $data = 
-        //                 [
-        //                     'item'=>$this->item->ambilData($check->id_item, $filterUser),
-        //                 ];
-                        
-                       
-        //             };
-        //             return view('user.peminjaman.table',$data);  
-        //         }else{
-        //             $data = 
-        //             [
-        //                 'item'=>$this->item->itemFilter($filterUser),
-        //             ];
-        //             return view('user.peminjaman.table',$data);  
-              
-        //         }
-        //     }
-        // }else{
-        //     $data = 
-        //     [
-        //         'item'=>$this->item->itemFilter($filterUser),
-        //     ];
-        //     return view('user.peminjaman.table',$data);  
-        // }
-
-        // $checkKeranjang = $this->keranjang->checkPeminjaman();
-        // $checkPeminjaman = $this->peminjaman->detailPeminjaman();
-
-
-
+        $unusedItems = DB::table('items')
+        ->leftJoin('keranjangs', 'items.id_item', '=', 'keranjangs.id_item')
+        ->leftJoin('peminjaman', 'keranjangs.id_peminjaman', '=', 'peminjaman.id_peminjaman')
+        ->where(function ($query) use ($fromDate, $toDate) {
+            $query->where('peminjaman.waktu_awal', '>', $toDate)
+                ->orWhere('peminjaman.waktu_akhir', '<', $fromDate)
+                ->orWhereNull('peminjaman.id_peminjaman');
+        })
+        ->orWhereExists(function ($query) use ($fromDate, $toDate) {
+            $query->select(DB::raw(1))
+                ->from('peminjaman as p')
+                ->join('keranjangs as k', function ($join) {
+                    $join->on('p.id_peminjaman', '=', 'k.id_peminjaman')
+                        ->whereColumn('k.id_item', 'items.id_item');
+                })
+                ->where(function ($query) use ($fromDate, $toDate) {
+                    $query->where(function ($query) use ($fromDate, $toDate) {
+                        $query->where('p.waktu_awal', '>', $toDate)
+                            ->orWhere('p.waktu_akhir', '<', $fromDate);
+                    })
+                    ->orWhere(function ($query) use ($fromDate, $toDate) {
+                        $query->where('p.waktu_awal', '<=', $toDate)
+                            ->where('p.waktu_akhir', '>=', $fromDate);
+                    });
+                });
+        })
+        ->select(
+            'items.id_item',
+            'items.nama_item',
+            'items.jumlah_item',
+            'items.kategori_item',
+            'items.foto_item',
+            DB::raw("CAST(items.jumlah_item - COALESCE(SUM(CASE WHEN peminjaman.waktu_awal <= '{$toDate}' AND peminjaman.waktu_akhir >= '{$fromDate}' THEN keranjangs.jumlah ELSE 0 END), 0) AS UNSIGNED) AS ready_stok")
+        )
+        ->where('items.jumlah_item', '>', 0)
+        ->groupBy('items.id_item', 'items.nama_item', 'items.jumlah_item', 'items.kategori_item',  'items.foto_item')
+        ->havingRaw("CAST(items.jumlah_item - COALESCE(SUM(CASE WHEN peminjaman.waktu_awal <= '{$toDate}' AND peminjaman.waktu_akhir >= '{$fromDate}' THEN keranjangs.jumlah ELSE 0 END), 0) AS UNSIGNED) > 0")
+        ->distinct()
+        ->get();
     
-        if($filterUser <> "All"){
-            $data =[
-                'item'=> $this->item->itemFilter($filterUser),
-            ];
-        }else{
+    
+    
+
+
             $data = [
-                'item'=> $this->item->itemReady(),
+                'item' => $unusedItems,
             ];
-        }
+
+
+        // if($filterUser <> "All"){
+        //     $data =[
+        //         'item'=> $this->item->itemFilter($filterUser),
+        //     ];
+        // }else{
+        //     $data = [
+        //         'item'=> $this->item->itemReady(),
+        //     ];
+        // }
         return view('user.peminjaman.table',$data);  
     }
 
@@ -789,12 +796,44 @@ class c_peminjaman extends Controller
         $id_keranjang = $request->id_keranjang;
         $id = Auth::user()->id;
         $jumlah = $request->jumlah;
-        $data =[
-            'jumlah'=>$jumlah,
-        ];
-        $this->keranjang->ubahQty($id_keranjang, $id, $data);
-        $data = 1;
-        return $data;
+        $fromDate = "2023-07-01 16:00:00";
+        $toDate = "2023-07-01 08:00:00";
+        
+        $detail = $this->keranjang->detailData($id_keranjang);
+        $id_item = $detail->id_item;
+        
+        $readyStok = DB::table('items')
+            ->leftJoin('keranjangs', function ($join) use ($id_item, $id_keranjang) {
+                $join->on('items.id_item', '=', 'keranjangs.id_item')
+                    ->where('keranjangs.id_keranjang', '<>', $id_keranjang);
+            })
+            ->select(
+                'items.id_item',
+                'items.nama_item',
+                'items.jumlah_item',
+                'items.kategori_item',
+                'items.foto_item',
+                DB::raw("CAST(items.jumlah_item - COALESCE(SUM(CASE WHEN keranjangs.id_peminjaman IS NOT NULL THEN keranjangs.jumlah ELSE 0 END), 0) AS UNSIGNED) AS ready_stok")
+            )
+            ->where('items.id_item', $id_item)
+            ->where('items.jumlah_item', '>', 0)
+            ->groupBy('items.id_item', 'items.nama_item', 'items.jumlah_item', 'items.kategori_item', 'items.foto_item')
+            ->first();
+        
+        if ($jumlah <= $readyStok->ready_stok) {
+            $input = [
+                'jumlah' => $jumlah,
+            ];
+            $this->keranjang->ubahQty($id_keranjang, $id, $input);
+            $data = 1;
+        }else{
+            $data = 2;
+        }
+        
+        
+        
+      
+        
     }
 
     public function hapusBarang($id_keranjang)
@@ -839,6 +878,7 @@ class c_peminjaman extends Controller
             'supir' => $driversWithoutActivities,
         ];
 
+    
    
     
         return view ('user.peminjaman.checkSupir', $data);

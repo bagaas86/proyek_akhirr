@@ -1,3 +1,15 @@
+<style>
+    @keyframes blink {
+        0% { opacity: 1; }
+        50% { opacity: 0; }
+        100% { opacity: 1; }
+    }
+
+    .blinking-text {
+        animation: blink 3s infinite;
+    }
+</style>
+
 <input type="text" class="form-control" id="id_user" value="{{ Auth::user()->id }}" hidden>
 <br>
 
@@ -30,10 +42,7 @@
             <div class="card-body h-20">
                 <div style="text-align: center">
                     <h6>{{$data->nama_item}}</h6>
-                  
-                </div>
-                <div style="text-align:center">
-                    <a class="btn btn-primary btn-sm" onclick="modalDetail({{$data->id_item}})" href="#"><i class="bi bi-eye"></i></a>
+                    <span class="blinking-text" style="color:green;font-size:12px">Tersedia :{{$data->ready_stok}}</span>
                 </div>
             </div>
            

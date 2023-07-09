@@ -2,26 +2,30 @@
     <div id="tanggal">
        
             <div class="col col-12 col-md-4">
-                <input id="fromdate" type="text" class="form-control" placeholder="--Tanggal Awal Peminjaman--"  name="fromdate" value="{{old('fromdate')}}" onchange="submit()"  onfocus="(this.type='datetime-local')"
+                <input id="fromdate" type="text" class="form-control" placeholder="--Tanggal Awal Peminjaman--"  name="fromdate" value="{{old('fromdate')}}"  onfocus="(this.type='datetime-local')"
                 onblur="(this.type='text')" required>
             </div>
             <div class="col col-12 col-md-4">
-                <input id="todate" type="text" class="form-control" placeholder="--Tanggal Selesai Peminjaman--" name="todate" value="{{old('todate')}}" onchange="submit()" onfocus="(this.type='datetime-local')"
+                <input id="todate" type="text" class="form-control" placeholder="--Tanggal Selesai Peminjaman--" name="todate" value="{{old('todate')}}" onfocus="(this.type='datetime-local')"
                 onblur="(this.type='text')" required>
             </div>
-      
+            <div  class="col col-12 col-md-12 mt-2">
+                <a href="#" onclick="submit()" class="btn btn-primary">Cari</a>
+            </div>
     </div>
-   
 
-    <div class="col col-md-4 col-12 mt-2" id="pilihKategori">
+
+
+
+
+    {{-- <div class="col col-md-4 col-12 mt-2" id="pilihKategori">
         <select class="form-control" aria-label=".form-select-sm example" id="kategori" onchange="submit()">
             <option value="All" selected disabled>-- Pilih Kategori --</option>
-            {{-- <option value="All">Semua Kategori</option> --}}
             <option value="Barang">Barang</option>
             <option value="Ruangan">Ruangan</option>
             <option value="Kendaraan">Kendaraan</option>
         </select>
-    </div>
+    </div> --}}
  
 </center> 
 
@@ -30,7 +34,7 @@
         <div id="kembali"  style="display:none">
             <a href="#" class="btn btn-warning" onclick="back()">Kembali</a>
         </div>
-        <div id="selanjutnya">
+        <div id="selanjutnya" style="display: none">
             <a href="#" class="btn btn-warning" onclick="list()">Selanjutnya</a>
         </div>
     </div>
@@ -74,7 +78,19 @@
         var kategori = $("#kategori").val();
         var fromdate = $("#fromdate").val();
         var todate = $("#todate").val();
-      $.ajax({
+        if(fromdate == "" || todate == "")
+        {
+            Swal.fire(
+                    {
+                        icon: 'error',
+                        title: 'Gagal',
+                        text: 'Silahkan Masukkan Tanggal Awal dan Selesai Peminjaman!'
+                        }
+                    )
+            document.getElementById("selanjutnya").style.display="none";
+        }else{
+        
+            $.ajax({
              type: "get",
              url: "{{ url('loaditem') }}",
              data: {
@@ -84,15 +100,16 @@
              },
          success: function(data, status) {
              $("#tableItem").html(data),
-             document.getElementById("pilihKategori").style.display="block";
+            //  document.getElementById("pilihKategori").style.display="block";
              document.getElementById("tableItem").style.display="block";
              document.getElementById("selanjutnya").style.display="block";
              document.getElementById("kembali").style.display="none";
              document.getElementById("list").style.display="none";
              document.getElementById("tanggal").style.display="block";
-        
              }
          });
+        }
+
      }
 
      function back(){ 
@@ -194,7 +211,7 @@
         $.get("{{ url('listbarang') }}", {}, function(data, status) {
                $("#list").html(data);
                document.getElementById("tableItem").style.display="none";
-               document.getElementById("pilihKategori").style.display="none";
+            //    document.getElementById("pilihKategori").style.display="none";
                document.getElementById("list").style.display="block";
                document.getElementById("pengajuan").style.display="block";
                document.getElementById("selanjutnya").style.display="none";
@@ -207,18 +224,45 @@
 
      function ubahJumlah(id_keranjang){
         var jumlah = $("#jumlah"+id_keranjang).val();
-      $.ajax({
+        var fromdate = $("#fromdate1").val();
+        var todate = $("#todate1").val();
+        if(jumlah > 0)
+        {
+            $.ajax({
               type: "get",
               url: "{{ url('ubahjumlah') }}",
               data: {
               "id_keranjang": id_keranjang,
               "jumlah": jumlah,
+              "fromdate": fromdate,
+              "todate": todate,
               },
               success: function(data, status) {
-                list()
+                if(data == 1){
+                Swal.fire(
+                    {
+                        icon: 'success',
+                        title: 'Berhasil',
+                        text: 'Item Berhasil Ditambahkan!'
+                        }
+                    )
+              }if(data == 2){
+                Swal.fire(
+                    {
+                        icon: 'error',
+                        title: 'Gagal',
+                        text: 'Item Sudah Ada!'
+                        }
+                    )
+              }
+              list() 
               }
              
           });
+        }else{
+            list()
+        }
+     
      }
      function hapusBarang(id_keranjang) {
             $.ajax({

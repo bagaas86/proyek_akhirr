@@ -188,6 +188,11 @@ class keranjang extends Model
         ->where('id_peminjaman', $id_peminjaman)->first();
     }
 
+    public function detailData($id_keranjang)
+    {
+        return DB::table('keranjangs')->where('id_keranjang', $id_keranjang)->first();
+    }
+
 
 
 

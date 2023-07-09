@@ -12,7 +12,7 @@
 </div>
 @endsection 
 @section('content')
-<div class="container">
+
     <div class="row">
         <div class="col col-12 col-md-12">
             <div class="container text-center" data-aos="fade-up">
@@ -24,7 +24,7 @@
         </div>
 
     </div>
-</div>
+
 
 
 <script>
