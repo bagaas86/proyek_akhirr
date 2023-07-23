@@ -64,12 +64,13 @@
                         <div class="form-group">
                             <label for="deskripsi_item">Deskripsi Ruangan</label>
                             <textarea type="number" class="form-control @error('deskripsi_item') is-invalid @enderror" id="deskripsi_item" name="deskripsi_item" placeholder="Deskripsi Ruangan...">{{old('deskripsi_item')}}</textarea>
+                            @error('deskripsi_item')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
                         </div>
-                        @error('deskripsi_item')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                        @enderror
+                       
                     </div>
                     <div class="col col-md-4 col-12">
                         <div class="form-group">
@@ -79,17 +80,23 @@
                                 <option value="Ready" @if(old('kondisi_item') == "Ready") selected @endif>Siap Digunakan</option>
                                 <option value="Renovasi" @if(old('kondisi_item') == "Renovasi") selected @endif>Renovasi</option>
                             </select>
+                            @error('kondisi_item')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
                         </div>
-                        @error('kondisi_item')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                        @enderror
+                       
                     </div>
                     <div class="col col-md-6 col-12">
                         <div class="form-group">
                             <label for="deskripsi_barang">Foto Ruangan</label>
-                           <input type="file" class="form-control" name="foto_item" value="{{old('foto_item')}}">
+                           <input type="file" class="form-control @error('foto_item') is-invalid @enderror" name="foto_item" value="{{old('foto_item')}}">
+                           @error('foto_item')
+                           <span class="invalid-feedback" role="alert">
+                               <strong>{{ $message }}</strong>
+                           </span>
+                           @enderror
                         </div>
                     </div>
                 </div>

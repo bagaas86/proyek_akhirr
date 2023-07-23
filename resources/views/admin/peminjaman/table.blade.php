@@ -284,12 +284,14 @@
     function cetakKendaraan(id_peminjaman)
     {
         var cek = $('#kendaraans').attr("data-custom-value");
+        var nomor_surat = $('#nomor_surat').val();
         $("#download").html(`Sedang Membuat Berita Acara, Harap Tunggu...`)
         $.ajax({
                 type: "get",
                 url: "{{ url('peminjaman/pengajuan/cetak/') }}/" + id_peminjaman,
                 data: {
-                "cek": cek
+                "cek": cek,
+                "nomor_surat": nomor_surat,
                  },
                  xhrFields: {
                 responseType: 'blob',

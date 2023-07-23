@@ -5,11 +5,11 @@
         <div class="row align-items-center">
             <div class="col-md-12">
                 <div class="page-header-title">
-                    <h5 class="m-b-10">List Data Master Barang</h5>
+                    <h5 class="m-b-10">Informasi BMN</h5>
                 </div>
                 <ul class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{{url('dashboard')}}"><i class="feather icon-home"></i></a></li>
-                    <li class="breadcrumb-item"><a href="#!">Data Master Barang</a></li>
+                    <li class="breadcrumb-item"><a href="#!">Informasi BMN</a></li>
                 </ul>
             </div>
         </div>
@@ -21,53 +21,34 @@
     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 </div>
 @endif
-@if (session()->has('error'))
-<div class="alert alert-danger alert-dismissible fade show" role="alert">
-    {{session()->get('error')}}
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-</div>
-@endif
 <div class="card">
     <div class="xtabledm">
-        <a href="{{route('dm.barang.create')}}" class="btn btn-primary mb-2"><i class="fa fa-plus"></i>Tambah</a>
         <table id="barang" class="display" style="width:100%;font-size:14px;">
             <thead>
                 <tr>
-                    <th>No</th>
-                    <th>Nama Barang</th>
-                    <th>Foto Barang</th>
-                    <th>Jumlah</th>
-                    <th>Kondisi</th>
-                    <th>Lokasi</th>
-                    <th>Aksi</th>
+                    <th style="width:5%">No</th>
+                    <th style="width:30%">Nama Barang</th>
+                    <th style="width:25%">Foto Barang</th>
+                    <th style="width:40%">Aksi</th>
         
                 </tr>
             </thead>
             <tbody>
-                @php
-                $i=0;
-                @endphp
                 @foreach($item as $data)
-                @php
-                $i=$i+1;
-                @endphp
                 <tr>
                     <td></td>
-                    <td id="name" style="width:25%">{{$data->nama_item}}</td>
-                    <td style="width:10%"><img src="{{asset('foto/dm/barang/'. $data->foto_item)}}" class="img-rounded" style="width:50%" alt=""></td>
-                    <td>{{$data->jumlah_item}}</td>
-                    <td>
-                        @if($data->kondisi_item == "Ready")
-                        <i class="badge bg-success">Baik</i>
-                        @elseif($data->kondisi_item == "Rusak")
-                        <i class="badge bg-danger">Rusak</i>
+                    <td id="name">{{$data->nama_item}}</td>
+                    <td style="width:10%">
+                        @if($data->kategori_item == "Barang")
+                        <img src="{{asset('foto/dm/barang/'. $data->foto_item)}}" class="img-rounded" style="width:50px;height:50px" alt="">
+                        @elseif($data->kategori_item == "Ruangan")
+                        <img src="{{asset('foto/dm/ruangan/'. $data->foto_item)}}" class="img-rounded" style="width:50px;height:50px" alt="">
+                        @elseif($data->kategori_item == "Kendaraan")
+                        <img src="{{asset('foto/dm/kendaraan/'. $data->foto_item)}}" class="img-rounded" style="width:50px;height:50px" alt="">
                         @endif
                     </td>
-                    <td style="width:20%">{{$data->lokasi_item}}</td>
                     <td>
-                        {{-- <a href="{{route('dm.barang.detail', $data->id_item)}}" class="btn btn-primary btn-sm"><i class="fa fa-eye"></i></a> --}}
-                        <a href="{{route('dm.barang.edit', $data->id_item)}}" class="btn btn-warning btn-sm"><i class="fa fa-edit"></i></a>
-                        <a href="#" onclick="modalDelete({{$data->id_item}})" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></a>
+                        <a href="{{route('info.detail', $data->id_item)}}" class="btn btn-warning btn-sm"><i class="fa fa-eye"></i>Lihat Info</a>
                     </td>
                 </tr>
                 @endforeach

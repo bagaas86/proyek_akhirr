@@ -81,6 +81,25 @@ class peminjaman extends Model
 
 
 
+    // Dashboard
+        // Admin
+        public function totalPengajuan_Peminjaman()
+        {
+            return DB::table('peminjaman')->count();
+        }
+        public function totalPengajuanDiterima_Peminjaman()
+        {
+            return DB::table('peminjaman')->where('status_peminjaman', "Pengajuan Diterima")->count();
+        }
+
+        // user
+        public function totalPengajuan_Saya($id)
+        {
+            return DB::table('peminjaman')->where('id_user', $id)->count();
+        }
+
+
+
 
 
 

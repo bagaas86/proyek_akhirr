@@ -79,8 +79,8 @@
             </tr>
       </table>
      <div class="judul">
-      <h4 style="font-weight:bold; font-size:14px;" >BERITA ACARA SERAH TERIMA BARANG</h4>
-      <h4 style="line-height:20px; font-size:14px;">Nomor Surat</h4>
+      <h4 style="font-weight:bold; font-size:14px;text-decoration:underline;" >BERITA ACARA SERAH TERIMA BARANG</h4>
+      <h4 style="line-height:1.5; font-size:14px;">NOMOR SURAT : {{$nomor_surat}}</h4>
       </div>
 
       <div class="isi" style="font-size:14px">
@@ -92,15 +92,15 @@
             <tr>
                   <td style="width:20%"><p>Nama</p></td>
                   <td style="width:2%"><p>:</p></td>
-                  <td style="width:78%"><p>Zaenal Abidin, S.Pd.I., M.Si.</p></td>
+                  <td style="width:78%"><p>{{$kabag->name}}</p></td>
             </tr>
             <tr>
-                  <td style="width:20%"><p>NIP</p></td>
+                  <td style="width:20%"><p>{{$kabag->jenis_identitas}}</p></td>
                   <td style="width:2%"><p>:</p></td>
-                  <td style="width:78%"><p>196704221996011001</p></td>
+                  <td style="width:78%"><p>{{$kabag->no_identitas}}</p></td>
             </tr>
             <tr>
-                  <td style="width:20%"><p>Unit</p></td>
+                  <td style="width:20%"><p>Unit/Jabatan</p></td>
                   <td style="width:2%"><p>:</p></td>
                   <td style="width:78%"><p>Koordinator Ketatausahaan</p></td>
             </tr>
@@ -118,7 +118,7 @@
                   <td style="width:78%"><p>{{$peminjaman->no_identitas}}</p></td>
             </tr>
             <tr>
-                  <td style="width:20%"><p>Unit</p></td>
+                  <td style="width:20%"><p>Unit/Jabatan</p></td>
                   <td style="width:2%"><p>:</p></td>
                   <td style="width:78%"><p>{{$peminjaman->sebagai}}</p></td>
             </tr>
@@ -208,17 +208,23 @@
                                     <td><p>{{$peminjaman->sebagai}}</p></td>
                               </tr>
                               <tr>
-                                    <td style="height:75px" colspan="3"></td>
+                                    <td style="height:75px">
+                                          @if($approval->kepala_bagian == "Disetujui")
+                                          <img src="{{public_path('foto/ttd/'. $kabag->ttd_kabag)}}" width="50px" alt="">
+                                          @endif
+                                          </td>
+                                    <td style="height:75px"></td>
+                                    <td style="height:75px"></td>
                               </tr>
                               <tr>
-                                    <td><p>Zaenal Abidin, S.Pd.I., M.Si.</p></td>
+                                    <td><p>{{$kabag->name}}</p></td>
                                     <td style="width:35%"></td>
                                     <td><p>{{$peminjaman->nama_pj}}</p></td>
                               </tr>
                               <tr>
-                                    <td><p>NIP. 196704221996011001</p></td>
+                                    <td><p>{{$kabag->jenis_identitas}} {{$kabag->no_identitas}}</p></td>
                                     <td style="width:35%"></td>
-                                    <td><p>NIP. {{$peminjaman->no_identitas}}</p></td>
+                                    <td><p>{{$peminjaman->jenis_identitas}} {{$peminjaman->no_identitas}}</p></td>
                               </tr>
                         </table>
       </div>

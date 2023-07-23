@@ -192,7 +192,7 @@ function jh()
                     label: 'Jumlah Peminjam',
                     data: v,
                     backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(255, 99, 0)',
 
                     ],
                     borderColor: [
@@ -205,8 +205,9 @@ function jh()
                 options: {
                     scales: {
                     y: {
-                        beginAtZero: true
-                    }
+                         min: 0, // Nilai minimum pada sumbu Y
+                         max: 16 // Nilai maksimum pada sumbu Y
+                       }
                     },
                     plugins: {
                     title: {

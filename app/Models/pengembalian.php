@@ -73,6 +73,13 @@ class pengembalian extends Model
     }
 
 
+    // dashboard
+    public function totalPengembalian()
+    {
+        return DB::table('pengembalian')->count();
+    }
+
+
 
     
 }

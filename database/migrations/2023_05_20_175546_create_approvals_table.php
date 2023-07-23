@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('approvals', function (Blueprint $table) {
             $table->id('id_approval');
             $table->string('id_peminjaman');
-            $table->string('wakil_direktur_1')->nullable();
+            // $table->string('wakil_direktur_1')->nullable();
             $table->string('wakil_direktur_2')->nullable();
             $table->string('kepala_bagian')->nullable();
             $table->string('staff_umum')->nullable();

@@ -78,9 +78,6 @@
                  </td>
             </tr>
      </table>
-     {{-- <div>
-      <h1 style="font-size:px">MAAFIN AKU PIAA CANTIKKK YAAAAA, NGGA DIULANGIN LAGII BENER DEHH</h1>
-     </div> --}}
      <div class="judul">
       <h4 style="font-weight:bold; font-size:14px;" >BERITA ACARA PEMINJAMAN RUANGAN</h4>
       <h4 style="line-height:20px; font-size:14px;">POLITEKNIK NEGERI SUBANG</h4>
@@ -89,7 +86,7 @@
       <div class="isi" style="font-size:14px">
       <table width="100%" class="mt-2">
             <tr>
-                  <td colspan="3"><p>
+                  <td colspan="3"><p align="justify">
                         Pada Hari Ini, Rabu Tanggal {{$tanggal}} Bulan {{$bulan}} Tahun {{$tahun}} ({{$now}}) telah memberikan izin kepada:</p></td>
             </tr>
             <tr>
@@ -162,11 +159,11 @@
             <tr style="vertical-align: top" align="justify">
                   <td colspan="2"><p>Dengan persyaratan sebagai berikut :</p></td>
             </tr>
-            <tr>
+            <tr style="vertical-align: top" align="justify">
                   <td style="width:3%"><p>1.</p></td>
                   <td><p> Menyerahkan Kartu Tanda Mahasiswa/Kartu Identitas pada saat melakukan peminjaman.</p></td>
             </tr>
-            <tr>
+            <tr style="vertical-align: top" align="justify">
                   <td style="width:3%"><p>2.</p></td>
                   <td><p> Menyerahkan dokumen Form Peminjaman Ruangan yang telah disetujui paling lambat (H-1) kepada Satuan Pengamanan Politeknik Negeri Subang.</p></td>
             </tr>
@@ -230,10 +227,10 @@
                                     <td style="height:30px"></td>
                               </tr>
                               <tr>
-                                    <td><p>Zaenal Abidin, S.Pd.I., M.Si.</p></td>
+                                    <td><p>{{$kabag->name}}</p></td>
                               </tr>
                               <tr>
-                                    <td><p>NIP. 196704221996011001</p></td>
+                                    <td><p>NIP. {{$kabag->no_identitas}}</p></td>
                               </tr>
                         </table>
 
@@ -247,17 +244,23 @@
                                     <td><p>Staff Umum,</p></td>
                               </tr>
                               <tr>
-                                    <td style="height:30px" colspan="3"></td>
+                                    <td style="height:30px">
+                                          @if($approval->staff_umum == "Disetujui")
+                                          <img src="{{public_path('foto/ttd/'. $umum->ttd_kabag)}}" width="50px" alt="">
+                                          @endif
+                                    </td>
+                                    <td style="height:30px"></td>
+                                    <td style="height:30px"></td>
                               </tr>
                               <tr>
-                                    <td><p>Agata Novi Anindita</p></td>
+                                    <td><p>{{$umum->name}}</p></td>
                                     <td style="width:50%"></td>
                                     <td><p>{{$peminjaman->nama_pj}}</p></td>
                               </tr>
                               <tr>
-                                    <td><p>NIP. xxxx</p></td>
+                                    <td><p>{{$umum->jenis_identitas}} {{$umum->no_identitas}}</p></td>
                                     <td style="width:50%"></td>
-                                    <td><p>{{$peminjaman->no_identitas}}</p></td>
+                                    <td><p>{{$peminjaman->jenis_identitas}} {{$peminjaman->no_identitas}}</p></td>
                               </tr>
                         </table>
       </div>

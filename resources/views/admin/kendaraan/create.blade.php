@@ -112,8 +112,13 @@
                     </div>
                     <div class="col col-md-12 col-12">
                         <div class="form-group">
-                            <label for="foto">Foto Kendaraan</label>
-                           <input type="file" class="form-control" name="foto_item" value="{{old('foto_item')}}">
+                            <label for="deskripsi_barang">Foto Kendaraan</label>
+                           <input type="file" class="form-control @error('foto_item') is-invalid @enderror" name="foto_item" value="{{old('foto_item')}}">
+                           @error('foto_item')
+                           <span class="invalid-feedback" role="alert">
+                               <strong>{{ $message }}</strong>
+                           </span>
+                           @enderror
                         </div>
                     </div>
                 </div>

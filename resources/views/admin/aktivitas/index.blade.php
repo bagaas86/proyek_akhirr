@@ -27,15 +27,16 @@
         <table id="aktivitas" class="display" style="width:100%">
             <thead>
                 <tr>
-                 <th style="text-align:center; vertical-align:middle"  rowspan="2">No</th>
-                  <th style="text-align:center; vertical-align:middle"  rowspan="2">Nama Supir</th>
-                   <th style="text-align:center; vertical-align:middle"  rowspan="2">Nama Aktivitas</th>
-                 <th style="text-align:center; vertical-align:middle" colspan="2">Aktivitas</th>
+                    <th style="text-align:center; vertical-align:middle"  rowspan="2">No</th>
+                    <th style="text-align:center; vertical-align:middle"  rowspan="2">Nama Supir</th>
+                    <th style="text-align:center; vertical-align:middle"  rowspan="2">Nama Aktivitas</th>
+                    <th style="text-align:center; vertical-align:middle" colspan="2">Aktivitas</th>
+                    <th style="text-align:center; vertical-align:middle" rowspan="2">Aksi</th>
                 </tr>
-                  <tr>
-                    <th>Mulai Aktivitas</th>
-                     <th>Selesai Aktivitas</th>
-                  </tr>
+                    <tr>
+                        <th>Mulai Aktivitas</th>
+                        <th>Selesai Aktivitas</th>
+                    </tr>
             </thead>
             <tbody>
                 @foreach($aktivitas as $data)
@@ -49,6 +50,9 @@
                     <td style="width:30%">{{$data->nama_aktivitas}}</td>
                     <td style="width:20%">{{$mulai_aktivitas}}</td>
                     <td style="width:20%">{{$selesai_aktivitas}}</td>
+                    <td style="width:10%">
+                    <a href="#" data-toggle="modal" data-target="#surat{{$data->id_aktivitas}}" class="btn btn-primary">Cetak Surat Jalan</a>
+                    </td>
                 </tr>
                 @endforeach
             </tbody>
@@ -72,6 +76,35 @@
         </div>
     </div>
 </div>
+{{-- endModal --}}
+
+
+{{-- Modal --}}
+@foreach($aktivitas as $data)
+<div id="surat{{$data->id_aktivitas}}" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Surat Tugas {{$data->nama_supir}}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <form action="{{route('supir.aktivitas.cetaksurat', $data->id_aktivitas)}}">
+                    <div class="form-group">
+                        <label for="">Nomor Surat Tugas</label>
+                        <input type="text" class="form-control" name="nomor_st">
+                    </div>
+                <button class="btn btn-primary" type="submit">Cetak Surat</button>
+                </form>
+              
+            </div>
+            <div id="modalFooter" class="modal-footer">
+             
+            </div>
+        </div>
+    </div>
+</div>
+@endforeach
 {{-- endModal --}}
 @endsection
 

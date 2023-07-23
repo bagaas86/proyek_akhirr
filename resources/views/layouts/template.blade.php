@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>SIP3 BMN</title>
+    <title>SIP2 BMN</title>
     <!-- HTML5 Shim and Respond.js IE11 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 11]>
@@ -16,10 +16,12 @@
     <meta name="description" content="" />
     <meta name="keywords" content="">
     <meta name="author" content="Phoenixcoded" />
+    <link rel="icon" href="{{asset('template')}}/dist/assets/images/logoPolsub.png">
     {{-- css pribadi --}}
     <link rel="stylesheet" href="{{asset('template')}}/dist/assets/css/mycss.css">
+    
     <!-- Favicon icon -->
-    <link rel="icon" href="{{asset('template')}}/dist/assets/images/favicon.ico" type="image/x-icon">
+    {{-- <link rel="icon" href="{{asset('template')}}/dist/assets/images/favicon.ico" type="image/x-icon"> --}}
 
     <!-- vendor css -->
     <link rel="stylesheet" href="{{asset('template')}}/dist/assets/css/style.css">
@@ -30,8 +32,9 @@
     {{-- datatable --}}
     {{-- <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css" /> --}}
 
-    {{-- bootstrap icons --}}
-    <link href="{{asset('templateBaru')}}/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  {{-- bootstrap icons --}}
+  <link href="{{asset('template')}}/dist/assets/js/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+
 
     <script src="https://code.jquery.com/jquery-3.6.1.js" integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI=" crossorigin="anonymous"></script>
 

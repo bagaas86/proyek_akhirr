@@ -7,17 +7,17 @@
             <li class="nav-item">
                 <a href="{{url('dashboard')}}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-home"></i></span><span class="pcoded-mtext">
                     @if(Auth::user()->sebagai == "Staff Umum" OR Auth::user()->sebagai == "Kepala Bagian" OR Auth::user()->sebagai == "Wakil Direktur 1" OR Auth::user()->sebagai == "Wakil Direktur 2" OR Auth::user()->sebagai == "Pengelola Supir"  )
-                    Kembali ke Mode Admin
+                    Beranda
                     @else
                     Beranda
                     @endif
                 </span></a>
             </li>
             <li class="nav-item">
-                <a href="{{route('dm.peminjaman.index')}}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-home"></i></span><span class="pcoded-mtext">Peminjaman</span></a>
+                <a href="{{route('dm.peminjaman.index')}}" class="nav-link "><span class="pcoded-micon"><i class="bi bi-send-plus"></i></span><span class="pcoded-mtext">Peminjaman</span></a>
             </li>
             <li class="nav-item">
-                <a href="{{route('pengembalian.lapor.index')}}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-home"></i></span><span class="pcoded-mtext">Pengembalian</span></a>
+                <a href="{{route('pengembalian.lapor.index')}}" class="nav-link "><span class="pcoded-micon"><i class="bi bi-file-earmark-check-fill"></i></span><span class="pcoded-mtext">Pengembalian</span></a>
             </li>
             {{-- <li class="nav-item pcoded-hasmenu">
                 <a href="#!" class="nav-link "><span class="pcoded-micon"><i class="feather icon-lock"></i></span><span class="pcoded-mtext">Authentication</span></a>

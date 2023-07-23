@@ -8,6 +8,8 @@ use App\Models\supir;
 use App\Models\aktivitas;
 use DB;
 use File;
+use Carbon\Carbon;
+use PDF;
 
 class c_supir extends Controller
 {
@@ -136,5 +138,25 @@ class c_supir extends Controller
         $this->aktivitas->addData($data);
           
         return redirect()->route('supir.aktivitas.index')->with('success','Aktivitas Supir berhasil ditambahkan');
+    }
+
+    public function cetakSurat(Request $request, $id_aktivitas)
+    {
+        $getData = $this->aktivitas->suratData($id_aktivitas);
+        $now = Carbon::now()->format('d-m-Y');
+        $nomor_surat = $request->nomor_st;
+        $data = [
+            'aktivitas' => $getData,
+            'now' => $now,
+            'nomor_surat' => $nomor_surat,
+        ];
+
+        $pdf = PDF::loadView('admin.beritaacara.surat', $data)->setPaper('A4', 'potrait');
+        $path = public_path('pdf/');
+        $fileNameST =  'Surat Tugas'.'-'.$getData->nama_supir.'-'.$getData->id_aktivitas.'-'.$now.'.'.'pdf' ;
+        $pdf->save($path . '/' . $fileNameST);
+        $pdf = public_path('pdf/'.$fileNameST);
+        return response()->download($pdf);
+        // return view ('admin.beritaacara.surat', $data);
     }
 }

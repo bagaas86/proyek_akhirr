@@ -26,14 +26,14 @@
     @foreach($item as $data)
     <div class="col col-6 col-md-3" style="margin-top:1em;">
         <div class="card h-100" style="border:1px solid grey">
-            <div type="button" onclick="tambahitem({{ $data->id_item }})"  class="card-header h-50">
+            <div type="button" onclick="tambahitem({{ $data->id_item }})"  class="card-header h-65">
                 <div style="text-align: center">
                     @if($data->kategori_item == "Barang")
-                    <img class="img-rounded" src="{{asset('foto/dm/barang/'. $data->foto_item)}}" width="50%" height="50%"  alt="">    
+                    <img class="img-thumbnail" src="{{asset('foto/dm/barang/'. $data->foto_item)}}" width="50%" height="50%"  alt="">    
                     @elseif($data->kategori_item == "Ruangan")
-                    <img class="img-rounded" src="{{asset('foto/dm/ruangan/'. $data->foto_item)}}" width="50%" height="50%" alt="">    
+                    <img class="img-thumbnail" src="{{asset('foto/dm/ruangan/'. $data->foto_item)}}" width="50%" height="50%" alt="">    
                     @elseif($data->kategori_item == "Kendaraan")
-                    <img class="img-rounded" src="{{asset('foto/dm/kendaraan/'. $data->foto_item)}}" width="50%" height="50%" alt="">    
+                    <img class="img-thumbnail" src="{{asset('foto/dm/kendaraan/'. $data->foto_item)}}" width="50%" height="50%" alt="">    
                     @endif
                 </div>
                

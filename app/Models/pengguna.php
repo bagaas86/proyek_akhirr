@@ -12,7 +12,7 @@ class pengguna extends Model
 
     public function allData()
     {
-        return DB::table('users')->get();
+        return DB::table('users')->where('status_user', "Aktif")->get();
     }
 
     public function addData($data)
@@ -41,4 +41,37 @@ class pengguna extends Model
     {
         return DB::table('users')->distinct()->select('sebagai')->get();
     }
+
+    // untuk pengaturan
+    public function bagian_umum()
+    {
+        return DB::table('users')->where('sebagai', "Staff Umum")->whereNot('username', null)->get();
+    }
+
+    public function wakil_direktur_1()
+    {
+        return DB::table('users')->where('sebagai', "Wakil Direktur 1")->whereNot('username', null)->get();
+    }
+
+    public function wakil_direktur_2()
+    {
+        return DB::table('users')->where('sebagai', "Wakil Direktur 2")->whereNot('username', null)->get();
+    }
+
+    public function kepala_bagian()
+    {
+        return DB::table('users')->where('sebagai', "Kepala Bagian")->whereNot('username', null)->get();
+    }
+
+    public function pengelola_supir()
+    {
+        return DB::table('users')->where('sebagai', "Pengelola Supir")->whereNot('username', null)->get();
+    }
+
+    // Dashboard
+    public function totalPengguna()
+    {
+        return DB::table('users')->whereNot('username', null)->count();
+    }
+    
 }

@@ -95,6 +95,29 @@ class c_pengguna extends Controller
 
     public function update(Request $request, $id)
     {
+        $validate = $this->pengguna->detailData($id);
+        if($request->username <> $validate->username)
+        {
+            $request->validate([
+                'username' => 'required|unique:users,username',
+                'name' => 'required',
+            ],[
+                'username.required'=>'Username Wajib Terisi',
+                'username.unique'=>'Username Sudah Ada',
+                'name.required'=>'Nama Wajib Terisi',
+            ]);
+        }else{
+            $request->validate([
+                'username' => 'required',
+                'name' => 'required',
+            ],[
+                'username.required'=>'Username Wajib Terisi',
+                'username.unique'=>'Username Sudah Ada',
+                'name.required'=>'Nama Wajib Terisi',
+            ]);
+        }
+      
+
            // Ganti Foto
            if($request->foto <> null){
             $file = $request->foto;
@@ -132,8 +155,14 @@ class c_pengguna extends Controller
         if($deleteFoto->foto <> "default.png"){
             File::delete('foto/dm/pengguna/'.$deleteFoto->foto);
         };
+        // $this->pengguna->deleteData($id);
 
-        $this->pengguna->deleteData($id);
+        $data = [
+            'username' => null,
+            'status_user' => $deleteFoto->username,
+        ];
+        $this->pengguna->editData($id, $data);
+
         return redirect()->route('dm.pengguna.index')->with('success','Pengguna berhasil dihapus.');
     }
 
@@ -187,6 +216,21 @@ class c_pengguna extends Controller
 
     public function editProfil_User(Request $request)
     {
+        $request->validate([
+            'name' => 'required',
+            'foto' => 'mimes:jpg,png',
+            'no_telepon' => [
+                function ($attribute, $value, $fail) {
+                    if (strpos($value, '+62') === 0) {
+                        $fail('Nomor telepon tidak boleh diisi dengan +62.');
+                    }
+                },
+            ],
+        ],[
+            'name.required'=>'Nama Tidak Boleh Kosong.',
+            'foto.mimes'=>'Foto Harus Berformat JPG atau PNG.',
+            'no_telepon' => 'Nomor telepon tidak boleh diisi dengan +62.'
+        ]);
             $id = $request->id_user;
        
            // Ganti Foto
@@ -210,6 +254,7 @@ class c_pengguna extends Controller
                 'keterangan'=> $request->keterangan,
                 'no_identitas' => $request->no_identitas,
                 'no_telepon' => $request->no_telepon,
+                'jenis_identitas'=>$request->jenis_identitas,
             ];
            
         }
@@ -218,5 +263,67 @@ class c_pengguna extends Controller
         return redirect()->route('profil.user')->with('success', 'Pengguna Berhasil diupdate.');
 
     }
+
+
+     // user
+     public function myProfil_Admin()
+     {
+         $id = Auth::user()->id;
+         $data = [
+             'pengguna'=> $this->pengguna->detailData($id),
+         ];
+         return view('user.v_adm_profile', $data);
+     }
+ 
+     public function editProfil_Admin(Request $request)
+     {
+
+             $request->validate([
+                'name' => 'required',
+                'foto' => 'mimes:jpg,png',
+                'no_telepon' => [
+                    function ($attribute, $value, $fail) {
+                        if (strpos($value, '+62') === 0) {
+                            $fail('Nomor telepon tidak boleh diisi dengan +62.');
+                        }
+                    },
+                ],
+            ],[
+                'name.required'=>'Nama Tidak Boleh Kosong.',
+                'foto.mimes'=>'Foto Harus Berformat JPG atau PNG.',
+                'no_telepon' => 'Nomor telepon tidak boleh diisi dengan +62.'
+            ]);
+
+             $id = $request->id_user;
+            // Ganti Foto
+            if($request->foto <> null){
+             $file = $request->foto;
+             $filename= $request->username.".png";   
+             $file->move(public_path('foto/dm/pengguna'),$filename);
+             $data['foto'] = $filename;
+             $this->pengguna->editData($id, $data);
+         }
+ 
+         if($request->password <> null){
+             $data = [
+                 'password'=> Hash::make($request->password),
+             ];
+         }else{
+             $data = [
+                 'name'=> $request->name,
+                 'sebagai'=> $request->sebagai,
+                 'username'=> $request->username,
+                 'keterangan'=> $request->keterangan,
+                 'no_identitas' => $request->no_identitas,
+                 'no_telepon' => $request->no_telepon,
+                 'jenis_identitas'=>$request->jenis_identitas,
+             ];
+            
+         }
+         $this->pengguna->editData($id, $data);
+     
+         return redirect()->route('profil.admin')->with('success', 'Pengguna Berhasil diupdate.');
+ 
+     }
 
 }

@@ -11,6 +11,8 @@ use App\Http\Controllers\c_unit;
 use App\Http\Controllers\c_supir;
 use App\Http\Controllers\c_pengembalian;
 use App\Http\Controllers\c_laporan;
+use App\Http\Controllers\c_info;
+use App\Http\Controllers\c_pengaturan;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,6 +24,9 @@ use App\Http\Controllers\c_laporan;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Route::get('wa', [App\Http\Controllers\c_peminjaman::class, 'createNumber'])->name('sendWhatsapp');
+
 
 Route::get('error', [App\Http\Controllers\c_login::class, 'errorPage'])->name('error');
 Route::get('/', [App\Http\Controllers\c_login::class, 'landingPage'])->name('user.login');
@@ -76,6 +81,10 @@ Route::controller(c_pengguna::class)->middleware('auth')->group(function () {
         // user
         Route::get('profilsaya', 'myProfil_User')->name('profil.user');
         Route::post('editprofil','editProfil_User')->name('profil.user.edit');
+
+         // admin
+         Route::get('profil', 'myProfil_Admin')->name('profil.admin');
+         Route::post('updateprofil','editProfil_Admin')->name('profil.admin.edit');
 });
 
 // // Unit
@@ -102,6 +111,7 @@ Route::controller(c_supir::class)->middleware('auth')->group(function () {
     Route::post('supir/aktivitas/store', 'storeAktivitas')->name('supir.aktivitas.store');
     Route::get('supir/aktivitas/edit/{id_aktivitas}', 'editAktivitas')->name('supir.aktivitas.edit');
     Route::post('supir/aktivitas/update/{id_aktivitas}', 'updateAktivitas')->name('supir.aktivitas.update');
+    Route::get('supir/aktivitas/cetaksurat/{id_aktivitas}', 'cetakSurat')->name('supir.aktivitas.cetaksurat');
 
         // js
         Route::get('ubahstatussupir/{id_supir}', 'ubahStatus_Supir')->name('ubahstatussupir');
@@ -175,6 +185,13 @@ Route::controller(c_history::class)->middleware('auth')->group(function () {
     Route::get('detailhistory/{id}', 'detailHistory')->name('detailhistory');
 });
 
+Route::controller(c_info::class)->middleware('auth')->group(function () {
+    Route::get('info', 'index')->name('info.index');
+    Route::get('info/detail/{id_item}', 'infoDetail')->name('info.detail');
+    Route::get('datainfo/{id_item}', 'dataInfo')->name('datainfo');
+});
+
+
 
 Route::controller(c_laporan::class)->middleware('auth')->group(function () {
     Route::get('laporan', 'index')->name('laporan.index');
@@ -183,6 +200,11 @@ Route::controller(c_laporan::class)->middleware('auth')->group(function () {
     Route::get('profil/chartpeminjaman', 'chartPeminjaman')->name('profil.chartpeminjaman');
 
    
+});
+
+Route::controller(c_pengaturan::class)->middleware('auth')->group(function () {
+    Route::get('pengaturan', 'index')->name('pengaturan.index');
+    Route::post('pengaturan/simpan', 'simpan')->name('pengaturan.simpan');
 });
 
 

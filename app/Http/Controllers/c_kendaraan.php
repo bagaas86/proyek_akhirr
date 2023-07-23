@@ -52,6 +52,7 @@ class c_kendaraan extends Controller
             'plat_kendaraan' => 'required',
             'kondisi_item' => 'required',
             'deskripsi_item' => 'required',
+            'foto_item' => 'mimes:jpg,png',
         ],[
             'nama_item.required'=>'Merk Kendaraan Wajib terisi',
             'tipe_kendaraan.required'=>'Tipe Kendaraan Wajib terisi',
@@ -59,6 +60,7 @@ class c_kendaraan extends Controller
             'plat_kendaraan.required'=>'Plat Kendaraan Wajib terisi',
             'kondisi_item.required'=>'Kondisi Kendaraan wajib terisi',
             'deskripsi_item.required' => 'Deskripsi Kendaraan wajib terisi',
+            'foto_item.mimes'=>'Foto Kendaraan Harus Berformat JPG or PNG',
         ]);
 
             if($request->foto_item <> null){
@@ -127,10 +129,20 @@ class c_kendaraan extends Controller
     {
         $request->validate([
             'nama_item' => 'required',
+            'tipe_kendaraan' => 'required',
+            'warna_kendaraan' => 'required',
+            'plat_kendaraan' => 'required',
+            'kondisi_item' => 'required',
             'deskripsi_item' => 'required',
+            'foto_item' => 'mimes:jpg,png',
         ],[
-            'nama_item.required'=>'Nama Kendaraan Wajib terisi',
-            'deskripsi_item.required'=>'Deskripsi Kendaraan wajib terisi',
+            'nama_item.required'=>'Merk Kendaraan Wajib terisi',
+            'tipe_kendaraan.required'=>'Tipe Kendaraan Wajib terisi',
+            'warna_kendaraan.required'=>'Warna Kendaraan wajib terisi',
+            'plat_kendaraan.required'=>'Plat Kendaraan Wajib terisi',
+            'kondisi_item.required'=>'Kondisi Kendaraan wajib terisi',
+            'deskripsi_item.required' => 'Deskripsi Kendaraan wajib terisi',
+            'foto_item.mimes'=>'Foto Kendaraan Harus Berformat JPG or PNG',
         ]);
     
    
@@ -159,6 +171,17 @@ class c_kendaraan extends Controller
     $this->kendaraan->editData($request->id_item, $data_kendaraan);
 
     return redirect()->route('dm.kendaraan.index')->with('success','Barang berhasil diupdate.');
+    }
+
+    public function destroy($id)
+    {
+       
+        $data = [
+            'kondisi_item' => "Dihapus",
+        ];
+        $this->item->editData($id, $data);    
+        return redirect()->route('dm.kendaraan.index')->with('success','Kendaraan berhasil dihapus.');
+      
     }
     
 }

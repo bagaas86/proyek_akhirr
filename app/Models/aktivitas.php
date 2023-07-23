@@ -49,4 +49,12 @@ class aktivitas extends Model
               }
             })->get();
     }
+
+    public function suratData($id_aktivitas)
+    {
+        return DB::table('aktivitas')
+        ->join('supir','aktivitas.id_supir','=','supir.id_supir')
+        ->where('aktivitas.id_aktivitas', $id_aktivitas)
+        ->first();
+    }
 }

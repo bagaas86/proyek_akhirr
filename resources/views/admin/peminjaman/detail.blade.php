@@ -67,7 +67,7 @@ $lama = $diff+1;
                                         </table> 
                                     </div>
                                     <div class="col col-md-3 col-12">
-                                        <a href="#" onclick="lihatUlasan({{$peminjaman->id_user}})"> <img src="{{asset('foto/dm/pengguna/default.png')}}" class="img-rounded" style="width:100%"></a>
+                                        <a href="#" onclick="lihatUlasan({{$peminjaman->id_user}})"> <img src="{{asset('foto/dm/pengguna/'. $peminjaman->foto)}}" class="rounded-circle shadow-4-strong" style="width:150px;height: 150px;"></a>
                                     </div>
 
                                 </div>
@@ -85,15 +85,17 @@ $lama = $diff+1;
                         <div class="table">
                             <table>
                                 <tr style="border-bottom:1px solid rgb(0, 0, 0);font-size:14px">
-                                    <th style="width:70%">Nama BMN</th>
+                                    <th style="width:60%">Nama BMN</th>
                                     <th style="width:10%">Kategori</th>
                                     <th style="width:15%">Jumlah</th>  
+                                    <th style="width:15%">Aksi</th>
                                 </tr>
                                 @foreach($keranjang as $data)
                                 <tr style="font-size:14px">
-                                    <td style="width:70%">{{$data->nama_item}}</td>
-                                    <td style="width:70%">{{$data->kategori_item}}</td>
+                                    <td style="width:60%">{{$data->nama_item}}</td>
+                                    <td style="width:10%">{{$data->kategori_item}}</td>
                                     <td style="width:15%">{{$data->jumlah}}</td>
+                                    <td style="width:15%"><a href="#" onclick="lihatInfo({{$data->id_item}})"><i class="bi bi-eye"></i></a></td>
                                 </tr>
                                 @endforeach
                             </table> 
@@ -117,6 +119,15 @@ $lama = $diff+1;
                     </div>
                 </div>
             </div>
+            @if($peminjaman->surat_pengajuan <> null )
+            <div class="col col-md-12 col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <iframe style="width:100%;height:300px" src="{{asset('foto/peminjaman/surat_pengajuan/'. $peminjaman->surat_pengajuan)}}" frameborder="0"></iframe>
+                    </div>
+                </div>
+            </div>
+            @endif
             
         </div>
 
@@ -132,6 +143,19 @@ $lama = $diff+1;
             $("#page2").html(data);
             $("#modalFooter2").html(`
             <a style="color:white" class="btn  btn-secondary" data-dismiss="modal">Tutup</a>
+            `)
+            $("#exampleModalCenter2").modal('show');
+        })
+    }
+
+    function lihatInfo(id_item)
+    {
+        var id_peminjaman = $("#id_peminjaman").val();
+        $.get("{{ url('datainfo') }}/" + id_item, {}, function(data, status){
+        $("#exampleModalCenterTitle2").html(`Informasi BMN`)
+            $("#page2").html(data);
+            $("#modalFooter2").html(`
+            <a style="color:white" id="kembali" class="btn  btn-secondary" onclick="modalDetail(`+id_peminjaman+`)" >Kembali</a>
             `)
             $("#exampleModalCenter2").modal('show');
         })

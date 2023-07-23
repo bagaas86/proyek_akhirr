@@ -202,9 +202,11 @@
                                             <input type="text" class="form-control" placeholder="Nama Kegiatan" id="nama_kegiatan" name="nama_kegiatan" value="{{old('nama_kegiatan')}}" required>
                                         </div>
                                         <div class="col col-12 col-md-12 mt-2">
-                                            <label for=""><b>Upload Surat Pengajuan</b><small>(opsional)</small></label>
-                                            <input type="file" class="form-control" placeholder="Nama Kegiatan" id="bukti" name="surat_pengajuan">
+                                            <label for=""><b>Upload Surat Pengajuan</b><small>Format : PDF</small></label>
+                                            <input  onchange="ceksurat()" type="file" class="form-control" placeholder="Nama Kegiatan" id="bukti" name="surat_pengajuan">
+                                            <div id="alert1"></div>
                                         </div>
+                                        <input type="text" id="eror" value="0" hidden>
                                         {{-- <div class="col col-12 col-md-12 mt-2">
                                             <label for=""><b>Upload Kartu Identitas</b><small style="color:red">*</small></label>
                                             <input type="file" class="form-control" placeholder="Nama Kegiatan" id="tanda_pengenal" name="foto_identitas" required>
@@ -215,7 +217,7 @@
                                     </div>
                                 </form>
                                 <div style="text-align: center">
-                                    <a onclick="confirm()" class="btn btn-block btn-primary mt-4">Kirim Pengajuan</a>
+                                    <a onclick="confirm()" id="buttonSend" style="color:white" class="btn btn-block btn-primary mt-4">Kirim Pengajuan</a>
                                 </div>
                 
                             </div>
@@ -230,12 +232,27 @@
     $( document ).ready(function() {
     jenisPeminjaman()
 });
+function ceksurat(){
+    var files = $("#bukti")[0].files
+    var type = files[0].type
+    if (type != "application/pdf"){
+            $("#alert1").html(`<span style="color: red">Jenis File Harus PDF</span>`);
+            $("#eror").val(1);
+     }else{
+        $("#alert1").html('');
+            $("#eror").val(0);
+     }
+}
 function confirm()
     {
+        var btn = document.getElementById("buttonSend")
         var jenis_peminjaman = $("#inputt").val()
         var nama_kegiatan = $("#nama_kegiatan").val()
         var fromdate1 = $("#fromdate1").val()
         var todate1 = $("#todate1").val()
+        var surat = $("#bukti").val()
+        var eror = $("#eror").val();
+        
         if(jenis_peminjaman == "Masukkan Barang Terlebih Dahulu" || nama_kegiatan == "" || fromdate1 == "" || todate1 == "" )
         {
             Swal.fire(
@@ -245,8 +262,17 @@ function confirm()
                         text: 'Gagal Mengirim. Harap Perhatikan Inputan form!'
                         }
                     )
-        }else{
-            document.getElementById("send").click(),
+        }else if (eror == 1){
+            Swal.fire(
+                    {
+                        icon: 'error',
+                        title: 'Gagal',
+                        text: 'Surat Pengajuan Harus Berformat PDF!'
+                        }
+                    )
+        }else if (eror == 0){
+            document.getElementById("send").click();
+            document.getElementById("buttonSend").style.display="none";
             Swal.fire(
                     {
                         icon: 'success',

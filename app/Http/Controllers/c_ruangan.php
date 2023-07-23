@@ -44,16 +44,19 @@ class c_ruangan extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nama_item' => 'required|unique:items,nama_item',
+            'nama_item' => 'required',
             'lokasi_item' => 'required',
             'kondisi_item' => 'required',
             'deskripsi_item' => 'required',
+            'foto_item' => 'mimes:jpg,png',
         ],[
             'nama_item.required'=>'Nama Ruangan Wajib terisi',
             'nama_item.unique'=>'Nama Ruangan Sudah Ada',
             'lokasi_item.required'=>'Lokasi Ruangan Wajib terisi',
             'kondisi_item.required'=>'Kondisi Ruangan Wajib terisi',
             'deskripsi_item.required'=>'Deskripsi Ruangan wajib terisi',
+            'foto_item.mimes'=>'Foto Ruangan Harus Berformat JPG or PNG',
+            
         ]);
 
             if($request->foto_item <> null){
@@ -99,33 +102,22 @@ class c_ruangan extends Controller
 
     public function update(Request $request, $id)
     {
-        $validate = $this->item->detailData($id);
-        if ($validate->nama_item == $request->nama_item){
-            $request->validate([
-                'nama_item' => 'required',
-                'lokasi_item' => 'required',
-                'kondisi_item' => 'required',
-                'deskripsi_item' => 'required',
-            ],[
-                'nama_item.required'=>'Nama Barang Wajib terisi',
-                'lokasi_item.required'=>'Lokasi Barang Wajib terisi',
-                'kondisi_item.required'=>'Kondisi Barang Wajib terisi',
-                'deskripsi_item.required'=>'Deskripsi Barang wajib terisi',
-            ]);
-        }else{
-            $request->validate([
-                'nama_item' => 'required|unique:items,nama_item',
-                'lokasi_item' => 'required',
-                'kondisi_item' => 'required',
-                'deskripsi_item' => 'required',
-            ],[
-                'nama_item.required'=>'Nama Barang Wajib terisi',
-                'nama_item.unique'=>'Nama Barang Sudah Ada',
-                'lokasi_item.required'=>'Lokasi Barang Wajib terisi',
-                'kondisi_item.required'=>'Kondisi Barang Wajib terisi',
-                'deskripsi_item.required'=>'Deskripsi Barang wajib terisi',
-            ]);
-        }
+        $request->validate([
+            'nama_item' => 'required',
+            'lokasi_item' => 'required',
+            'kondisi_item' => 'required',
+            'deskripsi_item' => 'required',
+            'foto_item' => 'mimes:jpg,png',
+        ],[
+            'nama_item.required'=>'Nama Ruangan Wajib terisi',
+            'nama_item.unique'=>'Nama Ruangan Sudah Ada',
+            'lokasi_item.required'=>'Lokasi Ruangan Wajib terisi',
+            'kondisi_item.required'=>'Kondisi Ruangan Wajib terisi',
+            'deskripsi_item.required'=>'Deskripsi Ruangan wajib terisi',
+            'foto_item.mimes'=>'Foto Ruangan Harus Berformat JPG or PNG',
+            
+        ]);
+      
        
         // Ganti Foto
         if($request->foto_item <> null){
@@ -150,14 +142,11 @@ class c_ruangan extends Controller
 
     public function destroy($id)
     {
-        $deleteFoto = $this->item->detailData($id);
-        if($deleteFoto->foto_item <> "nruangan.png"){
-            File::delete('foto/dm/ruangan/'.$deleteFoto->foto_item);
-        }
-       
-
-        $this->item->deleteData($id);
-        return redirect()->route('dm.ruangan.index')->with('success','Barang berhasil dihapus.');
+        $data = [
+            'kondisi_item' => "Dihapus",
+        ];
+        $this->item->editData($id, $data);    
+        return redirect()->route('dm.ruangan.index')->with('success','Ruangan berhasil dihapus.');
     }
 
 

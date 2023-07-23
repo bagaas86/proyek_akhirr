@@ -63,7 +63,6 @@
 
 
 
-
 <div class = "rangkasurat">
      <table class="header" width = "100%">
            <tr>
@@ -228,13 +227,17 @@
                                     <td><p>Koordinator Ketatausahaan</p></td>
                               </tr>
                               <tr>
-                                    <td style="height:30px"></td>
+                                    <td style="height:50px">
+                                          @if($approval->kepala_bagian == "Disetujui")
+                                          <img src="{{public_path('foto/ttd/'. $kabag->ttd_kabag)}}" width="50px" alt="">
+                                          @endif
+                                    </td>
                               </tr>
                               <tr>
-                                    <td><p>Zaenal Abidin, S.Pd.I., M.Si.</p></td>
+                                    <td><p>{{$kabag->name}}</p></td>
                               </tr>
                               <tr>
-                                    <td><p>NIP. 196704221996011001</p></td>
+                                    <td><p>{{$kabag->jenis_identitas}} {{$kabag->no_identitas}}</p></td>
                               </tr>
                         </table>
 
@@ -248,17 +251,17 @@
                                     <td><p>Staff Umum,</p></td>
                               </tr>
                               <tr>
-                                    <td style="height:30px" colspan="3"></td>
+                                    <td style="height:30px" colspan="3"><img src="{{public_path('foto/ttd/'. $umum->ttd_bagian_umum)}}" width="50px" alt=""></td>
                               </tr>
                               <tr>
-                                    <td><p>Agata Novi Anindita</p></td>
+                                    <td><p>{{$umum->name}}</p></td>
                                     <td style="width:50%"></td>
                                     <td><p>{{$peminjaman->nama_pj}}</p></td>
                               </tr>
                               <tr>
-                                    <td><p>NIP. xxxx</p></td>
+                                    <td><p>{{$umum->jenis_identitas}} {{$umum->no_identitas}}</p></td>
                                     <td style="width:50%"></td>
-                                    <td><p>{{$peminjaman->no_identitas}}</p></td>
+                                    <td><p>{{$peminjaman->jenis_identitas}} {{$peminjaman->no_identitas}}</p></td>
                               </tr>
                         </table>
       </div>
@@ -267,8 +270,5 @@
 
       </div>
 </div>
-
-
-
 </body>
 </html>

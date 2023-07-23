@@ -23,17 +23,27 @@ class item extends Model
 
     public function ruanganData()
     {
-        return DB::table('items')->where('kategori_item','=','Ruangan')->get();
+        return DB::table('items')
+                ->where('kategori_item','=','Ruangan')
+                ->whereNot('kondisi_item', "Dihapus") 
+                ->get();
     }
 
     public function barangData()
     {
-        return DB::table('items')->where('kategori_item','=','Barang')->get();
+        return DB::table('items')
+                ->where('kategori_item','=','Barang')
+                ->whereNot('kondisi_item', "Dihapus")
+                ->get();
     }
 
     public function kendaraanData()
     {
-        return DB::table('items')->join('kendaraan', 'items.id_item','=','kendaraan.id_item')->where('kategori_item','=','Kendaraan')->get();
+        return DB::table('items')
+                ->join('kendaraan', 'items.id_item','=','kendaraan.id_item')
+                ->where('kategori_item','=','Kendaraan')
+                ->whereNot('kondisi_item', "Dihapus")
+                ->get();
     }
 
     public function checkID()
@@ -106,6 +116,21 @@ class item extends Model
     
     // }
     
+    // Dashboard
+    public function totalBarang()
+    {
+        return DB::table('items')->where('kategori_item', "Barang")->whereNot('kondisi_item', "Dihapus")->count();
+    }
+
+    public function totalRuangan()
+    {
+        return DB::table('items')->where('kategori_item', "Ruangan")->whereNot('kondisi_item', "Dihapus")->count();
+    }
+
+    public function totalKendaraan()
+    {
+        return DB::table('items')->where('kategori_item', "Kendaraan")->whereNot('kondisi_item', "Dihapus")->count();
+    }
 
 
 }

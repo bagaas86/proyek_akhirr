@@ -193,6 +193,11 @@ class keranjang extends Model
         return DB::table('keranjangs')->where('id_keranjang', $id_keranjang)->first();
     }
 
+    public function cascadeItem($id_item)
+    {
+        return DB::table('keranjangs')->where('id_item', $id_item)->whereNot('id_peminjaman', null)->count();
+    }
+
 
 
 

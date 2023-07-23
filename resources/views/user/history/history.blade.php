@@ -6,10 +6,21 @@
      @foreach($history as $data)
           <div class="card">
               <div class="row">
-                  @if($data->jenis_peminjaman == "Kendaraan" OR $data->jenis_peminjaman == "Barang,Kendaraan" OR $data->jenis_peminjaman == "Ruangan,Kendaraan" OR $data->jenis_peminjaman == "Barang,Ruangan,Kendaraan")
+                <div class="card-body col col-4 col-md-4">
+                    <div class="status">
+                        @php
+                        $jenis_peminjaman = explode("," , $data->jenis_peminjaman);
+                        @endphp
+                        @foreach($jenis_peminjaman as $badge)
+                        <span class="badge badge-secondary">{{ $badge }}</span>
+                        @endforeach
+                    </div>
+
+                </div>
+                  {{-- @if($data->jenis_peminjaman == "Kendaraan" OR $data->jenis_peminjaman == "Barang,Kendaraan" OR $data->jenis_peminjaman == "Ruangan,Kendaraan" OR $data->jenis_peminjaman == "Barang,Ruangan,Kendaraan")
                   <div class="card-body col col-4 col-md-4">
                         <div class="status">
-                            @if($data->staff_umum =="Proses" OR $data->wakil_direktur_1 == "Proses" OR $data->wakil_direktur_2 == "Proses" OR $data->kepala_bagian == "Proses")
+                            @if($data->staff_umum == "Proses" OR $data->wakil_direktur_1 == "Proses" OR $data->wakil_direktur_2 == "Proses" OR $data->kepala_bagian == "Proses")
                             <span class="text-white badge bg-warning">Menunggu...</span>
                             @elseif($data->staff_umum <> "Proses" AND $data->staff_umum <> "Disetujui" OR $data->wakil_direktur_1 <> "Proses" AND $data->wakil_direktur_1 <> "Disetujui" OR $data->wakil_direktur_2 <> "Proses" AND $data->wakil_direktur_2 <> "Disetujui" OR $data->kepala_bagian <> "Proses" AND $data->kepala_bagian <> "Disetujui")
                             <span class="text-white badge bg-danger">Ditolak...</span>
@@ -42,7 +53,7 @@
                           @endif
                       </div>
                   </div>
-                  @endif
+                  @endif --}}
                   <div class="card-body col col-8 col-md-8">
                   <h6 style="font-size:12px">{{$data->nama_kegiatan}}</h6>
                   <div class="row">

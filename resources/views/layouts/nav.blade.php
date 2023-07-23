@@ -3,14 +3,23 @@
         
         <div class="">
             <div class="main-menu-header">
-                <img class="img-radius" src="{{asset('template')}}/dist/assets/images/user/avatar-2.jpg" alt="User-Profile-Image">
+                <img class="img-radius" src="{{asset('foto/dm/pengguna/'. Auth::user()->foto)}}" alt="User-Profile-Image">
                 <div class="user-details">
-                    <div id="more-details">{{Auth::user()->name}} <i class="fa fa-caret-down"></i></div>
+                    @php
+                    $kata = explode(' ', Auth::user()->name);
+                    $hasil = $kata[0];
+                    @endphp
+                    <div id="more-details">
+                        {{$hasil}}                  
+                        <i class="fa fa-caret-down"></i></div>
                 </div>
             </div>
             <div class="collapse" id="nav-user-link">
                 <ul class="list-unstyled">
-                    <li class="list-group-item"><a href="#"><i class="feather icon-user m-r-5"></i>Edit Profil</a></li>
+                    <li class="list-group-item"><a href="{{route('profil.admin')}}"><i class="feather icon-user m-r-5"></i>Edit Profil</a></li>
+                    @if(Auth::user()->sebagai == "Staff Umum")
+                    <li class="list-group-item"><a href="{{route('pengaturan.index')}}"><i class="bi bi-gear"></i> Pengaturan</a></li>
+                    @endif
                     <li class="list-group-item">
                         <a  href="{{ route('user.logout') }}"
                         onclick="event.preventDefault();
@@ -21,11 +30,6 @@
                         @csrf
                         </form>
                     </li>
-
-
-
-
-                   
                 </ul>
             </div>
         </div>
@@ -85,6 +89,11 @@
             </li>
             @endif
 
+           @if(Auth::user()->sebagai == "Staff Umum")
+            <li class="nav-item">
+                <a href="{{route('info.index')}}" class="nav-link "><span class="pcoded-micon"><i class="bi bi-calendar-week"></i></span><span class="pcoded-mtext">Informasi BMN</span></a>
+            </li>
+            @endif
             <li class="nav-item">
                 <a href="{{route('dm.peminjaman.index')}}" class="nav-link "><span class="pcoded-micon"><i class="bi bi-cart-plus"></i></span><span class="pcoded-mtext">Mode Peminjam</span></a>
             </li>

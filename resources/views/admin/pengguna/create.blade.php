@@ -1,7 +1,7 @@
 @extends('layouts.template')
 <style>
     #select2{
-        width:1200px !important;
+        width:1000px !important;
     }
   </style>
 

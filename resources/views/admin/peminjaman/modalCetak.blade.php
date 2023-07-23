@@ -14,6 +14,10 @@
         @endif
         @if($checkkendaraan <> 0)
         <div class="col col-md-4">
+            <div class="form-group">
+                <label for="">No. Surat</label>
+                <input type="text" class="form-control" name="nomor_surat" id="nomor_surat">
+            </div>
             <a style="color:white" onclick="cetakKendaraan({{$id_peminjaman}})" id="kendaraans" data-custom-value="Kendaraan" class="btn  btn-primary">Download Berita Acara Kendaraan</a>
         </div>  
         @endif

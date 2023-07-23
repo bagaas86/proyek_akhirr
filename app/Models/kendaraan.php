@@ -21,4 +21,8 @@ class kendaraan extends Model
     {
         return DB::table('kendaraan')->where('id_item', $id_item)->update($data_kendaraan);
     }
+    public function deleteData($id)
+    {
+        return DB::table('kendaraan')->where('id_item', $id)->delete();
+    }
 }

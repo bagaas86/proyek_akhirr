@@ -114,8 +114,13 @@
                         <div class="form-group">
                             <label for="foto">Foto Kendaraan</label>
                             <img id="imageResult" style="width:25%"  class="img-thumbnail btn" src="{{asset('foto/dm/kendaraan/'. $kendaraan->foto_item)}}">
-                            <a class="btn btn-secondary" onclick="gantifoto()"><i class="fa fa-edit"></i>Ubah</a>
+                            <a class="btn btn-secondary  @error('foto_item') is-invalid @enderror" onclick="gantifoto()"><i class="fa fa-edit"></i>Ubah</a>
                             <input onchange="readURL(this);" type="file" id="filefotobarang" name="foto_item" hidden>
+                            @error('foto_item')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
                         </div>
                     </div>
                 </div>

@@ -17,7 +17,8 @@ return new class extends Migration
             $table->id();
             // $table->string('id_unit')->nullable();
             $table->string('name');
-            $table->string('username')->unique();
+            $table->string('username')->unique()->nullable();
+            $table->string('jenis_identitas')->nullable();
             $table->string('no_identitas')->nullable();
             $table->string('sebagai');
             $table->string('keterangan')->nullable();

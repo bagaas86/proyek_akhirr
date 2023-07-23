@@ -13,6 +13,7 @@ use App\Models\approval;
 use App\Models\aktivitas;
 use App\Models\pengguna;
 use App\Models\supir;
+use App\Models\pengaturan;
 use DB;
 use Auth;
 use PDF;
@@ -32,6 +33,7 @@ class c_peminjaman extends Controller
         $this->pengguna = new pengguna();
         $this->aktivitas = new aktivitas();
         $this->supir = new supir();
+        $this->pengaturan = new pengaturan();
     }
 
     // Controller Admin
@@ -83,6 +85,22 @@ class c_peminjaman extends Controller
         $tahun = $this->penyebut($tahun);
         // end tanggal ke terbilang
 
+        // ambil tanda tangan
+        $ttd = $this->pengaturan->detailPengaturan();
+        $kabag = $this->pengaturan->joinKabag();
+        $umum = $this->pengaturan->joinUmum();
+        // end ambil tanda tangan
+
+        // ambil status persetujuan
+        $approval = $this->approval->detailData($id_peminjaman);
+        // end status persetujuan
+
+        // nomor surat
+        $nomor_surat = $request->nomor_surat;
+        // end nomor surat
+
+  
+
         if($request->cek == "Barang")
         {
             $data = [
@@ -97,6 +115,9 @@ class c_peminjaman extends Controller
                 'bulan' => $bulan,
                 'tahun' => $tahun,
                 'now'=> $now,
+                'kabag'=> $kabag,
+                'umum'=> $umum,
+                'approval'=> $approval,
             ];
               $pdf = PDF::loadView('admin.beritaacara.barang', $data)->setPaper('legal', 'potrait');
               $path = public_path('pdf/');
@@ -118,6 +139,9 @@ class c_peminjaman extends Controller
                 'bulan' => $bulan,
                 'tahun' => $tahun,
                 'now'=> $now,
+                'kabag'=> $kabag,
+                'umum'=> $umum,
+                'approval'=> $approval,
             ];
             $pdf = PDF::loadView('admin.beritaacara.ruangan', $data)->setPaper('legal', 'potrait');
             $path = public_path('pdf/');
@@ -146,6 +170,10 @@ class c_peminjaman extends Controller
                 'bulan' => $bulan,
                 'tahun' => $tahun,
                 'now'=> $now,
+                'kabag'=> $kabag,
+                'umum'=> $umum,
+                'approval'=> $approval,
+                'nomor_surat'=> $nomor_surat,
             ];
               $pdf = PDF::loadView('admin.beritaacara.kendaraan', $data)->setPaper('legal', 'potrait');
           
@@ -154,7 +182,6 @@ class c_peminjaman extends Controller
               $pdf->save($path . '/' . $fileNameBarang);
               $pdf = public_path('pdf/'.$fileNameBarang);
               return response()->download($pdf);
-                // return view('admin.beritaacara.kendaraan',$data);
         
         }       
       
@@ -192,10 +219,6 @@ class c_peminjaman extends Controller
         }elseif($status == "Kepala Bagian"){
             $data = [
                 'kepala_bagian'=> "Disetujui",
-            ];
-        }elseif($status == "Wakil Direktur 1"){
-            $data = [
-                'wakil_direktur_1'=> "Disetujui",
             ];
         }elseif($status == "Wakil Direktur 2"){
             $data = [
@@ -245,10 +268,6 @@ class c_peminjaman extends Controller
         }elseif($status == "Kepala Bagian"){
             $data = [
                 'kepala_bagian'=> $alasan,
-            ];
-        }elseif($status == "Wakil Direktur 1"){
-            $data = [
-                'wakil_direktur_1'=> $alasan,
             ];
         }elseif($status == "Wakil Direktur 2"){
             $data = [
@@ -392,7 +411,6 @@ class c_peminjaman extends Controller
             $this->keranjang->finish($id_user, $data2);
 
             $approval = $this->approval($sebagai, $id_peminjaman);
-
          }else{
             // $filename_pengenal = $request->nama_pj."-".$tahun.'.'. $file_pengenal->extension();   
             // $file_pengenal->move(public_path('foto/peminjaman/foto_identitas'),$filename_pengenal);
@@ -421,7 +439,9 @@ class c_peminjaman extends Controller
                 $this->keranjang->finish($id_user, $data2);
 
                $approval = $this->approval($sebagai, $id_peminjaman);
+               
          }
+         $whatsapp = $this->createNumber($jenis_peminjaman);
         return redirect()->route('dashboard')->with('success','Pengajuan Berhasil Dikirim');
 
        }else{
@@ -480,77 +500,112 @@ class c_peminjaman extends Controller
                 $this->keranjang->finish($id_user, $data2);
 
                 $approval = $this->approval($sebagai, $id_peminjaman);
-               
+           
         }
-
-        // if($jenis_peminjaman == "Barang")
-        // {
-        //     $getNumber1 = $this->pengguna->whatsapp1();
-        //     foreach ($getNumber1 as $value) {
-        //         $this->sendWhatsapp($value->no_telepon);
-        //     }
-        // }
-      
-              
-            $whatsapp = $this->sendWhatsapp($nama_pj, $jenis_peminjaman, $fromdate, $todate);
+            // $whatsapp = $this->sendWhatsapp($nama_pj, $jenis_peminjaman, $fromdate, $todate, $no_telepon);
+            $whatsapp = $this->createNumber($jenis_peminjaman);
            return redirect()->route('dashboard')->with('success','Pengajuan Berhasil Dikirim');
        }
     }
 
-    // public function sendWhatsapp($no_telepon)
-    // {
-    //     $token = '8233afc8ddee3653c46b286b9ee646bdad641929648039544f80a615edc2cd25';
-    //     $whatsapp_phone = $no_telepon;
-    //     $message = "1 Peminjaman Masuk! \n\n Perlu persetujuan anda";
 
-    //     $url = "https://sendtalk-api.taptalk.io/api/v1/message/send_whatsapp";
-
-    //     $data = [
-    //         "phone" => $whatsapp_phone,
-    //         "messageType" => "text",
-    //         "body" => $message
-    //     ];
-
-    //     $curl = curl_init($url);
-    //     curl_setopt($curl, CURLOPT_URL, $url);
-    //     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-
-    //     $headers = array(
-    //         "API-Key: $token",
-    //         "Content-Type: application/json",
-    //     );
-    //     curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-
-    //     //for debug only!
-    //     curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
-    //     curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-    //     curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
-
-    //     curl_exec($curl);
-    //     curl_close($curl);
-
-
-
-    // }
-
-    public function sendWhatsapp($nama_pj, $jenis_peminjaman, $fromdate, $todate) 
+    public function createNumber($jenis_peminjaman)
     {
-        $sid = "ACfb515188f6c67480edd55995f3f41f0c";
-        $token = "641b842a6c43d1c3a08f589abb69b355";
-        $twilioNumber = "+14155238886";
-        $recipientNumber = "+6282249025414";
-        $client = new Client($sid, $token);
-    
-        $message = $client->messages->create(
-            'whatsapp:' . $recipientNumber, // Replace with the recipient's WhatsApp number
-            [
-                'from' => 'whatsapp:' . $twilioNumber,
-                'body' => 'Hallo, 1 Pengajuan Peminjaman '.$jenis_peminjaman." dilakukan oleh".$nama_pj."\n\n Ayo masuk ke sistem untuk menyetujui peminjaman ini.", // Replace with your desired message
-            ]
-        );
-    
-        return response()->json(['message' => 'WhatsApp message sent successfully.', 'messageSid' => $message->sid]);
+        // $jenis_peminjaman = "Barang";
+        $kabag = $this->pengaturan->joinKabag();
+        $umum = $this->pengaturan->joinUmum();
+        // $wadir1 = $this->pengaturan->joinWadir1();
+        $wadir2 = $this->pengaturan->joinWadir2();
+        $wadir2 = $this->pengaturan->joinWadir2();
+        $pengelola_supir = $this->pengaturan->joinPengelolaSupir();
+
+
+        if($jenis_peminjaman == "Barang" OR $jenis_peminjaman == "Ruangan" OR $jenis_peminjaman == "Barang,Ruangan" )
+        {
+            $this->sendWhatsapp($umum->no_telepon, $umum->name);
+            $this->sendWhatsapp($kabag->no_telepon, $kabag->name);     
+        }elseif($jenis_peminjaman == "Kendaraan" OR $jenis_peminjaman == "Barang,Kendaraan" OR $jenis_peminjaman == "Ruangan,Kendaraan" OR $jenis_peminjaman == "Barang,Ruangan,Kendaraan"){
+            if($wadir2 <> null){
+                $this->sendWhatsapp($wadir2->no_telepon, $wadir2->name);
+            }
+            if($umum <> null){
+                $this->sendWhatsapp($umum->no_telepon, $umum->name);
+            }
+            if($kabag <> null){
+                $this->sendWhatsapp($kabag->no_telepon, $kabag->name);
+            } 
+        }elseif($jenis_peminjaman == "Barang,Ruangan,Kendaraan,Supir" OR $jenis_peminjaman == "Barang,Kendaraan,Supir" OR $jenis_peminjaman == "Ruangan,Kendaraan,Supir" OR $jenis_peminjaman == "Kendaraan,Supir"){
+            if($wadir2 <> null){
+                $this->sendWhatsapp($wadir2->no_telepon, $wadir2->name);
+            }
+            if($umum <> null){
+                $this->sendWhatsapp($umum->no_telepon, $umum->name);
+            }
+            if($kabag <> null){
+                $this->sendWhatsapp($kabag->no_telepon, $kabag->name);
+            } 
+            if($pengelola_supir <> null){
+                $this->sendWhatsapp($pengelola_supir->no_telepon, $pengelola_supir->name);
+            } 
+        }     
     }
+
+   
+
+    public function sendWhatsapp($no_telepon, $name)
+    {
+
+        $token = '8233afc8ddee3653c46b286b9ee646bdad641929648039544f80a615edc2cd25';
+        $whatsapp_phone = "+62".$no_telepon;
+        $message = "Hallo ".$name."\n 1 Peminjaman Masuk! Perlu persetujuan anda \nKunjungi Website https://bmnpolsub.elearningpolsub.com";
+
+        $url = "https://sendtalk-api.taptalk.io/api/v1/message/send_whatsapp";
+        $data = [
+            "phone" => $whatsapp_phone,
+            "messageType" => "text",
+            "body" => $message
+        ];
+
+        $curl = curl_init($url);
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+
+        $headers = array(
+            "API-Key: $token",
+            "Content-Type: application/json",
+        );
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+
+        //for debug only!
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
+
+        curl_exec($curl);
+        curl_close($curl);
+
+
+
+    }
+
+    // public function sendWhatsapp($nama_pj, $jenis_peminjaman, $fromdate, $todate) 
+    // {
+    //     $sid = "ACfb515188f6c67480edd55995f3f41f0c";
+    //     $token = "641b842a6c43d1c3a08f589abb69b355";
+    //     $twilioNumber = "+14155238886";
+    //     $recipientNumber = "+6282249025414";
+    //     $client = new Client($sid, $token);
+    
+    //     $message = $client->messages->create(
+    //         'whatsapp:' . $recipientNumber, // Replace with the recipient's WhatsApp number
+    //         [
+    //             'from' => 'whatsapp:' . $twilioNumber,
+    //             'body' => 'Hallo, 1 Pengajuan Peminjaman '.$jenis_peminjaman." dilakukan oleh".$nama_pj."\n\n Ayo masuk ke sistem untuk menyetujui peminjaman ini.", // Replace with your desired message
+    //         ]
+    //     );
+    
+    //     return response()->json(['message' => 'WhatsApp message sent successfully.', 'messageSid' => $message->sid]);
+    // }
 
     
 
@@ -559,7 +614,6 @@ class c_peminjaman extends Controller
         if($sebagai == "Bagian Umum"){
             $data_approval = [
                 'id_peminjaman'=> $id_peminjaman,
-                'wakil_direktur_1'=> "Proses",
                 'wakil_direktur_2'=> "Proses",
                 'kepala_bagian'=> "Proses",
                 'staff_umum'=> "Disetujui",
@@ -568,25 +622,14 @@ class c_peminjaman extends Controller
         }elseif($sebagai == "Kepala Bagian"){
             $data_approval = [
                 'id_peminjaman'=> $id_peminjaman,
-                'wakil_direktur_1'=> "Proses",
                 'wakil_direktur_2'=> "Proses",
                 'kepala_bagian'=> "Disetujui",
-                'staff_umum'=> "Proses",
-                'pengelola_supir'=> "Proses",
-               ];
-        }elseif($sebagai == "Wakil Direktur 1"){
-            $data_approval = [
-                'id_peminjaman'=> $id_peminjaman,
-                'wakil_direktur_1'=> "Disetujui",
-                'wakil_direktur_2'=> "Proses",
-                'kepala_bagian'=> "Proses",
                 'staff_umum'=> "Proses",
                 'pengelola_supir'=> "Proses",
                ];
         }elseif($sebagai == "Wakil Direktur 2"){
             $data_approval = [
                 'id_peminjaman'=> $id_peminjaman,
-                'wakil_direktur_1'=> "Proses",
                 'wakil_direktur_2'=> "Disetujui",
                 'kepala_bagian'=> "Proses",
                 'staff_umum'=> "Proses",
@@ -595,7 +638,6 @@ class c_peminjaman extends Controller
         }elseif($sebagai == "Pengelola Supir"){
             $data_approval = [
                 'id_peminjaman'=> $id_peminjaman,
-                'wakil_direktur_1'=> "Proses",
                 'wakil_direktur_2'=> "Proses",
                 'kepala_bagian'=> "Proses",
                 'staff_umum'=> "Proses",
@@ -604,7 +646,6 @@ class c_peminjaman extends Controller
         }else{
             $data_approval = [
                 'id_peminjaman'=> $id_peminjaman,
-                'wakil_direktur_1'=> "Proses",
                 'wakil_direktur_2'=> "Proses",
                 'kepala_bagian'=> "Proses",
                 'staff_umum'=> "Proses",
@@ -635,7 +676,7 @@ class c_peminjaman extends Controller
             }
         }elseif($ubahStatus->jenis_peminjaman == "Barang,Ruangan,Kendaraan" OR $ubahStatus->jenis_peminjaman == "Barang,Kendaraan" OR $ubahStatus->jenis_peminjaman == "Ruangan,Kendaraan" OR $ubahStatus->jenis_peminjaman == "Kendaraan" OR $ubahStatus->jenis_peminjaman == "Barang,Ruangan,Kendaraan,Supir" OR $ubahStatus->jenis_peminjaman == "Barang,Kendaraan,Supir" OR $ubahStatus->jenis_peminjaman == "Ruangan,Kendaraan,Supir" OR $ubahStatus->jenis_peminjaman == "Kendaraan,Supir")
         {
-            if($ubahStatus->staff_umum == "Disetujui" AND $ubahStatus->kepala_bagian == "Disetujui" AND $ubahStatus->wakil_direktur_1 == "Disetujui" AND $ubahStatus->wakil_direktur_2 == "Disetujui")
+            if($ubahStatus->staff_umum == "Disetujui" AND $ubahStatus->kepala_bagian == "Disetujui" AND  $ubahStatus->wakil_direktur_2 == "Disetujui")
             {
                 $data = [
                     'status_peminjaman' => "Pengajuan Diterima"
@@ -684,9 +725,9 @@ class c_peminjaman extends Controller
         // $fromDate = $request->fromdate;
         $fromDate = Carbon::parse($request->fromdate)->translatedFormat('Y-m-d H:i:s');
         $toDate = Carbon::parse($request->todate)->translatedFormat('Y-m-d H:i:s');
-        $filterUser = "Kendaraan";
 
         $unusedItems = DB::table('items')
+        ->where('items.kondisi_item', 'Ready')
         ->leftJoin('keranjangs', 'items.id_item', '=', 'keranjangs.id_item')
         ->leftJoin('peminjaman', 'keranjangs.id_peminjaman', '=', 'peminjaman.id_peminjaman')
         ->where(function ($query) use ($fromDate, $toDate) {
@@ -699,7 +740,8 @@ class c_peminjaman extends Controller
                 ->from('peminjaman as p')
                 ->join('keranjangs as k', function ($join) {
                     $join->on('p.id_peminjaman', '=', 'k.id_peminjaman')
-                        ->whereColumn('k.id_item', 'items.id_item');
+                        ->whereColumn('k.id_item', 'items.id_item')
+                        ->where('items.kondisi_item', 'Ready');
                 })
                 ->where(function ($query) use ($fromDate, $toDate) {
                     $query->where(function ($query) use ($fromDate, $toDate) {
@@ -725,8 +767,8 @@ class c_peminjaman extends Controller
         ->havingRaw("CAST(items.jumlah_item - COALESCE(SUM(CASE WHEN peminjaman.waktu_awal <= '{$toDate}' AND peminjaman.waktu_akhir >= '{$fromDate}' THEN keranjangs.jumlah ELSE 0 END), 0) AS UNSIGNED) > 0")
         ->distinct()
         ->get();
-    
-    
+
+        
     
 
 
@@ -796,29 +838,77 @@ class c_peminjaman extends Controller
         $id_keranjang = $request->id_keranjang;
         $id = Auth::user()->id;
         $jumlah = $request->jumlah;
-        $fromDate = "2023-07-01 16:00:00";
-        $toDate = "2023-07-01 08:00:00";
+        $fromDate = Carbon::parse($request->fromdate)->translatedFormat('Y-m-d H:i:s');
+        $toDate = Carbon::parse($request->todate)->translatedFormat('Y-m-d H:i:s');
         
         $detail = $this->keranjang->detailData($id_keranjang);
         $id_item = $detail->id_item;
-        
+
         $readyStok = DB::table('items')
-            ->leftJoin('keranjangs', function ($join) use ($id_item, $id_keranjang) {
-                $join->on('items.id_item', '=', 'keranjangs.id_item')
-                    ->where('keranjangs.id_keranjang', '<>', $id_keranjang);
-            })
-            ->select(
-                'items.id_item',
-                'items.nama_item',
-                'items.jumlah_item',
-                'items.kategori_item',
-                'items.foto_item',
-                DB::raw("CAST(items.jumlah_item - COALESCE(SUM(CASE WHEN keranjangs.id_peminjaman IS NOT NULL THEN keranjangs.jumlah ELSE 0 END), 0) AS UNSIGNED) AS ready_stok")
-            )
-            ->where('items.id_item', $id_item)
-            ->where('items.jumlah_item', '>', 0)
-            ->groupBy('items.id_item', 'items.nama_item', 'items.jumlah_item', 'items.kategori_item', 'items.foto_item')
-            ->first();
+        ->where('items.kondisi_item', 'Ready')
+        ->where('items.id_item', $id_item)
+        ->leftJoin('keranjangs', 'items.id_item', '=', 'keranjangs.id_item')
+        ->leftJoin('peminjaman', 'keranjangs.id_peminjaman', '=', 'peminjaman.id_peminjaman')
+        ->where(function ($query) use ($fromDate, $toDate) {
+            $query->where('peminjaman.waktu_awal', '>', $toDate)
+                ->orWhere('peminjaman.waktu_akhir', '<', $fromDate)
+                ->orWhereNull('peminjaman.id_peminjaman');
+        })
+        ->orWhereExists(function ($query) use ($fromDate, $toDate, $id_item) {
+            $query->select(DB::raw(1))
+                ->from('peminjaman as p')
+                ->join('keranjangs as k', function ($join) use ($id_item) {
+                    $join->on('p.id_peminjaman', '=', 'k.id_peminjaman')
+                        ->whereColumn('k.id_item', 'items.id_item')
+                        ->where('items.id_item', $id_item)
+                        ->where('items.kondisi_item', 'Ready');
+                })
+                ->where(function ($query) use ($fromDate, $toDate) {
+                    $query->where(function ($query) use ($fromDate, $toDate) {
+                        $query->where('p.waktu_awal', '>', $toDate)
+                            ->orWhere('p.waktu_akhir', '<', $fromDate);
+                    })
+                    ->orWhere(function ($query) use ($fromDate, $toDate) {
+                        $query->where('p.waktu_awal', '<=', $toDate)
+                            ->where('p.waktu_akhir', '>=', $fromDate);
+                    });
+                });
+        })
+        ->select(
+            'items.id_item',
+            'items.nama_item',
+            'items.jumlah_item',
+            'items.kategori_item',
+            'items.foto_item',
+            DB::raw("CAST(items.jumlah_item - COALESCE(SUM(CASE WHEN peminjaman.waktu_awal <= '{$toDate}' AND peminjaman.waktu_akhir >= '{$fromDate}' THEN keranjangs.jumlah ELSE 0 END), 0) AS UNSIGNED) AS ready_stok")
+        )
+        ->where('items.jumlah_item', '>', 0)
+        ->groupBy('items.id_item', 'items.nama_item', 'items.jumlah_item', 'items.kategori_item',  'items.foto_item')
+        ->havingRaw("CAST(items.jumlah_item - COALESCE(SUM(CASE WHEN peminjaman.waktu_awal <= '{$toDate}' AND peminjaman.waktu_akhir >= '{$fromDate}' THEN keranjangs.jumlah ELSE 0 END), 0) AS UNSIGNED) > 0")
+        ->first();
+
+
+
+        
+        // $readyStok = DB::table('items')
+        //     ->leftJoin('keranjangs', function ($join) use ($id_item, $id_keranjang) {
+        //         $join->on('items.id_item', '=', 'keranjangs.id_item')
+        //             ->where('keranjangs.id_keranjang', '<>', $id_keranjang);
+        //     })
+        //     ->select(
+        //         'items.id_item',
+        //         'items.nama_item',
+        //         'items.jumlah_item',
+        //         'items.kategori_item',
+        //         'items.foto_item',
+        //         DB::raw("CAST(items.jumlah_item - COALESCE(SUM(CASE WHEN keranjangs.id_peminjaman IS NOT NULL THEN keranjangs.jumlah ELSE 0 END), 0) AS UNSIGNED) AS ready_stok")
+        //     )
+        //     ->where('items.id_item', $id_item)
+        //     ->where('items.jumlah_item', '>', 0)
+        //     ->groupBy('items.id_item', 'items.nama_item', 'items.jumlah_item', 'items.kategori_item', 'items.foto_item')
+        //     ->first();
+        
+        //     dd($readyStok);
         
         if ($jumlah <= $readyStok->ready_stok) {
             $input = [
@@ -829,6 +919,8 @@ class c_peminjaman extends Controller
         }else{
             $data = 2;
         }
+
+        return $data;
         
         
         
@@ -861,19 +953,22 @@ class c_peminjaman extends Controller
         
         $driversWithoutActivities = DB::table('supir')
         ->leftJoin('aktivitas', 'supir.id_supir', '=', 'aktivitas.id_supir')
-        ->where(function ($query) use ($fromdate,$todate) {
-            $query->whereNotBetween('aktivitas.mulai_aktivitas', [$fromdate,$todate])
-                  ->whereNotBetween('aktivitas.selesai_aktivitas', [$fromdate,$todate]);
+        ->where(function ($query) use ($fromdate, $todate) {
+            $query->where(function ($query) use ($fromdate, $todate) {
+                $query->where('aktivitas.mulai_aktivitas', '>', $todate)
+                    ->orWhere('aktivitas.selesai_aktivitas', '<', $fromdate);
+            })
+            ->orWhereNull('aktivitas.id_supir');
         })
-        ->orWhereNull('aktivitas.id_supir')
         ->select('supir.*')
         ->distinct()
         ->get();
+    
 
         // $driversWithoutActivities = DB::table('supir')->get();
 
 
-        $ready = $this->aktivitas->readySupir($driversWithoutActivities);
+        // $ready = $this->aktivitas->readySupir($driversWithoutActivities);
         $data = [
             'supir' => $driversWithoutActivities,
         ];
@@ -944,6 +1039,10 @@ class c_peminjaman extends Controller
         return $n;
        }
       
+       public function test()
+       {
+        return view('admin.beritaacara.kwitansi');
+       }
 
 
     

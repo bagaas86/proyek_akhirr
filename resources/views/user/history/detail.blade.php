@@ -69,7 +69,7 @@ $diff = Carbon\Carbon::parse($waktu_awal)->diffInDays(Carbon\Carbon::parse($wakt
                             <div class="table">
                                 <div class="row">
                                     @if($peminjaman->jenis_peminjaman == "Kendaraan" OR $peminjaman->jenis_peminjaman == "Barang,Kendaraan" OR $peminjaman->jenis_peminjaman == "Ruangan,Kendaraan" OR $peminjaman->jenis_peminjaman == "Barang,Ruangan,Kendaraan" OR $peminjaman->jenis_peminjaman == "Barang,Ruangan,Kendaraan,Supir" OR $peminjaman->jenis_peminjaman == "Barang,Kendaraan,Supir" OR $peminjaman->jenis_peminjaman == "Ruangan,Kendaraan,Supir" OR $peminjaman->jenis_peminjaman == "Kendaraan,Supir")
-                                    <div class="col col-12 col-md-4">
+                                    {{-- <div class="col col-12 col-md-4">
                                         <div class="card-header h-50">
                                             <img src="{{asset('foto/dm/pengguna/default.png')}}" class="img-rounded" style="width:25%">
                                             @if($approval->wakil_direktur_1 == "Proses" )
@@ -91,7 +91,7 @@ $diff = Carbon\Carbon::parse($waktu_awal)->diffInDays(Carbon\Carbon::parse($wakt
                                          
                                         </div>
                                      
-                                    </div>
+                                    </div> --}}
                             
                                     <div class="col col-12 col-md-4">
                                         <div class="card-header h-50">

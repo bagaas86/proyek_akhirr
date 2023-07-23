@@ -1,6 +1,5 @@
 <center>
     <div id="tanggal">
-       
             <div class="col col-12 col-md-4">
                 <input id="fromdate" type="text" class="form-control" placeholder="--Tanggal Awal Peminjaman--"  name="fromdate" value="{{old('fromdate')}}"  onfocus="(this.type='datetime-local')"
                 onblur="(this.type='text')" required>
@@ -52,6 +51,11 @@
         </div>
     </div>
 </div>
+@php 
+use Carbon\Carbon;
+$currentDate = Carbon::now();
+@endphp
+<input type="text" value="{{ $currentDate->format('Y-m-d')}}T{{$currentDate->format('H:i')}}" id="now" hidden>
 {{-- <div id="tableItem"></div> --}}
 {{-- Modal --}}
 <div id="exampleModalCenter" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -78,6 +82,8 @@
         var kategori = $("#kategori").val();
         var fromdate = $("#fromdate").val();
         var todate = $("#todate").val();
+        var now = $("#now").val();
+        console.log(fromdate);
         if(fromdate == "" || todate == "")
         {
             Swal.fire(
@@ -85,6 +91,24 @@
                         icon: 'error',
                         title: 'Gagal',
                         text: 'Silahkan Masukkan Tanggal Awal dan Selesai Peminjaman!'
+                        }
+                    )
+            document.getElementById("selanjutnya").style.display="none";
+        }else if(fromdate > todate){
+            Swal.fire(
+                    {
+                        icon: 'error',
+                        title: 'Gagal',
+                        text: 'Tanggal awal peminjaman tidak boleh melebihi tanggal selesai peminjaman'
+                        }
+                    )
+            document.getElementById("selanjutnya").style.display="none";
+        }else if(fromdate < now || todate < now){
+            Swal.fire(
+                    {
+                        icon: 'error',
+                        title: 'Gagal',
+                        text: 'Tanggal awal peminjaman dan tanggal selesai peminjaman tidak boleh sebelum hari ini.'
                         }
                     )
             document.getElementById("selanjutnya").style.display="none";
@@ -243,7 +267,7 @@
                     {
                         icon: 'success',
                         title: 'Berhasil',
-                        text: 'Item Berhasil Ditambahkan!'
+                        text: 'Jumlah BMN Ditambahkan!'
                         }
                     )
               }if(data == 2){
@@ -251,7 +275,7 @@
                     {
                         icon: 'error',
                         title: 'Gagal',
-                        text: 'Item Sudah Ada!'
+                        text: 'Jumlah BMN Melebihi BMN Tersedia!'
                         }
                     )
               }

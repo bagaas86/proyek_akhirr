@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>SIP3 BMN</title>
+    <title>SIP2 BMN</title>
     <!-- HTML5 Shim and Respond.js IE11 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 11]>
@@ -16,16 +16,16 @@
     <meta name="description" content="" />
     <meta name="keywords" content="">
     <meta name="author" content="Phoenixcoded" />
-    <!-- Favicon icon -->
-    <link rel="icon" href="{{asset('template')}}/dist/assets/images/favicon.ico" type="image/x-icon">
+    
+    <link rel="icon" href="{{asset('template')}}/dist/assets/images/logoPolsub.png">
 
     <!-- prism css -->
     <link rel="stylesheet" href="{{asset('template')}}/dist/assets/css/plugins/prism-coy.css">
     <!-- vendor css -->
     <link rel="stylesheet" href="{{asset('template')}}/dist/assets/css/style.css">
 
-        {{-- bootstrap icons --}}
-        <link href="{{asset('templateBaru')}}/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    {{-- bootstrap icons --}}
+    <link href="{{asset('template')}}/dist/assets/js/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
 
     {{-- Ajax JS --}}
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.3/dist/sweetalert2.all.min.js"></script>
@@ -75,16 +75,26 @@
                             </a>
                             <div class="dropdown-menu dropdown-menu-right profile-notification">
                                 <div class="pro-head">
+                                    @php
+                                    $kata = explode(' ', Auth::user()->name);
+                                    $hasil = $kata[0];
+                                    @endphp
                                     <img src="{{asset('foto/dm/pengguna/'. Auth::user()->foto)}}" class="img-radius" style="width:40px;height:40px;" alt="User-Profile-Image">
-                                    <span>{{Auth::user()->name}}</span>
-                                    <a href="auth-signin.html" class="dud-logout" title="Logout">
-                                        <i class="feather icon-log-out"></i>
-                                    </a>
+                                    <span>{{$hasil}}</span>
+                                    
+                                        <a class="dud-logout"  href="{{ route('user.logout') }}"
+                                        onclick="event.preventDefault();
+                                                        document.getElementById('logout-form').submit();">
+                                            <i class="feather icon-log-out m-r-5"></i>
+                                        </a>
+                                        <form id="logout-form" action="{{route('user.logout')}}" method="POST">
+                                        @csrf
+                                        </form>
+                                  
                                 </div>
                                 <ul class="pro-body">
                                     <li><a href="{{route('profil.user')}}" class="dropdown-item"><i class="feather icon-user"></i> Profile</a></li>
                                     <li><a href="{{route('history.index')}}" class="dropdown-item"><i class="feather icon-mail"></i> History Peminjaman</a></li>
-                                    <li><a href="auth-signin.html" class="dropdown-item"><i class="feather icon-lock"></i> Lock Screen</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -98,7 +108,7 @@
 
     <!-- [ Main Content ] start -->
     <div class="pcoded-main-container">
-        <div class="pcoded-wrapper container">
+        <div class="pcoded-wrapper">
             <div class="pcoded-content">
                 <div class="pcoded-inner-content">
                     <div class="main-body">

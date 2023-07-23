@@ -26,7 +26,7 @@ class c_laporan extends Controller
         $poktan = $this->item->allData();
 
         $i = 0;
-        $h[0] = "Belum Ada Kelompok Tani";
+        $h[0] = "Belum Ada BMN";
         $v[0] = 0;
         if($poktan <> null){
             foreach($poktan as $poktans)
