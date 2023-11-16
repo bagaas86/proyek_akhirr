@@ -18,7 +18,8 @@ return new class extends Migration
             $table->string('id_user');
             $table->string('jenis_peminjaman')->nullable();  
             $table->string('nama_pj')->nullable();  
-            $table->string('no_identitas')->nullable();  
+            $table->string('no_identitas')->nullable();
+            $table->string('dari')->nullable();    
             $table->string('no_hp')->nullable(); 
             $table->string('nama_kegiatan');
             $table->string('surat_pengajuan')->nullable();

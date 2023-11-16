@@ -6,11 +6,14 @@ $diff = Carbon\Carbon::parse($waktu_awal)->diffInDays(Carbon\Carbon::parse($wakt
 @endphp
 
     <a style="margin-left:1em" href="#" onclick="read()" class="btn btn-primary btn-sm"><i class="bi bi-arrow-left-square"></i></a>
-    @if($pengembalian->status_pengembalian == "Belum Dikembalikan")
+    @if($pengembalian->status_pengembalian <> "Pengembalian Diterima")
+    <a style="margin-left:1em" href="#" onclick="laporUlang({{$pengembalian->id_peminjaman}})" class="btn btn-primary btn-sm">Lapor Pengembalian</a>
+    @endif
+    {{-- @if($pengembalian->status_pengembalian == "Belum Dikembalikan")
     <a style="margin-left:1em" href="#" onclick="laporUlang({{$pengembalian->id_peminjaman}})" class="btn btn-primary btn-sm">Lapor Pengembalian</a>
     @elseif($pengembalian->status_pengembalian == "Pengembalian Ditolak")
     <a style="margin-left:1em" href="#" onclick="laporUlang({{$pengembalian->id_peminjaman}})" class="btn btn-primary btn-sm">Lapor Ulang</a>
-    @endif
+    @endif --}}
         <div class="col col-12 col-md-12">
             <div class="text-center title">
                 <h3>Detail Pengembalian</h3>
@@ -33,6 +36,11 @@ $diff = Carbon\Carbon::parse($waktu_awal)->diffInDays(Carbon\Carbon::parse($wakt
                                         <td style="width:40%;font-weight:bold">No. Identitas</td>
                                         <td style="width:5%">:</td>
                                         <td style="width:50%">{{$pengembalian->no_identitas}}</td>  
+                                    </tr>
+                                    <tr style="vertical-align:top;font-size:12px">
+                                        <td style="width:40%;font-weight:bold">Unit/Jabatan</td>
+                                        <td style="width:5%">:</td>
+                                        <td style="width:50%">{{$pengembalian->dari}}</td>  
                                     </tr>
                                     <tr style="vertical-align:top;font-size:12px">
                                         <td style="width:40%;font-weight:bold">Nama Kegiatan</td>
@@ -60,11 +68,11 @@ $diff = Carbon\Carbon::parse($waktu_awal)->diffInDays(Carbon\Carbon::parse($wakt
                                              @endif
                                         </td>  
                                     </tr>
-                                    <tr style="vertical-align:top;font-size:12px">
+                                    {{-- <tr style="vertical-align:top;font-size:12px">
                                         <td style="width:40%;font-weight:bold">Status Pengembalian</td>
                                         <td style="width:5%">:</td>
                                         <td style="width:50%">{{$pengembalian->status_peminjaman}}</td>  
-                                    </tr>
+                                    </tr> --}}
                                 </table> 
                             </div>  
                         </div>
@@ -74,7 +82,7 @@ $diff = Carbon\Carbon::parse($waktu_awal)->diffInDays(Carbon\Carbon::parse($wakt
                     <div class="card mt-2">
                         <div class="card-body">
                             <div class="header" style="text-align: center">
-                                <h4>List Pengajuan Peminjaman</h4>
+                                <h4>List Pengembalian</h4>
                             </div>
                             <div  style="text-align:left" class="table">
                                 <table class="table table-responsive">
@@ -82,12 +90,19 @@ $diff = Carbon\Carbon::parse($waktu_awal)->diffInDays(Carbon\Carbon::parse($wakt
                                         <th style="width:70%">Nama Item</th>
                                         <th style="width:10%">Kategori</th>
                                         <th style="width:15%">Jumlah</th>  
+                                        <th style="width:10%">Status</th>
                                     </tr>
                                     @foreach($keranjang as $data)
                                     <tr style="height:30px">
                                         <td style="width:70%">{{$data->nama_item}}</td>
                                         <td style="width:70%">{{$data->kategori_item}}</td>
                                         <td style="width:15%">{{$data->jumlah}}</td>
+                                        <td style="width:15%">
+                                            <a style="color:white"  class="btn btn-primary btn-sm" onclick="lihatBukti({{$data->id_keranjang}})"><i class="bi bi-eye"></i> Lihat Bukti</a>
+                                            @if($data->selesai <> null)
+                                            <span class="badge bg-success" style="color:white"> Diterima</span>
+                                            @endif
+                                        </td>
                                     </tr>
                                     @endforeach
                                 </table> 
@@ -110,17 +125,29 @@ $diff = Carbon\Carbon::parse($waktu_awal)->diffInDays(Carbon\Carbon::parse($wakt
                                                 <label for=""><b>Deskripsi Pengembalian</b><small style="color:red">*</small></label>
                                                 <input type="text" class="form-control" placeholder="Deskripsi Pengembalian" id="deskripsi_pengembalian" name="deskripsi_pengembalian" value="{{$pengembalian->deskripsi_pengembalian}}" required>
                                             </div>
+                                          
+
                                             <div class="col col-12 col-md-12 mt-2">
-                                            <div id="hasil_buktiPengembalian" class="overflow-hidden d-flex justify-content-center mt-3">
-                                                <img src="{{asset('foto/pengembalian/'. $pengembalian->bukti_pengembalian)}}" alt="">
-                                            </div>
+                                                <div id="hasil_buktiPengembalian" class="overflow-hidden d-flex justify-content-center mt-3">
+                                                    @if($pengembalian->bukti_pengembalian <> null)
+                                                    <img src="{{asset('foto/pengembalian/'. $pengembalian->bukti_pengembalian)}}" alt="">
+                                                    @endif
+                                                </div>
+                                                <div id="hasil_buktiPengembalian_Video" class="overflow-hidden d-flex justify-content-center mt-3">
+                                                    @if($pengembalian->bukti_video <> null)
+                                                    <video controls style="width: 425px;">
+                                                        <source src="{{ asset('foto/pengembalian/video/' . $pengembalian->bukti_video) }}" type="video/mp4">
+                                                        Your browser does not support the video tag.
+                                                    </video>
+                                                    @endif
+                                                </div>
                                             </div>
                                 </div>
                             </div>  
                         </div>
                     </div>
                 </div>
-                @if($pengembalian->status_pengembalian == "Pengembalian Ditolak")
+                @if($pengembalian->alasan <> null)
                 <div class="col col-12 col-md-4">
                     <div class="card">
                         <div class="card-body">
@@ -152,5 +179,34 @@ $diff = Carbon\Carbon::parse($waktu_awal)->diffInDays(Carbon\Carbon::parse($wakt
 
     </div>
 
+    
+<div id="exampleModalCenter3" class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle3">Modal Title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <p class="mb-0" id="page3"></p>
+            </div>
+            <div id="modalFooter3" class="modal-footer">
+             
+            </div>
+        </div>
+    </div>
+</div>
 
+<script>
+        function lihatBukti(id_keranjang){
+         
+         $.get("{{ url('buktipengembalian') }}/" + id_keranjang, {}, function(data, status){
+        $("#exampleModalCenterTitle3").html(`Bukti Pengembalian`)
+        $("#page3").html(data);
+        $("#modalFooter3").html(`
+        `)
+        $("#exampleModalCenter3").modal('show');
+    })
+}
+</script>
 

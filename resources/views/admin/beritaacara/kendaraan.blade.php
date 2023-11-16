@@ -120,7 +120,7 @@
             <tr>
                   <td style="width:20%"><p>Unit/Jabatan</p></td>
                   <td style="width:2%"><p>:</p></td>
-                  <td style="width:78%"><p>{{$peminjaman->sebagai}}</p></td>
+                  <td style="width:78%"><p>{{$peminjaman->dari}}</p></td>
             </tr>
             <tr>
                   <td style="height:40px" colspan="3"><p>Selanjutnya disebut PIHAK KEDUA</p></td>
@@ -205,7 +205,7 @@
                               <tr>
                                     <td><p>Koordinator Ketatausahaan,</p></td>
                                     <td style="width:35%"></td>
-                                    <td><p>{{$peminjaman->sebagai}}</p></td>
+                                    <td><p>{{$peminjaman->dari}}</p></td>
                               </tr>
                               <tr>
                                     <td style="height:75px">

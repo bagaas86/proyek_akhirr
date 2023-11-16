@@ -44,10 +44,26 @@ class c_peminjaman extends Controller
 
     public function detailPengajuan($id_peminjaman)
     {
+        $approval = $this->approval->detailData($id_peminjaman);
+        $detail = $this->peminjaman->detailPeminjaman2($id_peminjaman);
+        $fromDate = $detail->waktu_awal;
+        $toDate = $detail->waktu_akhir;
+        $driversWithoutActivities = DB::table('supir')
+        ->leftJoin(DB::raw('(SELECT id_supir FROM aktivitas 
+                        WHERE mulai_aktivitas <= ? AND selesai_aktivitas >= ?) AS subquery'),
+                        'supir.id_supir', '=', 'subquery.id_supir')
+        ->whereNull('subquery.id_supir')
+        ->setBindings([$toDate, $fromDate]) // Bind the parameters to the subquery
+        ->select('supir.*')
+        ->distinct()
+        ->get();
+
         $data = [
             'keranjang' => $this->keranjang->detailPeminjaman($id_peminjaman),
             'peminjaman'=> $this->peminjaman->detailPeminjaman2($id_peminjaman),
             'supir' => $this->keranjang->detailPeminjamanSupir($id_peminjaman),
+            'driver' => $driversWithoutActivities,
+            'approval' => $approval,
         ];
         return view ('admin.peminjaman.detail' ,$data);
     }
@@ -189,20 +205,61 @@ class c_peminjaman extends Controller
 
     public function tablePeminjaman(Request $request)
     {
-      
+        $auth = Auth::user()->sebagai;
         $filter = $request->filter;
         $dari = $request->dari." "."00:00:00";
         $sampai = $request->sampai." "."23:59:59";
-        if($filter == "Semua")
+        if($auth == "Staff Umum")
         {
-            $data =[
-                'peminjaman'=> $this->peminjaman->tampilPeminjamann($dari, $sampai)
-            ];
-        }else{
-            $data =[
-                'peminjaman'=> $this->peminjaman->tampilPeminjamans($dari, $sampai, $filter)
-            ];
+            if($filter == "Semua")
+            {
+                $data =[
+                    'peminjaman'=> $this->peminjaman->tampilPeminjamann($dari, $sampai)
+                ];
+            }else{
+                $data =[
+                    'peminjaman'=> $this->peminjaman->tampilPeminjamans($dari, $sampai, $filter)
+                ];
+            }
+        }elseif($auth == "Kepala Bagian")
+        {
+            if($filter == "Semua")
+            {
+                $data =[
+                    'peminjaman'=> $this->peminjaman->tampilPeminjamann_Kabag($dari, $sampai)
+                ];
+              
+            }else{
+                $data =[
+                    'peminjaman'=> $this->peminjaman->tampilPeminjamans_Kabag($dari, $sampai, $filter)
+                ];
+            }
+        }elseif($auth == "Wakil Direktur 2")
+        {
+            if($filter == "Semua")
+            {
+                $data =[
+                    'peminjaman'=> $this->peminjaman->tampilPeminjamann_Wadir2($dari, $sampai)
+                ];
+            }else{
+                $data =[
+                    'peminjaman'=> $this->peminjaman->tampilPeminjamans_Wadir2($dari, $sampai, $filter)
+                ];
+            }
+        }elseif($auth == "Pengelola Supir")
+        {
+            if($filter == "Semua")
+            {
+                $data =[
+                    'peminjaman'=> $this->peminjaman->tampilPeminjamann_PengelolaSupir($dari, $sampai)
+                ];
+            }else{
+                $data =[
+                    'peminjaman'=> $this->peminjaman->tampilPeminjamans_PengelolaSupir($dari, $sampai, $filter)
+                ];
+            }
         }
+      
 
         return view ('admin.peminjaman.table', $data);
     }
@@ -210,24 +267,119 @@ class c_peminjaman extends Controller
 
     public function ubahStatus(Request $request, $id_peminjaman)
     {
+        $umum = $this->pengaturan->joinUmum();
+        $kabag = $this->pengaturan->joinKabag();
+        $wadir2 = $this->pengaturan->joinWadir2();
+        $pengelola_supir = $this->pengaturan->joinPengelolaSupir();
         $status = $request->status;
-
+        $tujuan = $this->peminjaman->detailPeminjaman2($id_peminjaman);
+        $supir = $this->keranjang->detailSupir($id_peminjaman);
         if($status == "Staff Umum"){
             $data = [
                 'staff_umum'=> "Disetujui",
+                'nama_staff_umum' => Auth::user()->name,
             ];
+            
+            $this->approval->updatePeminjaman($id_peminjaman, $data);
+            $approval = $this->otomatis($id_peminjaman);
+            
+            // notifikasi pemberitahuan
+            if($tujuan->sebagai <> "Staff Umum"){
+                $whatsapp = $this->sendWhatsapp_Approval_Disetujui($tujuan->name, $tujuan->no_telepon, $tujuan->nama_kegiatan, $status );
+            }
+            // end pemberitahuan
+
+            // notifikasi persetujuan
+            if($tujuan->sebagai == "Kepala Bagian"){
+                if(strpos($tujuan->jenis_peminjaman, 'Kendaraan') !== false){
+                    $whatsapp2 = $this->sendWhatsapp($wadir2->name, $wadir2->no_telepon);
+                }
+            }else{
+                $whatsapp2 = $this->sendWhatsapp($kabag->name, $kabag->no_telepon);
+            }
+            // end notifikasi persetujuan
+
         }elseif($status == "Kepala Bagian"){
             $data = [
                 'kepala_bagian'=> "Disetujui",
+                'nama_kepala_bagian' => Auth::user()->name,
             ];
+            
+            $this->approval->updatePeminjaman($id_peminjaman, $data);
+            $approval = $this->otomatis($id_peminjaman);
+            $whatsapp = $this->sendWhatsapp_Approval_Disetujui($umum->name, $umum->no_telepon, $tujuan->nama_kegiatan, $status );
+
+            // notifikasi pemberitahuan
+            if($tujuan->sebagai <> "Kepala Bagian"){
+                $whatsapp = $this->sendWhatsapp_Approval_Disetujui($tujuan->name, $tujuan->no_telepon, $tujuan->nama_kegiatan, $status );
+            
+            }
+            // end pemberitahuan
+
+            // notifikasi persetujuan
+            if($tujuan->sebagai == "Wakil Direktur 2"){
+                if(strpos($tujuan->jenis_peminjaman, 'Supir') !== false){
+                    $whatsapp2 = $this->sendWhatsapp($pengelola_supir->name, $pengelola_supir->no_telepon);
+                }
+            }else{
+                if(strpos($tujuan->jenis_peminjaman, 'Kendaraan') !== false)
+                $whatsapp2 = $this->sendWhatsapp($wadir2->name, $wadir2->no_telepon);
+            }
+
+            // end notifikasi persetujuan
+
+            // $whatsapp = $this->sendWhatsapp_Approval_Disetujui($tujuan->name, $tujuan->no_telepon, $tujuan->nama_kegiatan, $status );
+
+            // if($tujuan->sebagai <> "Wakil Direktur 2"){
+            //     if(strpos($tujuan->jenis_peminjaman, 'Kendaraan') !== false){
+            //         $whatsapp2 = $this->sendWhatsapp($wadir2->name, $wadir2->no_telepon);
+            //     }
+            // }
+          
+           
         }elseif($status == "Wakil Direktur 2"){
             $data = [
                 'wakil_direktur_2'=> "Disetujui",
+                'nama_wakil_direktur_2' => Auth::user()->name,
             ];
+            
+            $this->approval->updatePeminjaman($id_peminjaman, $data);
+            $approval = $this->otomatis($id_peminjaman);
+
+              $whatsapp = $this->sendWhatsapp_Approval_Disetujui($umum->name, $umum->no_telepon, $tujuan->nama_kegiatan, $status );
+              // notifikasi pemberitahuan
+              if($tujuan->sebagai <> "Wakil Direktur 2"){
+                $whatsapp = $this->sendWhatsapp_Approval_Disetujui($tujuan->name, $tujuan->no_telepon, $tujuan->nama_kegiatan, $status );
+            }
+            // end pemberitahuan
+
+                 // notifikasi persetujuan
+                if(strpos($tujuan->jenis_peminjaman, 'Supir') !== false){
+                    $whatsapp2 = $this->sendWhatsapp($pengelola_supir->name, $pengelola_supir->no_telepon);
+                }
+                // end persetujuan
+
+        
+
+
+            // if($tujuan->no_telepon <> null){
+            //     $whatsapp = $this->sendWhatsapp_Approval_Disetujui($tujuan->name, $tujuan->no_telepon, $tujuan->nama_kegiatan, $status );
+            // } 
+
+            // if(strpos($tujuan->jenis_peminjaman, 'Supir') !== false AND $pengelola_supir->no_telepon <> null){
+            //     $whatsapp2 = $this->sendWhatsapp($pengelola_supir->name, $pengelola_supir->no_telepon);
+            // }
+
         }elseif($status == "Pengelola Supir"){
             $data = [
                 'pengelola_supir'=> "Disetujui",
+                'nama_pengelola_supir' => Auth::user()->name,
             ];
+            $this->approval->updatePeminjaman($id_peminjaman, $data);
+            $whatsapp = $this->sendWhatsapp_Approval_Disetujui_Supir($umum->name, $umum->no_telepon, $tujuan->nama_kegiatan, $status, $supir->nama_supir );
+            if($tujuan->sebagai <> "Pengelola Supir"){
+                $whatsapp = $this->sendWhatsapp_Approval_Disetujui_Supir($tujuan->name, $tujuan->no_telepon, $tujuan->nama_kegiatan, $status, $supir->nama_supir );
+            }  
 
             $peminjaman = $this->peminjaman->detailPeminjaman2($id_peminjaman);
             // $supirAktivitas = $this->keranjang->detailSupir($id_peminjaman);
@@ -242,18 +394,7 @@ class c_peminjaman extends Controller
                 ];
                 $this->aktivitas->addData($tambahAktivitas);
             }
-            // $tambahAktivitas = [
-            //     'id_peminjaman' => $id_peminjaman,
-            //     'id_supir' => $supirAktivitas->id_supir,
-            //     'nama_aktivitas' => $peminjaman->nama_kegiatan,
-            //     'mulai_aktivitas' => $peminjaman->waktu_awal,
-            //     'selesai_aktivitas' => $peminjaman->waktu_akhir,
-            // ];
-            // $this->aktivitas->addData($tambahAktivitas);
         }
-        $this->approval->updatePeminjaman($id_peminjaman, $data);
-        $approval = $this->otomatis($id_peminjaman);
-      
     }
 
     public function ubahStatusTolak(Request $request, $id_peminjaman)
@@ -261,24 +402,56 @@ class c_peminjaman extends Controller
         $status = $request->status;
         $alasan = $request->alasan;
 
+        $tujuan = $this->peminjaman->detailPeminjaman2($id_peminjaman);
+
         if($status == "Staff Umum"){
             $data = [
                 'staff_umum'=> $alasan,
+                'nama_staff_umum' => Auth::user()->name,
             ];
+            if($tujuan->no_telepon <> null){
+                $whatsapp = $this->sendWhatsapp_Approval_Ditolak($tujuan->name, $tujuan->no_telepon, $tujuan->nama_kegiatan, $status, $alasan );
+            }
+            $datas = [
+                'status_peminjaman' => "Pengajuan Ditolak",
+            ];
+            $this->peminjaman->updatePeminjaman($id_peminjaman, $datas);
         }elseif($status == "Kepala Bagian"){
             $data = [
                 'kepala_bagian'=> $alasan,
+                'nama_kepala_bagian' => Auth::user()->name,
             ];
+            if($tujuan->no_telepon <> null){
+                $whatsapp = $this->sendWhatsapp_Approval_Ditolak($tujuan->name, $tujuan->no_telepon, $tujuan->nama_kegiatan, $status, $alasan );
+            }
+            $datas = [
+                'status_peminjaman' => "Pengajuan Ditolak",
+            ];
+            $this->peminjaman->updatePeminjaman($id_peminjaman, $datas);
         }elseif($status == "Wakil Direktur 2"){
             $data = [
                 'wakil_direktur_2'=> $alasan,
+                'nama_wakil_direktur_2' => Auth::user()->name,
             ];
+            if($tujuan->no_telepon <> null){
+                $whatsapp = $this->sendWhatsapp_Approval_Ditolak($tujuan->name, $tujuan->no_telepon, $tujuan->nama_kegiatan, $status, $alasan );
+            }
+            $datas = [
+                'status_peminjaman' => "Pengajuan Ditolak",
+            ];
+            $this->peminjaman->updatePeminjaman($id_peminjaman, $datas);
         }elseif($status == "Pengelola Supir"){
             $data = [
                 'pengelola_supir'=> $alasan,
+                'nama_pengelola_supir' => Auth::user()->name,
             ];
+            if($tujuan->no_telepon <> null){
+                $whatsapp = $this->sendWhatsapp_Approval_Ditolak_Supir($tujuan->name, $tujuan->no_telepon, $tujuan->nama_kegiatan, $status, $alasan );
+            }
         }
         $this->approval->updatePeminjaman($id_peminjaman, $data);
+
+      
       
     }
 
@@ -303,6 +476,19 @@ class c_peminjaman extends Controller
             'approval' => $this->approval->detailData($id_peminjaman)
         ];
         return view('admin.peminjaman.modalApproval', $data);
+    }
+
+    public function editSupir(Request $request, $id_keranjang)
+    {
+        $data = [
+            'id_supir' => $request->id_supir,
+        ];
+        $this->keranjang->gantiSupir($id_keranjang, $data);
+
+        $tujuan = $this->peminjaman->detailPeminjaman2($request->id_peminjaman);
+        $supir = $this->keranjang->detailSupir($request->id_peminjaman);
+        // $whatsapp = $this->sendWhatsapp_gantiSupir($tujuan->name, $tujuan->no_telepon, $tujuan->nama_kegiatan, $supir->nama_supir);
+       
     }
 
 
@@ -366,6 +552,10 @@ class c_peminjaman extends Controller
         $fromdate = date('Y-m-d H:i:s', strtotime($request->fromdate));
         $todate = date('Y-m-d H:i:s', strtotime($request->todate));
 
+            // whatsapp
+            $umum = $this->pengaturan->joinUmum();
+            $kabag = $this->pengaturan->joinKabag();
+
         // validasi
         $request->validate([
             'fromdate' => 'required',
@@ -401,6 +591,7 @@ class c_peminjaman extends Controller
                 'nama_kegiatan'=> $request->nama_kegiatan,
                 'surat_pengajuan'=> "Tanpa Surat Pengajuan",
                 'status_peminjaman' => "Proses",
+                'dari' => $request->dari,
                 'waktu_pengajuan'=> $now,
                ];
             $this->peminjaman->addData($data);
@@ -429,6 +620,7 @@ class c_peminjaman extends Controller
                     'nama_kegiatan'=> $request->nama_kegiatan,
                     'surat_pengajuan'=> $filename_surat_pengajuan,
                     'status_peminjaman' => "Proses",
+                    'dari' => $request->dari,
                     'waktu_pengajuan'=> $now,
                 ];
                 $this->peminjaman->addData($data);
@@ -441,7 +633,13 @@ class c_peminjaman extends Controller
                $approval = $this->approval($sebagai, $id_peminjaman);
                
          }
-         $whatsapp = $this->createNumber($jenis_peminjaman);
+         if($sebagai <> "Staff Umum"){
+            $whatsapp = $this->sendWhatsapp($umum->name, $umum->no_telepon);
+         }else{
+            $whatsapp = $this->sendWhatsapp($kabag->name, $kabag->no_telepon);
+         }
+         
+        //  $whatsapp = $this->createNumber($jenis_peminjaman);
         return redirect()->route('dashboard')->with('success','Pengajuan Berhasil Dikirim');
 
        }else{
@@ -463,6 +661,7 @@ class c_peminjaman extends Controller
                 'nama_kegiatan'=> $request->nama_kegiatan,
                 'surat_pengajuan'=> "Tanpa Surat Pengajuan",
                 'status_peminjaman' => "Proses",
+                'dari' => $request->dari,
                 'waktu_pengajuan'=> $now,
                ];
                $this->peminjaman->addData($data);
@@ -491,6 +690,7 @@ class c_peminjaman extends Controller
                 'nama_kegiatan'=> $request->nama_kegiatan,
                 'surat_pengajuan'=> $filename_surat_pengajuan,
                 'status_peminjaman' => "Proses",
+                'dari' => $request->dari,
                 'waktu_pengajuan'=> $now,
                ];
                $this->peminjaman->addData($data);
@@ -502,87 +702,406 @@ class c_peminjaman extends Controller
                 $approval = $this->approval($sebagai, $id_peminjaman);
            
         }
-            // $whatsapp = $this->sendWhatsapp($nama_pj, $jenis_peminjaman, $fromdate, $todate, $no_telepon);
-            $whatsapp = $this->createNumber($jenis_peminjaman);
+            if($sebagai <> "Staff Umum"){
+                $whatsapp = $this->sendWhatsapp($umum->name, $umum->no_telepon);
+            }else{
+                $whatsapp = $this->sendWhatsapp($kabag->name, $kabag->no_telepon);
+            }
+            // $whatsapp = $this->createNumber($jenis_peminjaman);
            return redirect()->route('dashboard')->with('success','Pengajuan Berhasil Dikirim');
        }
     }
 
 
-    public function createNumber($jenis_peminjaman)
+    // public function createNumber($jenis_peminjaman)
+    // {
+    //     // $jenis_peminjaman = "Barang";
+    //     $kabag = $this->pengaturan->joinKabag();
+    //     $umum = $this->pengaturan->joinUmum();
+    //     // $wadir1 = $this->pengaturan->joinWadir1();
+    //     $wadir2 = $this->pengaturan->joinWadir2();
+    //     $wadir2 = $this->pengaturan->joinWadir2();
+    //     $pengelola_supir = $this->pengaturan->joinPengelolaSupir();
+
+
+    //     if($jenis_peminjaman == "Barang" OR $jenis_peminjaman == "Ruangan" OR $jenis_peminjaman == "Barang,Ruangan" )
+    //     {
+    //         $this->sendWhatsapp($umum->no_telepon, $umum->name);
+    //         $this->sendWhatsapp($kabag->no_telepon, $kabag->name);     
+    //     }elseif($jenis_peminjaman == "Kendaraan" OR $jenis_peminjaman == "Barang,Kendaraan" OR $jenis_peminjaman == "Ruangan,Kendaraan" OR $jenis_peminjaman == "Barang,Ruangan,Kendaraan"){
+    //         if($wadir2 <> null){
+    //             $this->sendWhatsapp($wadir2->no_telepon, $wadir2->name);
+    //         }
+    //         if($umum <> null){
+    //             $this->sendWhatsapp($umum->no_telepon, $umum->name);
+    //         }
+    //         if($kabag <> null){
+    //             $this->sendWhatsapp($kabag->no_telepon, $kabag->name);
+    //         } 
+    //     }elseif($jenis_peminjaman == "Barang,Ruangan,Kendaraan,Supir" OR $jenis_peminjaman == "Barang,Kendaraan,Supir" OR $jenis_peminjaman == "Ruangan,Kendaraan,Supir" OR $jenis_peminjaman == "Kendaraan,Supir"){
+    //         if($wadir2 <> null){
+    //             $this->sendWhatsapp($wadir2->no_telepon, $wadir2->name);
+    //         }
+    //         if($umum <> null){
+    //             $this->sendWhatsapp($umum->no_telepon, $umum->name);
+    //         }
+    //         if($kabag <> null){
+    //             $this->sendWhatsapp($kabag->no_telepon, $kabag->name);
+    //         } 
+    //         if($pengelola_supir <> null){
+    //             $this->sendWhatsapp($pengelola_supir->no_telepon, $pengelola_supir->name);
+    //         } 
+    //     }     
+    // }
+
+    public function sendWhatsapp_Approval_Disetujui_Supir($name, $no_telepon, $nama_kegiatan, $sender, $nama_supir)
     {
-        // $jenis_peminjaman = "Barang";
-        $kabag = $this->pengaturan->joinKabag();
-        $umum = $this->pengaturan->joinUmum();
-        // $wadir1 = $this->pengaturan->joinWadir1();
-        $wadir2 = $this->pengaturan->joinWadir2();
-        $wadir2 = $this->pengaturan->joinWadir2();
-        $pengelola_supir = $this->pengaturan->joinPengelolaSupir();
+
+        // $token = '8233afc8ddee3653c46b286b9ee646bdad641929648039544f80a615edc2cd25';
+        // $whatsapp_phone = "+62".$no_telepon;
+        // $message = "Hallo ".$name."\n Peminjaman BMN untuk ".$nama_kegiatan." Telah Disetujui Oleh ".$sender." \n Kunjungi Website https://bmnpolsub.elearningpolsub.com",
+
+        // $url = "https://sendtalk-api.taptalk.io/api/v1/message/send_whatsapp";
+        // $data = [
+        //     "phone" => $whatsapp_phone,
+        //     "messageType" => "text",
+        //     "body" => $message
+        // ];
+
+        // $curl = curl_init($url);
+        // curl_setopt($curl, CURLOPT_URL, $url);
+        // curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+
+        // $headers = array(
+        //     "API-Key: $token",
+        //     "Content-Type: application/json",
+        // );
+        // curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+
+        // //for debug only!
+        // curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+        // curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        // curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
+
+        // curl_exec($curl);
+        // curl_close($curl);
+
+        $sid = "ACfb515188f6c67480edd55995f3f41f0c";
+        $token = "641b842a6c43d1c3a08f589abb69b355";
+        $twilioNumber = "+14155238886";
+        $recipientNumber = '+62'.$no_telepon;
+        $client = new Client($sid, $token);
+    
+        $message = $client->messages->create(
+            'whatsapp:' . $recipientNumber, // Replace with the recipient's WhatsApp number
+            [
+                'from' => 'whatsapp:' . $twilioNumber,
+                'body' => "Hallo ".$name."\n Peminjaman Supir untuk ".$nama_kegiatan." Telah Disetujui Oleh ".$sender." \n Nama Supir : ".$nama_supir." \n Info lebih lengkap kunjungi Website https://bmnpolsub.elearningpolsub.com",
+            ]
+        );
 
 
-        if($jenis_peminjaman == "Barang" OR $jenis_peminjaman == "Ruangan" OR $jenis_peminjaman == "Barang,Ruangan" )
-        {
-            $this->sendWhatsapp($umum->no_telepon, $umum->name);
-            $this->sendWhatsapp($kabag->no_telepon, $kabag->name);     
-        }elseif($jenis_peminjaman == "Kendaraan" OR $jenis_peminjaman == "Barang,Kendaraan" OR $jenis_peminjaman == "Ruangan,Kendaraan" OR $jenis_peminjaman == "Barang,Ruangan,Kendaraan"){
-            if($wadir2 <> null){
-                $this->sendWhatsapp($wadir2->no_telepon, $wadir2->name);
-            }
-            if($umum <> null){
-                $this->sendWhatsapp($umum->no_telepon, $umum->name);
-            }
-            if($kabag <> null){
-                $this->sendWhatsapp($kabag->no_telepon, $kabag->name);
-            } 
-        }elseif($jenis_peminjaman == "Barang,Ruangan,Kendaraan,Supir" OR $jenis_peminjaman == "Barang,Kendaraan,Supir" OR $jenis_peminjaman == "Ruangan,Kendaraan,Supir" OR $jenis_peminjaman == "Kendaraan,Supir"){
-            if($wadir2 <> null){
-                $this->sendWhatsapp($wadir2->no_telepon, $wadir2->name);
-            }
-            if($umum <> null){
-                $this->sendWhatsapp($umum->no_telepon, $umum->name);
-            }
-            if($kabag <> null){
-                $this->sendWhatsapp($kabag->no_telepon, $kabag->name);
-            } 
-            if($pengelola_supir <> null){
-                $this->sendWhatsapp($pengelola_supir->no_telepon, $pengelola_supir->name);
-            } 
-        }     
+
+    }
+
+    public function sendWhatsapp_Approval_Ditolak_Supir($name, $no_telepon, $nama_kegiatan, $sender)
+    {
+
+        // $token = '8233afc8ddee3653c46b286b9ee646bdad641929648039544f80a615edc2cd25';
+        // $whatsapp_phone = "+62".$no_telepon;
+        // $message = "Hallo ".$name."\n Peminjaman BMN untuk ".$nama_kegiatan." Telah Disetujui Oleh ".$sender." \n Kunjungi Website https://bmnpolsub.elearningpolsub.com",
+
+        // $url = "https://sendtalk-api.taptalk.io/api/v1/message/send_whatsapp";
+        // $data = [
+        //     "phone" => $whatsapp_phone,
+        //     "messageType" => "text",
+        //     "body" => $message
+        // ];
+
+        // $curl = curl_init($url);
+        // curl_setopt($curl, CURLOPT_URL, $url);
+        // curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+
+        // $headers = array(
+        //     "API-Key: $token",
+        //     "Content-Type: application/json",
+        // );
+        // curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+
+        // //for debug only!
+        // curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+        // curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        // curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
+
+        // curl_exec($curl);
+        // curl_close($curl);
+
+        $sid = "ACfb515188f6c67480edd55995f3f41f0c";
+        $token = "641b842a6c43d1c3a08f589abb69b355";
+        $twilioNumber = "+14155238886";
+        $recipientNumber = '+62'.$no_telepon;
+        $client = new Client($sid, $token);
+    
+        $message = $client->messages->create(
+            'whatsapp:' . $recipientNumber, // Replace with the recipient's WhatsApp number
+            [
+                'from' => 'whatsapp:' . $twilioNumber,
+                'body' => "Hallo ".$name."\n Peminjaman Supir untuk ".$nama_kegiatan." Telah Ditolak Oleh ".$sender." \n Info lebih lengkap kunjungi Website https://bmnpolsub.elearningpolsub.com",
+            ]
+        );
+
+
+
+    }
+
+    public function sendWhatsapp_gantiSupir($name, $no_telepon, $nama_kegiatan, $nama_supir)
+    {
+
+        // $token = '8233afc8ddee3653c46b286b9ee646bdad641929648039544f80a615edc2cd25';
+        // $whatsapp_phone = "+62".$no_telepon;
+        // $message = "Hallo ".$name."\n Peminjaman BMN untuk ".$nama_kegiatan." Telah Disetujui Oleh ".$sender." \n Kunjungi Website https://bmnpolsub.elearningpolsub.com",
+
+        // $url = "https://sendtalk-api.taptalk.io/api/v1/message/send_whatsapp";
+        // $data = [
+        //     "phone" => $whatsapp_phone,
+        //     "messageType" => "text",
+        //     "body" => $message
+        // ];
+
+        // $curl = curl_init($url);
+        // curl_setopt($curl, CURLOPT_URL, $url);
+        // curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+
+        // $headers = array(
+        //     "API-Key: $token",
+        //     "Content-Type: application/json",
+        // );
+        // curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+
+        // //for debug only!
+        // curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+        // curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        // curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
+
+        // curl_exec($curl);
+        // curl_close($curl);
+
+        $sid = "ACfb515188f6c67480edd55995f3f41f0c";
+        $token = "641b842a6c43d1c3a08f589abb69b355";
+        $twilioNumber = "+14155238886";
+        $recipientNumber = '+62'.$no_telepon;
+        $client = new Client($sid, $token);
+    
+        $message = $client->messages->create(
+            'whatsapp:' . $recipientNumber, // Replace with the recipient's WhatsApp number
+            [
+                'from' => 'whatsapp:' . $twilioNumber,
+                'body' => "Hallo ".$name."\n Peminjaman Supir untuk ".$nama_kegiatan." Telah Digantikan Oleh ".$nama_supir." Sebagai Supir yang disetujui. \n Kunjungi Website https://bmnpolsub.elearningpolsub.com",
+            ]
+        );
+
+
+
+    }
+
+     public function sendWhatsapp_berita($name, $no_telepon, $nama_kegiatan)
+    {
+
+        // $token = '8233afc8ddee3653c46b286b9ee646bdad641929648039544f80a615edc2cd25';
+        // $whatsapp_phone = "+62".$no_telepon;
+        // $message = "Hallo ".$name."\n Peminjaman BMN untuk ".$nama_kegiatan." Telah Disetujui Oleh ".$sender." \n Kunjungi Website https://bmnpolsub.elearningpolsub.com",
+
+        // $url = "https://sendtalk-api.taptalk.io/api/v1/message/send_whatsapp";
+        // $data = [
+        //     "phone" => $whatsapp_phone,
+        //     "messageType" => "text",
+        //     "body" => $message
+        // ];
+
+        // $curl = curl_init($url);
+        // curl_setopt($curl, CURLOPT_URL, $url);
+        // curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+
+        // $headers = array(
+        //     "API-Key: $token",
+        //     "Content-Type: application/json",
+        // );
+        // curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+
+        // //for debug only!
+        // curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+        // curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        // curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
+
+        // curl_exec($curl);
+        // curl_close($curl);
+
+        $sid = "ACfb515188f6c67480edd55995f3f41f0c";
+        $token = "641b842a6c43d1c3a08f589abb69b355";
+        $twilioNumber = "+14155238886";
+        $recipientNumber = '+62'.$no_telepon;
+        $client = new Client($sid, $token);
+    
+        $message = $client->messages->create(
+            'whatsapp:' . $recipientNumber, // Replace with the recipient's WhatsApp number
+            [
+                'from' => 'whatsapp:' . $twilioNumber,
+                'body' => "Hallo ".$name."\n Peminjaman BMN untuk ".$nama_kegiatan." Telah Disetujui oleh pihak yang berkaitan. Berita acara telah diterbitkan, silahkan datang ke bagian umum. \n Info lebih lengkap kunjungi website https://bmnpolsub.elearningpolsub.com",
+            ]
+        );
+
+
+
+    }
+
+    public function sendWhatsapp_Approval_Disetujui($name, $no_telepon, $nama_kegiatan, $sender)
+    {
+
+        // $token = '8233afc8ddee3653c46b286b9ee646bdad641929648039544f80a615edc2cd25';
+        // $whatsapp_phone = "+62".$no_telepon;
+        // $message = "Hallo ".$name."\n Peminjaman BMN untuk ".$nama_kegiatan." Telah Disetujui Oleh ".$sender." \n Kunjungi Website https://bmnpolsub.elearningpolsub.com",
+
+        // $url = "https://sendtalk-api.taptalk.io/api/v1/message/send_whatsapp";
+        // $data = [
+        //     "phone" => $whatsapp_phone,
+        //     "messageType" => "text",
+        //     "body" => $message
+        // ];
+
+        // $curl = curl_init($url);
+        // curl_setopt($curl, CURLOPT_URL, $url);
+        // curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+
+        // $headers = array(
+        //     "API-Key: $token",
+        //     "Content-Type: application/json",
+        // );
+        // curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+
+        // //for debug only!
+        // curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+        // curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        // curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
+
+        // curl_exec($curl);
+        // curl_close($curl);
+
+        $sid = "ACfb515188f6c67480edd55995f3f41f0c";
+        $token = "641b842a6c43d1c3a08f589abb69b355";
+        $twilioNumber = "+14155238886";
+        $recipientNumber = '+62'.$no_telepon;
+        $client = new Client($sid, $token);
+    
+        $message = $client->messages->create(
+            'whatsapp:' . $recipientNumber, // Replace with the recipient's WhatsApp number
+            [
+                'from' => 'whatsapp:' . $twilioNumber,
+                'body' => "Hallo ".$name."\n Peminjaman BMN untuk ".$nama_kegiatan." Telah Disetujui Oleh ".$sender." \n Kunjungi Website https://bmnpolsub.elearningpolsub.com",
+            ]
+        );
+
+
+
+    }
+
+
+    public function sendWhatsapp_Approval_Ditolak($name, $no_telepon, $nama_kegiatan, $sender, $alasan)
+    {
+
+        // $token = '8233afc8ddee3653c46b286b9ee646bdad641929648039544f80a615edc2cd25';
+        // $whatsapp_phone = "+62".$no_telepon;
+        // $message = "Hallo ".$name."\n Peminjaman BMN untuk ".$nama_kegiatan." Telah Ditolak Oleh ".$sender." \n Alasan Penolakan : ".$alasan."  \n Kunjungi Website https://bmnpolsub.elearningpolsub.com";
+
+        // $url = "https://sendtalk-api.taptalk.io/api/v1/message/send_whatsapp";
+        // $data = [
+        //     "phone" => $whatsapp_phone,
+        //     "messageType" => "text",
+        //     "body" => $message
+        // ];
+
+        // $curl = curl_init($url);
+        // curl_setopt($curl, CURLOPT_URL, $url);
+        // curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+
+        // $headers = array(
+        //     "API-Key: $token",
+        //     "Content-Type: application/json",
+        // );
+        // curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+
+        // //for debug only!
+        // curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+        // curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        // curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
+
+        // curl_exec($curl);
+        // curl_close($curl);
+
+        $sid = "ACfb515188f6c67480edd55995f3f41f0c";
+        $token = "641b842a6c43d1c3a08f589abb69b355";
+        $twilioNumber = "+14155238886";
+        $recipientNumber = '+62'.$no_telepon;
+        $client = new Client($sid, $token);
+    
+        $message = $client->messages->create(
+            'whatsapp:' . $recipientNumber, // Replace with the recipient's WhatsApp number
+            [
+                'from' => 'whatsapp:' . $twilioNumber,
+                'body' => "Hallo ".$name."\n Peminjaman BMN untuk ".$nama_kegiatan." Telah Ditolak Oleh ".$sender." \n Alasan Penolakan : ".$alasan."  \n Kunjungi Website https://bmnpolsub.elearningpolsub.com",
+            ]
+        );
+
+
+
     }
 
    
 
-    public function sendWhatsapp($no_telepon, $name)
+    public function sendWhatsapp($name, $no_telepon)
     {
 
-        $token = '8233afc8ddee3653c46b286b9ee646bdad641929648039544f80a615edc2cd25';
-        $whatsapp_phone = "+62".$no_telepon;
-        $message = "Hallo ".$name."\n 1 Peminjaman Masuk! Perlu persetujuan anda \nKunjungi Website https://bmnpolsub.elearningpolsub.com";
+        // $token = '8233afc8ddee3653c46b286b9ee646bdad641929648039544f80a615edc2cd25';
+        // $whatsapp_phone = "+62".$no_telepon;
+        // $message = "Hallo ".$name."\n 1 Peminjaman Masuk! Perlu persetujuan anda \nKunjungi Website https://bmnpolsub.elearningpolsub.com";
 
-        $url = "https://sendtalk-api.taptalk.io/api/v1/message/send_whatsapp";
-        $data = [
-            "phone" => $whatsapp_phone,
-            "messageType" => "text",
-            "body" => $message
-        ];
+        // $url = "https://sendtalk-api.taptalk.io/api/v1/message/send_whatsapp";
+        // $data = [
+        //     "phone" => $whatsapp_phone,
+        //     "messageType" => "text",
+        //     "body" => $message
+        // ];
 
-        $curl = curl_init($url);
-        curl_setopt($curl, CURLOPT_URL, $url);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        // $curl = curl_init($url);
+        // curl_setopt($curl, CURLOPT_URL, $url);
+        // curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 
-        $headers = array(
-            "API-Key: $token",
-            "Content-Type: application/json",
+        // $headers = array(
+        //     "API-Key: $token",
+        //     "Content-Type: application/json",
+        // );
+        // curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+
+        // //for debug only!
+        // curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+        // curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        // curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
+
+        // curl_exec($curl);
+        // curl_close($curl);
+
+        $sid = "ACfb515188f6c67480edd55995f3f41f0c";
+        $token = "641b842a6c43d1c3a08f589abb69b355";
+        $twilioNumber = "+14155238886";
+        $recipientNumber = "+62".$no_telepon;
+        $client = new Client($sid, $token);
+    
+        $message = $client->messages->create(
+            'whatsapp:' . $recipientNumber, // Replace with the recipient's WhatsApp number
+            [
+                'from' => 'whatsapp:' . $twilioNumber,
+                'body' => "Hallo ".$name."\n 1 Peminjaman Masuk! Perlu persetujuan anda \nKunjungi Website https://bmnpolsub.elearningpolsub.com",
+            ]
         );
-        curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-
-        //for debug only!
-        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
-
-        curl_exec($curl);
-        curl_close($curl);
 
 
 
@@ -611,7 +1130,7 @@ class c_peminjaman extends Controller
 
     public function approval($sebagai, $id_peminjaman)
     {
-        if($sebagai == "Bagian Umum"){
+        if($sebagai == "Staff Umum"){
             $data_approval = [
                 'id_peminjaman'=> $id_peminjaman,
                 'wakil_direktur_2'=> "Proses",
@@ -658,6 +1177,7 @@ class c_peminjaman extends Controller
 
     public function otomatis($id_peminjaman)
     {
+        $tujuan = $this->peminjaman->detailPeminjaman2($id_peminjaman);
         $ubahStatus = $this->approval->detailData($id_peminjaman);
         if($ubahStatus->jenis_peminjaman == "Barang" OR $ubahStatus->jenis_peminjaman == "Ruangan" OR $ubahStatus->jenis_peminjaman == "Barang,Ruangan" )
         {
@@ -673,6 +1193,7 @@ class c_peminjaman extends Controller
                     'status_pengembalian' => "Belum Dikembalikan",
                    ];
                    $this->pengembalian->addData($pengembalian);
+                   $whatsapp = $this->sendWhatsapp_berita($tujuan->name, $tujuan->no_telepon, $tujuan->nama_kegiatan);
             }
         }elseif($ubahStatus->jenis_peminjaman == "Barang,Ruangan,Kendaraan" OR $ubahStatus->jenis_peminjaman == "Barang,Kendaraan" OR $ubahStatus->jenis_peminjaman == "Ruangan,Kendaraan" OR $ubahStatus->jenis_peminjaman == "Kendaraan" OR $ubahStatus->jenis_peminjaman == "Barang,Ruangan,Kendaraan,Supir" OR $ubahStatus->jenis_peminjaman == "Barang,Kendaraan,Supir" OR $ubahStatus->jenis_peminjaman == "Ruangan,Kendaraan,Supir" OR $ubahStatus->jenis_peminjaman == "Kendaraan,Supir")
         {
@@ -688,6 +1209,7 @@ class c_peminjaman extends Controller
                     'status_pengembalian' => "Belum Dikembalikan",
                    ];
                    $this->pengembalian->addData($pengembalian);
+                   $whatsapp = $this->sendWhatsapp_berita($tujuan->name, $tujuan->no_telepon, $tujuan->nama_kegiatan);
             }
         }
 
@@ -741,6 +1263,7 @@ class c_peminjaman extends Controller
                 ->join('keranjangs as k', function ($join) {
                     $join->on('p.id_peminjaman', '=', 'k.id_peminjaman')
                         ->whereColumn('k.id_item', 'items.id_item')
+                        ->whereNot('peminjaman.status_peminjaman', "Pengajuan Ditolak")
                         ->where('items.kondisi_item', 'Ready');
                 })
                 ->where(function ($query) use ($fromDate, $toDate) {
@@ -889,6 +1412,8 @@ class c_peminjaman extends Controller
 
 
 
+
+
         
         // $readyStok = DB::table('items')
         //     ->leftJoin('keranjangs', function ($join) use ($id_item, $id_keranjang) {
@@ -946,26 +1471,31 @@ class c_peminjaman extends Controller
     public function modalSupir(Request $request)
     {
       
-        $fromdate = date('Y-m-d H:i:s', strtotime($request->fromdate));
-        $todate = date('Y-m-d H:i:s', strtotime($request->todate));
-        // $check = $this->supir->checkSupir($fromdate, $todate);
-        
-        
+        $fromDate = date('Y-m-d H:i:s', strtotime($request->fromdate));
+        $toDate = date('Y-m-d H:i:s', strtotime($request->todate));
+
+        // $driversWithoutActivities = DB::table('supir')
+        // ->leftJoin(DB::raw('(SELECT id_supir FROM aktivitas 
+        //                 WHERE mulai_aktivitas <= ? AND selesai_aktivitas >= ?) AS subquery'),
+        //                 'supir.id_supir', '=', 'subquery.id_supir')
+        // ->whereNull('subquery.id_supir')
+        // ->setBindings([$toDate, $fromDate]) // Bind the parameters to the subquery
+        // ->select('supir.*')
+        // ->distinct()
+        // ->get();
+
         $driversWithoutActivities = DB::table('supir')
-        ->leftJoin('aktivitas', 'supir.id_supir', '=', 'aktivitas.id_supir')
-        ->where(function ($query) use ($fromdate, $todate) {
-            $query->where(function ($query) use ($fromdate, $todate) {
-                $query->where('aktivitas.mulai_aktivitas', '>', $todate)
-                    ->orWhere('aktivitas.selesai_aktivitas', '<', $fromdate);
-            })
-            ->orWhereNull('aktivitas.id_supir');
-        })
+        ->leftJoin(DB::raw('(SELECT id_supir FROM aktivitas 
+                        WHERE mulai_aktivitas <= ? AND selesai_aktivitas >= ?) AS subquery'),
+                        'supir.id_supir', '=', 'subquery.id_supir')
+        ->whereNull('subquery.id_supir')
+        ->where('supir.status_supir', 'Aktif') // Add the condition for Aktif drivers
         ->select('supir.*')
         ->distinct()
+        ->setBindings([$toDate, $fromDate, 'Aktif']) // Bind the parameters for the subquery and the status condition
         ->get();
     
-
-        // $driversWithoutActivities = DB::table('supir')->get();
+  
 
 
         // $ready = $this->aktivitas->readySupir($driversWithoutActivities);

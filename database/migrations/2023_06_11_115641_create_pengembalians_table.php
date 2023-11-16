@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('status_pengembalian')->nullable();
             $table->string('deskripsi_pengembalian')->nullable();
             $table->text('alasan')->nullable();
+            $table->string('bukti_video')->nullable();
         });
     }
 

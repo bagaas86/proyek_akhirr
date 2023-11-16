@@ -43,7 +43,7 @@
     <div class="xtabledm">
         <a href="{{route('dm.pengguna.create')}}" class="btn btn-primary btn-sm mb-2"><i class="fa fa-plus"></i>Tambah Pengguna</a>
         <a href="#" class="btn btn-success btn-sm mb-2" data-toggle="modal" data-target="#import1"><i class="fa fa-plus"></i>Import Pengguna</a>
-        <table id="myTable2" class="display">
+        <table style="width:100%" id="myTable2" class="display">
             <thead>
                 <tr>
                     <th>No</th>
@@ -60,13 +60,26 @@
                     <td></td>
                     <td id="name">{{$data->name}}</td>
                     <td style="width:10%"><img src="{{asset('foto/dm/pengguna/'. $data->foto)}}" class="img-radius" style="width:50px;height:50px;" alt=""></td>
-                    <td>{{$data->username}}</td>
                     <td>
-                        <i class="badge bg-success">{{$data->sebagai}}</i>
+                        @if($data->username == null)
+                        <span class="badge bg-danger">Akun Dihapus</span>
+                        @else
+                        {{$data->username}}
+                        @endif
                     </td>
                     <td>
+                        @if($data->sebagai == $data->keterangan)
+                        <i class="badge bg-success">{{$data->sebagai}}</i>
+                        @else
+                        <i class="badge bg-success">{{$data->sebagai}}</i> <i class="badge bg-success">{{$data->keterangan}}</i>
+                        @endif
+                    </td>
+                    <td style="width:15%">
                         <a href="{{route('dm.pengguna.edit', $data->id)}}" class="btn btn-warning btn-sm"><i class="fa fa-edit"></i></a>
+                        @if(Auth::user()->id <> $data->id)
                         <a href="#"  class="btn btn-danger btn-sm" data-toggle="modal" data-target="#delete{{$data->id}}"><i class="fa fa-trash"></i></a>
+                        @endif
+                        <button onclick="tugasTambah({{$data->id}})" class="btn btn-secondary btn-sm"><i class="bi bi-plus"></i></button>
                     </td>
                 </tr>
                 @endforeach
@@ -118,6 +131,7 @@
             </div>
             <div id="modalFooter" class="modal-footer">
                 <a style="color:white" class="btn  btn-secondary" data-dismiss="modal">Tutup</a>
+                <a href="{{asset('foto/dm/pengguna/Akun.xlsx')}}" class="btn btn-primary" download>Download Format</a>
                 <button id="send" type="submit" class="btn  btn-success" hidden>Import</button>
             </form>
                 <a style="color:white" onclick="confirm()" class="btn  btn-success">Import</a>
@@ -126,8 +140,26 @@
         </div>
     </div>
 </div>
-
 {{-- endModal Delete --}}
+
+{{-- Modal --}}
+<div id="exampleModalCenter2" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle2">Modal Title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <p class="mb-0" id="page2"></p>
+            </div>
+            <div id="modalFooter2" class="modal-footer">
+             
+            </div>
+        </div>
+    </div>
+</div>
+{{-- endModal --}}
 @endsection
 @section('script')
 <script>
@@ -170,6 +202,16 @@
         }else{
             document.getElementById("send").click()
         }
+    }
+
+    function tugasTambah(id)
+    {
+        $.get("{{ url('tambahtugas') }}/" + id, {}, function(data, status){
+            $("#exampleModalCenterTitle2").html(`Tambah Tugas`)
+            $("#page2").html(data);
+            $("#modalFooter2").html(``)
+            $("#exampleModalCenter2").modal('show');
+        })
     }
  </script>
 

@@ -46,7 +46,7 @@
             @enderror
         </div>
         <div class="form-group">
-            <label for="Nama Pengguna">Username</label>
+            <label for="Nama Pengguna">Akun Pengguna</label>
             <input type="text" value="{{$pengguna->username}}" name="username" class="form-control" readonly>
         </div>
         <div class="form-group">
@@ -54,19 +54,24 @@
             <input type="password" class="form-control" name="password">
         </div>
         <div class="form-group">
-            <label for="Nama Pengguna">Unit/Organisasi</label>
-            <input type="text" value="{{$pengguna->sebagai}}" name="sebagai" class="form-control" readonly>
+            <label for="Nama Pengguna">Unit</label>
+            <input type="text" value="{{$pengguna->keterangan}}" name="keterangan" class="form-control" readonly>
         </div>
         <div class="form-group">
-            <label for="Nama Pengguna">Keterangan</label>
-            <input type="text" value="{{$pengguna->keterangan}}" name="keterangan" class="form-control">
+            <label for="">Jabatan tambahan</label>
+            <select name="sebagai" id="" class="form-control">
+                @foreach ($tambahan as $data)
+                    <option value="{{$data->nama_unit}}" @if(Auth::user()->sebagai == $data->nama_unit) selected @endif>{{$data->nama_unit}}</option>
+                @endforeach
+                <option value="{{$pengguna->keterangan}}" @if($pengguna->keterangan == $pengguna->sebagai) selected @endif>Tidak ada</option>
+            </select>
         </div>
         <div class="form-group">
             <label for="Jenis Identitas">Jenis Identitas</label>
             <select name="jenis_identitas" class="form-control">
                 <option value="" selected disabled>-- Pilih Jenis Identitas --</option>
                 <option value="NIP" @if($pengguna->jenis_identitas == "NIP") selected @endif>NIP</option>
-                <option value="NIS" @if($pengguna->jenis_identitas == "NIS") selected @endif>NIS</option>
+                <option value="NIS" @if($pengguna->jenis_identitas == "NIK") selected @endif>NIK</option>
                 <option value="NIM" @if($pengguna->jenis_identitas == "NIM") selected @endif>NIM</option>
             </select>
         </div>

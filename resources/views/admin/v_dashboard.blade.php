@@ -17,6 +17,7 @@
 <div class="card" style="height:75px">
     <h2 class="text-muted m-b-0" style="margin-left:20px;margin-top:15px;">Selamat Datang, {{Auth::user()->name}}</h2>
 </div>
+@if(Auth::user()->sebagai == "Staff Umum")
 <div class="row">
     <div class="col-lg-7 col-md-12">
         <!-- support-section start -->
@@ -172,5 +173,292 @@
      </div>
     <!-- [ Main Content ] end -->
 </div>
+@endif
+
+@if(Auth::user()->sebagai == "Kepala Bagian")
+<div class="row">
+    <div class="col col-md-12">
+        <div class="row">
+            <div class="col col-md-4 col-6">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-8">
+                                <h4 class="text-c-blue">{{$total_pengajuan_kabag}}</h4>
+                                <h6 class="text-muted m-b-0">Total Pengajuan Peminjaman</h6>
+                            </div>
+                            <div class="col-4 text-right">
+                                <i class="bi bi-speaker f-28"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-c-blue btn">
+                        <a href="{{route('peminjaman.pengajuan.index')}}">
+                            <div class="row align-items-center">
+                                <div class="col-12">
+                                    <h6 class="text-white m-b-0">Lihat</h6>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col col-md-4 col-6">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-8">
+                                <h4 class="text-c-blue">{{$total_pengajuan_kabag_disetujui}}</h4>
+                                <h6 class="text-muted m-b-0">Pengajuan Peminjaman Disetujui</h6>
+                            </div>
+                            <div class="col-4 text-right">
+                                <i class="bi bi-check f-36"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-c-blue btn">
+                        <a href="{{route('peminjaman.pengajuan.index')}}">
+                            <div class="row align-items-center">
+                                <div class="col-12">
+                                    <h6 class="text-white m-b-0">Lihat</h6>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col col-md-4 col-6">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-8">
+                                <h4 class="text-c-blue">{{$total_pengajuan_kabag_ditolak}}</h4>
+                                <h6 class="text-muted m-b-0">Pengajuan Peminjaman Ditolak</h6>
+                            </div>
+                            <div class="col-4 text-right">
+                                <i class="bi bi-x f-36"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-c-blue btn">
+                        <a href="{{route('peminjaman.pengajuan.index')}}">
+                            <div class="row align-items-center">
+                                <div class="col-12">
+                                    <h6 class="text-white m-b-0">Lihat</h6>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+</div>
+@endif
+
+
+@if(Auth::user()->sebagai == "Wakil Direktur 2")
+<div class="row">
+    <div class="col col-md-12">
+        <div class="row">
+            <div class="col col-md-4 col-6">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-8">
+                                <h4 class="text-c-blue">{{$total_pengajuan_wadir2}}</h4>
+                                <h6 class="text-muted m-b-0">Total Pengajuan Peminjaman</h6>
+                            </div>
+                            <div class="col-4 text-right">
+                                <i class="bi bi-speaker f-28"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-c-blue btn">
+                        <a href="{{route('peminjaman.pengajuan.index')}}">
+                            <div class="row align-items-center">
+                                <div class="col-12">
+                                    <h6 class="text-white m-b-0">Lihat</h6>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col col-md-4 col-6">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-8">
+                                <h4 class="text-c-blue">{{$total_pengajuan_wadir2_disetujui}}</h4>
+                                <h6 class="text-muted m-b-0">Pengajuan Peminjaman Disetujui</h6>
+                            </div>
+                            <div class="col-4 text-right">
+                                <i class="bi bi-check f-36"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-c-blue btn">
+                        <a href="{{route('peminjaman.pengajuan.index')}}">
+                            <div class="row align-items-center">
+                                <div class="col-12">
+                                    <h6 class="text-white m-b-0">Lihat</h6>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col col-md-4 col-6">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-8">
+                                <h4 class="text-c-blue">{{$total_pengajuan_wadir2_ditolak}}</h4>
+                                <h6 class="text-muted m-b-0">Pengajuan Peminjaman Ditolak</h6>
+                            </div>
+                            <div class="col-4 text-right">
+                                <i class="bi bi-x f-36"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-c-blue btn">
+                        <a href="{{route('peminjaman.pengajuan.index')}}">
+                            <div class="row align-items-center">
+                                <div class="col-12">
+                                    <h6 class="text-white m-b-0">Lihat</h6>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+</div>
+@endif
+
+@if(Auth::user()->sebagai == "Pengelola Supir")
+<div class="row">
+    <div class="col col-md-12">
+        <div class="row">
+            <div class="col col-md-4 col-6">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-8">
+                                <h4 class="text-c-blue">{{$total_pengajuan_supir}}</h4>
+                                <h6 class="text-muted m-b-0">Total Pengajuan Peminjaman</h6>
+                            </div>
+                            <div class="col-4 text-right">
+                                <i class="bi bi-speaker f-28"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-c-blue btn">
+                        <a href="{{route('peminjaman.pengajuan.index')}}">
+                            <div class="row align-items-center">
+                                <div class="col-12">
+                                    <h6 class="text-white m-b-0">Lihat</h6>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col col-md-4 col-6">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-8">
+                                <h4 class="text-c-blue">{{$total_pengajuan_supir_disetujui}}</h4>
+                                <h6 class="text-muted m-b-0">Pengajuan Peminjaman Disetujui</h6>
+                            </div>
+                            <div class="col-4 text-right">
+                                <i class="bi bi-check f-36"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-c-blue btn">
+                        <a href="{{route('peminjaman.pengajuan.index')}}">
+                            <div class="row align-items-center">
+                                <div class="col-12">
+                                    <h6 class="text-white m-b-0">Lihat</h6>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col col-md-4 col-6">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-8">
+                                <h4 class="text-c-blue">{{$total_pengajuan_supir_ditolak}}</h4>
+                                <h6 class="text-muted m-b-0">Pengajuan Peminjaman Ditolak</h6>
+                            </div>
+                            <div class="col-4 text-right">
+                                <i class="bi bi-x f-36"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-c-blue btn">
+                        <a href="{{route('peminjaman.pengajuan.index')}}">
+                            <div class="row align-items-center">
+                                <div class="col-12">
+                                    <h6 class="text-white m-b-0">Lihat</h6>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col col-md-4 col-6">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-8">
+                                <h4 class="text-c-blue">{{$total_supir}}</h4>
+                                <h6 class="text-muted m-b-0">Total Supir Aktif</h6>
+                            </div>
+                            <div class="col-4 text-right">
+                                <i class="bi bi-people f-28"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-c-blue btn">
+                        <a href="{{route('supir.kelola.index')}}">
+                            <div class="row align-items-center">
+                                <div class="col-12">
+                                    <h6 class="text-white m-b-0">Lihat</h6>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+</div>
+@endif
+
+
 
 @endsection

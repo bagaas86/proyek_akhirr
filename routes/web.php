@@ -25,8 +25,7 @@ use App\Http\Controllers\c_pengaturan;
 |
 */
 
-Route::get('wa', [App\Http\Controllers\c_peminjaman::class, 'createNumber'])->name('sendWhatsapp');
-
+// Route::get('wa', [App\Http\Controllers\c_peminjaman::class, 'createNumber'])->name('sendWhatsapp');
 
 Route::get('error', [App\Http\Controllers\c_login::class, 'errorPage'])->name('error');
 Route::get('/', [App\Http\Controllers\c_login::class, 'landingPage'])->name('user.login');
@@ -85,17 +84,19 @@ Route::controller(c_pengguna::class)->middleware('auth')->group(function () {
          // admin
          Route::get('profil', 'myProfil_Admin')->name('profil.admin');
          Route::post('updateprofil','editProfil_Admin')->name('profil.admin.edit');
+         Route::get('tambahtugas/{id}', 'tambahTugas')->name('tambah.tugas.index');
+         Route::post('tambahtugasupdate/{id}', 'tambahTugasUpdate')->name('tambah.tugas.update');
 });
 
-// // Unit
-// Route::controller(c_unit::class)->middleware('auth')->group(function () {
-//     Route::get('dm/unit', 'index')->name('dm.unit.index');
-//     Route::get('dm/unit/create', 'create')->name('dm.unit.create');
-//     Route::post('dm/unit/store', 'store')->name('dm.unit.store');
-//     Route::get('dm/unit/edit/{id}', 'edit')->name('dm.unit.edit');
-//     Route::post('dm/unit/update/{id}', 'update')->name('dm.unit.update');
-//     Route::get('dm/unit/destroy/{id}', 'destroy')->name('dm.unit.destroy');
-// });
+// Unit
+Route::controller(c_unit::class)->middleware('auth')->group(function () {
+    Route::get('dm/unit', 'index')->name('dm.unit.index');
+    Route::get('dm/unit/create', 'create')->name('dm.unit.create');
+    Route::post('dm/unit/store', 'store')->name('dm.unit.store');
+    Route::get('dm/unit/edit/{id}', 'edit')->name('dm.unit.edit');
+    Route::post('dm/unit/update/{id}', 'update')->name('dm.unit.update');
+    Route::get('dm/unit/destroy/{id}', 'destroy')->name('dm.unit.destroy');
+});
 
 // Supir
 Route::controller(c_supir::class)->middleware('auth')->group(function () {
@@ -133,6 +134,7 @@ Route::controller(c_peminjaman::class)->middleware('auth')->group(function () {
         Route::get('modalapproval/{id}', 'modalApproval')->name('modalapproval');
         Route::get('tampilpeminjaman', 'tablePeminjaman')->name('tablepeminjaman');
         Route::get('hari', 'hari')->name('hari');
+        Route::get('editsupir/{id_keranjang}', 'editSupir')->name('editsupir');
 
     // user
     Route::get('dm/peminjaman', 'index')->name('dm.peminjaman.index');
@@ -149,6 +151,8 @@ Route::controller(c_peminjaman::class)->middleware('auth')->group(function () {
         Route::get('detailbmn/{id}', 'detailBMN')->name('detailbmn');
         Route::get('resetkeranjang', 'resetKeranjang')->name('resetkeranjang');
         Route::get('modalsupir', 'modalSupir')->name('modalsupir');
+
+
     
 
 });
@@ -162,12 +166,16 @@ Route::controller(c_pengembalian::class)->middleware('auth')->group(function () 
         Route::get('konfirmasipengembalian/{id}', 'ubahStatus_Pengembalian')->name('ubahstatuspengembalian');
         Route::get('ulasan/{id}', 'kirimUlasan')->name('kirimulasan');
         Route::get('dataulasan/{id}', 'dataUlasan')->name('dataulasan');
+        Route::get('terima', 'updateItem')->name('updateitem');
+        Route::get('feedback/{id_peminjaman}', 'feedback')->name('feedback');
 
 
     // user
     Route::get('pengembalian/lapor', 'index')->name('pengembalian.lapor.index');
     Route::post('pengembalian/lapor/store', 'storePengembalian')->name('pengembalian.lapor.store');
     Route::post('pengembalian/laporulang/store', 'storePengembalian_Ulang')->name('pengembalian.laporulang.store');
+    Route::get('buktipengembalian/{id_keranjang}', 'lihatBukti')->name('lihat.bukti');
+    Route::get('buktiawal/{id_keranjang}', 'lihatBukti_Awal')->name('lihat.bukti.awal');
         // js
         Route::get('jspengembalian', 'pengembalian')->name('jspengembalian');
         Route::get('detailpengembalian/{id}', 'detailPengembalian_User')->name('detailpengembalianuser');
@@ -179,6 +187,7 @@ Route::controller(c_pengembalian::class)->middleware('auth')->group(function () 
 
 Route::controller(c_history::class)->middleware('auth')->group(function () {
     Route::get('history', 'index')->name('history.index');
+    Route::post('kirimbuktiawal', 'sendBukti_Awal')->name('foto.awal');
 
     // js
     Route::get('jshistory', 'history')->name('jshistory');
@@ -189,6 +198,7 @@ Route::controller(c_info::class)->middleware('auth')->group(function () {
     Route::get('info', 'index')->name('info.index');
     Route::get('info/detail/{id_item}', 'infoDetail')->name('info.detail');
     Route::get('datainfo/{id_item}', 'dataInfo')->name('datainfo');
+    Route::get('datainfosupir/{id_supir}', 'dataSupir')->name('datasupir');
 });
 
 
@@ -198,6 +208,9 @@ Route::controller(c_laporan::class)->middleware('auth')->group(function () {
 
     Route::get('profil/chartlahan', 'chartPanen')->name('profil.chartlahan');
     Route::get('profil/chartpeminjaman', 'chartPeminjaman')->name('profil.chartpeminjaman');
+    Route::get('tampillaporan', 'tablePeminjaman')->name('tablelaporan');
+    Route::get('harilaporan', 'hari')->name('hari.laporan');
+    Route::get('cetaklaporan', 'cetakLaporan')->name('cetak.laporan');
 
    
 });

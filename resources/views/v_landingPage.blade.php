@@ -112,6 +112,28 @@
     </div>
     <!-- [ Main Content ] end -->
 
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                   <div class="foot" style="height: 50px">
+                    <center>
+                        <div class="col col-md-6 mt-4">
+                            <h6 style="color:white">
+                                Belum memiliki akun? <a href="https://wa.me/+62<?php echo $umum->no_telepon; ?>/?text=Hello%20there!" target="_blank" style="color: white">Hubungi</a> 
+                            </h6>
+                            <h6 style="color:white">
+                                Copyright © 2023 Politeknik Negeri Subang. All rights reserved.
+                            </h6>
+                        </div>
+                    </center>
+                   </div>
+
+                </div>
+            </div>
+        </div>
+    </footer>
+
         <!-- Warning Section start -->
         <!-- Older IE warning message -->
         <!--[if lt IE 11]>

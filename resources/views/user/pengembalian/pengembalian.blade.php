@@ -5,7 +5,7 @@
      @foreach($pengembalian as $data)
           <div class="card">
               <div class="row">
-                  <div class="card-body col col-10 col-md-10">
+                  <div class="card-body col col-12 col-md-12">
                   <h6>{{$data->nama_kegiatan}}                        
                     @if($data->status_pengembalian =="Belum Dikembalikan")
                     <span class="badge bg-warning">Belum Dikembalikan</span>
@@ -17,12 +17,12 @@
                     <span class="badge bg-success">Pengembalian Disetujui</span>
                     @endif</h6>
                   <div class="row">
-                      <div class="col col-8 col-md-8">
-                          <small style="font-size:10px">Penanggung Jawab :{{$data->nama_pj}}</small>
+                      <div class="col col-10 col-md-10">
+                          <small style="font-size:10px">PJ :{{$data->nama_pj}}</small>
                       </div>
-                      <div class="col col-4 col-md-4" style="text-align: right">
+                      {{-- <div class="col col-5 col-md-5" style="text-align: right">
                           <small style="font-size:10px">{{$data->waktu_pengajuan}} </small>
-                      </div> 
+                      </div>  --}}
                   </div>
                  
                   </div>

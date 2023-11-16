@@ -16,12 +16,22 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         DB::table('users')->insert([
+            'name' => 'Admin',
+            'username' => 'admin',
+            'sebagai' => 'Admin',
+            'keterangan' => 'Admin',
+            'foto'=> 'default.png',
+            'status_user' => "Aktif",
+            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+        ]);
+
+        DB::table('users')->insert([
             'name' => 'Agata Novi Anindita, S.E.',
-            'username' => 'umum',
+            'username' => '198811052019032015',
             'sebagai' => 'Staff Umum',
             'keterangan' => 'Dosen/Staff',
             'foto'=> 'default.png',
-            'no_telepon'=> '+6282249025414',
+            'no_telepon'=> '82249025414',
             'status_user' => "Aktif",
             'no_identitas' => '198811052019032015',
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
@@ -41,7 +51,7 @@ class DatabaseSeeder extends Seeder
 
         DB::table('users')->insert([
             'name' => 'Nunu Nugraha Purnawan, S.Pd., M.Kom',
-            'username' => 'wadir2',
+            'username' => '197909152015041000',
             'sebagai' => 'Wakil Direktur 2',
             'keterangan' => 'Wakil Direktur 2',
             'foto'=> 'default.png',
@@ -53,7 +63,7 @@ class DatabaseSeeder extends Seeder
 
         DB::table('users')->insert([
             'name' => 'Zaenal Abidin, S.Pd.I., M.Si.',
-            'username' => 'kabag',
+            'username' => '196704221996011001',
             'sebagai' => 'Kepala Bagian',
             'keterangan' => 'Kepala Bagian',
             'foto'=> 'default.png',
@@ -65,6 +75,7 @@ class DatabaseSeeder extends Seeder
 
         DB::table('pengaturan')->insert([
             'id_pengaturan' => '1',
+            'id_bagian_umum' => '2',
         ]);
 
     }

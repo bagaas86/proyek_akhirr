@@ -70,7 +70,7 @@
                 </div>
                 <div class="form-group">
                     <label for="Nama Pengguna">Keterangan</label>
-                    <input type="text" value="{{$pengguna->keterangan}}" name="keterangan" class="form-control">
+                    <input type="text" value="{{$pengguna->keterangan}}" name="keterangan" class="form-control" readonly>
                 </div>
                 <div class="form-group">
                     <label for="Jenis Identitas">Jenis Identitas</label>

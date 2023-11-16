@@ -18,4 +18,9 @@ class ulasan extends Model
     {
         return DB::table('ulasan')->where('id_user', $id_user)->get();
     }
+    
+    public function cekUlasan($id)
+    {
+        return DB::table('ulasan')->where('id_peminjaman', $id)->count();
+    }
 }

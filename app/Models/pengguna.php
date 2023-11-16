@@ -10,9 +10,17 @@ class pengguna extends Model
 {
     use HasFactory;
 
-    public function allData()
+    public function getData()
     {
         return DB::table('users')->where('status_user', "Aktif")->get();
+    }
+
+    public function allData()
+    {
+        return DB::table('users')->where('status_user', "Aktif")
+        ->whereNot('sebagai', "Admin")
+        ->orWhere('sebagai', null)
+        ->get();
     }
 
     public function addData($data)

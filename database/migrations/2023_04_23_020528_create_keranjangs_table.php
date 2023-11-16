@@ -20,7 +20,8 @@ return new class extends Migration
             $table->integer('id_supir')->nullable();
             $table->string('id_peminjaman')->nullable();
             $table->integer('jumlah');
-            $table->timestamps();
+            $table->string('jumlah_rusak')->nullable();
+            $table->string('selesai')->nullable();
         });
     }
 

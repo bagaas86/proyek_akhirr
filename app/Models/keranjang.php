@@ -198,6 +198,11 @@ class keranjang extends Model
         return DB::table('keranjangs')->where('id_item', $id_item)->whereNot('id_peminjaman', null)->count();
     }
 
+    public function gantiSupir($id_keranjang, $data)
+    {
+        return DB::table('keranjangs')->where('id_keranjang', $id_keranjang)->update($data);
+    }
+
 
 
 

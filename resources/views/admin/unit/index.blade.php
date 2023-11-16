@@ -5,11 +5,11 @@
             <div class="row align-items-center">
                 <div class="col-md-12">
                     <div class="page-header-title">
-                        <h5 class="m-b-10">List Supir Politeknik Negeri Subang</h5>
+                        <h5 class="m-b-10">Unit/Jabatan Politeknik Negeri Subang</h5>
                     </div>
                     <ul class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{{ url('dashboard') }}"><i class="feather icon-home"></i></a></li>
-                        <li class="breadcrumb-item"><a href="#!">Data Supir</a></li>
+                        <li class="breadcrumb-item"><a href="#!">Unit/Jabatan Politeknik Negeri Subang</a></li>
                     </ul>
                 </div>
             </div>
@@ -30,41 +30,25 @@
     <div class="card">
         <div class="xtabledm">
             <a href="#" onclick="modalCreate()" class="btn btn-primary btn-sm mb-2"><i class="fa fa-plus"></i>Tambah
-                Supir</a>
-            <table id="supir" class="display" style="width:100%">
+                Unit/Jabatan</a>
+            <table id="unit" class="display" style="width:100%">
                 <thead>
                     <tr>
                         <th>No</th>
-                        <th>Nama Supir</th>
-                        <th>Umur</th>
-                        <th>Status Supir</th>
+                        <th>Nama</th>
+                        <th>Jenis</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($supir as $data)
+                    @foreach ($unit as $data)
                         <tr>
                             <td></td>
-                            <td id="name" style="width:40%">{{ $data->nama_supir }}</td>
-                            <td>{{ $data->umur_supir }}</td>
-                            <td style="color:white">
-                                @if ($data->status_supir == 'Aktif')
-                                    <i class="badge bg-success">Aktif</i>
-                                @elseif($data->status_supir == 'Tidak Aktif')
-                                    <i class="badge bg-danger">Tidak Aktif</i>
-                                @endif
-                            </td>
+                            <td id="name" style="width:40%">{{ $data->nama_unit }}</td>
+                            <td>{{ $data->jenis }}</td>
                             <td>
-                                <a href="#" onclick="modalEdit({{ $data->id_supir }})"
+                                <a href="#" onclick="modalEdit({{ $data->id_unit }})"
                                     class="btn btn-warning btn-sm"><i class="fa fa-edit"></i></a>
-                                @if ($data->status_supir == 'Aktif')
-                                    <a href="#" class="btn btn-danger btn-sm"
-                                        onclick="modalNonaktif({{ $data->id_supir }})"><i class="bi bi-x"></i>
-                                        Nonaktifkan</a>
-                                @elseif($data->status_supir == 'Tidak Aktif')
-                                    <a href="#" class="btn btn-success btn-sm"
-                                        onclick="modalAktif({{ $data->id_supir }})"><i class="bi bi-check"></i> Aktifkan</a>
-                                @endif
                             </td>
                         </tr>
                     @endforeach
@@ -97,7 +81,7 @@
 @section('script')
     <script>
         $(document).ready(function() {
-            var t = $('#supir').DataTable({
+            var t = $('#unit').DataTable({
                 rowReorder: {
                     selector: 'td:nth-child(2)'
                 },
@@ -129,58 +113,21 @@
 
     <script>
         function modalCreate() {
-            $.get("{{ url('supir/kelola/create') }}", {}, function(data, status) {
-                $("#exampleModalCenterTitle2").html(`Tambah Supir`)
+            $.get("{{ url('dm/unit/create') }}", {}, function(data, status) {
+                $("#exampleModalCenterTitle2").html(`Tambah Unit`)
                 $("#page2").html(data);
                 $("#modalFooter2").html(``)
                 $("#exampleModalCenter2").modal('show');
             })
         }
 
-        function modalEdit(id_supir) {
-            $.get("{{ url('supir/kelola/edit') }}/" + id_supir, {}, function(data, status) {
-                $("#exampleModalCenterTitle2").html(`Edit Supir`)
+        function modalEdit(id_unit) {
+            $.get("{{ url('dm/unit/edit') }}/" + id_unit, {}, function(data, status) {
+                $("#exampleModalCenterTitle2").html(`Edit Unit`)
                 $("#page2").html(data);
                 $("#modalFooter2").html(``)
                 $("#exampleModalCenter2").modal('show');
             })
-        }
-
-        function modalNonaktif(id_supir) {
-
-            $("#exampleModalCenterTitle2").html(`Nonaktifkan Supir`)
-            $("#page2").html(`Apakah Anda Yakin Untuk Menonaktifkan Supir?`);
-            $("#modalFooter2").html(`
-            <a style="color:white" class="btn  btn-secondary" data-dismiss="modal">Tutup</a>
-            <a href="#" class="btn btn-danger" onclick="ubahStatus_Supir(` + id_supir + `)" id="status` + id_supir +
-                `" data-custom-value="Tidak Aktif"><i class="bi bi-x"></i> Nonaktifkan</a>`)
-            $("#exampleModalCenter2").modal('show');
-        }
-
-        function modalAktif(id_supir) {
-
-            $("#exampleModalCenterTitle2").html(`Aktifkan Supir`)
-            $("#page2").html(`Apakah Anda Yakin Untuk Aktifkan Supir?`);
-            $("#modalFooter2").html(` 
-            <a style="color:white" class="btn  btn-secondary" data-dismiss="modal">Tutup</a>
-            <a href="#"  class="btn btn-success" onclick="ubahStatus_Supir(` + id_supir + `)" id="status` + id_supir +
-                `" data-custom-value="Aktif"><i class="bi bi-check"></i> Aktifkan</a>`)
-            $("#exampleModalCenter2").modal('show');
-        }
-
-
-        function ubahStatus_Supir(id_supir) {
-            var status = $("#status" + id_supir).data("custom-value");
-            $.ajax({
-                type: "get",
-                url: "{{ url('ubahstatussupir') }}/" + id_supir,
-                data: {
-                    'status': status,
-                },
-                success: function(data) {
-                    location.reload();
-                }
-            });
         }
     </script>
 @endsection

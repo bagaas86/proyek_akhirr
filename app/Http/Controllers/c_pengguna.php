@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Models\pengguna;
+use App\Models\unit;
 use DB;
 use File;
 use Auth;
@@ -18,23 +19,37 @@ class c_pengguna extends Controller
     public function __construct()
     {
         $this->pengguna = new pengguna();
+        $this->unit = new unit();
        
     }
     public function index()
     {
-        $data =[
-            'pengguna'=> $this->pengguna->allData()
-        ];
+        $akun = Auth::user()->sebagai;
+        
+        if($akun == "Admin"){
+            $data =[
+                'pengguna'=> $this->pengguna->getData()
+            ];  
+        }else{
+            $data =[
+                'pengguna'=> $this->pengguna->allData()
+            ];
+        }
+      
         return view ('admin.pengguna.index', $data);
     }
 
     public function create()
     {
-        return view ('admin.pengguna.create');
+        $data = [
+            'unit' => $this->unit->unitData()
+        ];
+        return view ('admin.pengguna.create', $data);
     }
     
     public function store(Request $request)
     {
+        $akun = Auth::user()->sebagai;
         $request->validate([
             'username' => 'required|unique:users,username',
             'name' => 'required',
@@ -64,6 +79,7 @@ class c_pengguna extends Controller
                     'foto'=> $filename,
                     // 'id_unit'=> $request->id_unit,
                     'sebagai'=> $request->sebagai,
+                    'keterangan'=> $request->sebagai,
                     'status_user' => "Aktif",
                 ];
                 $this->pengguna->addData($data);
@@ -76,12 +92,16 @@ class c_pengguna extends Controller
                     'foto'=> 'default.png',
                     // 'id_unit'=> $request->id_unit,
                     'sebagai'=> $request->sebagai,
+                    'keterangan'=> $request->sebagai,
                     'status_user' => "Aktif",
                 ];
                 $this->pengguna->addData($data);
             }
-          
+            
             return redirect()->route('dm.pengguna.index')->with('success','Pengguna berhasil ditambahkan');
+           
+       
+            
     }
 
     public function edit($id)
@@ -89,6 +109,8 @@ class c_pengguna extends Controller
         $data =[
             'pengguna'=> $this->pengguna->detailData($id),
             'sebagai' => $this->pengguna->sebagai(),
+            'unit' => $this->unit->unitData(),
+            'tambahan' => $this->unit->allData()
         ];
         return view ('admin.pengguna.edit', $data);
     }
@@ -134,11 +156,10 @@ class c_pengguna extends Controller
         }else{
             $data = [
                 'name'=> $request->name,
-                'sebagai'=> $request->sebagai,
                 'username'=> $request->username,
-                'keterangan'=> $request->keterangan,
                 'no_identitas' => $request->no_identitas,
                 'no_telepon' => $request->no_telepon,
+                'keterangan' => $request->keterangan,
             ];
            
         }
@@ -166,6 +187,25 @@ class c_pengguna extends Controller
         return redirect()->route('dm.pengguna.index')->with('success','Pengguna berhasil dihapus.');
     }
 
+    public function tambahTugas($id)
+    {
+        $data = [
+            'pengguna'=> $this->pengguna->detailData($id),
+            'tambahan' => $this->unit->jabatanData()
+        ];
+
+        return view('admin.pengguna.tambahtugas', $data);
+    }
+
+    public function tambahTugasUpdate(Request $request, $id)
+    {
+        $data = [
+            'sebagai' => $request->sebagai,
+        ];
+        $this->pengguna->editData($id, $data);
+        return redirect()->route('dm.pengguna.index')->with('success', 'Pengguna Berhasil diupdate.');
+    }
+
     public function import1(Request $request)
     {
         $file = $request->excel; 
@@ -191,11 +231,12 @@ class c_pengguna extends Controller
 
         // return redirect()->back()->with('success','Import Data Pengguna Berhasil Dilakukan');
         
-       
+        // Excel::import(new penggunaImport, $file, 'Sheet1');
         try {
             Excel::import(new penggunaImport, $file);
         } catch (\Exception $e) {
             // Handle the exception (validation error)
+     
             return redirect()->back()->with('error', 'Gagal import Excel file: Terjadi Kesamaan Pada Username.');
         }
         // $filename_excel = 'Akun'.'.'.$file->extension();   
@@ -210,6 +251,7 @@ class c_pengguna extends Controller
         $id = Auth::user()->id;
         $data = [
             'pengguna'=> $this->pengguna->detailData($id),
+            'tambahan' => $this->unit->jabatanData()
         ];
         return view('user.v_profile', $data);
     }
@@ -271,6 +313,7 @@ class c_pengguna extends Controller
          $id = Auth::user()->id;
          $data = [
              'pengguna'=> $this->pengguna->detailData($id),
+             'tambahan' => $this->unit->jabatanData()
          ];
          return view('user.v_adm_profile', $data);
      }

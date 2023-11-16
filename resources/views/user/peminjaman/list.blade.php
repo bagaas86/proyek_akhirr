@@ -18,7 +18,7 @@
                             <tr style="height:50px;color:black">
                                 <td style="width:60%">{{$data->nama_item}}</td>
                                 <td style="width:30%"> <input class="form-control" type="number" value="{{old('jumlah',$data->jumlah)}}" id="jumlah{{$data->id_keranjang}}" name="jumlah" onchange="ubahJumlah({{$data->id_keranjang}})"></td>
-                                <td style="width:10%;padding-left:30px;"><a href="#" class="btn btn-danger btn-sm" id="delete{{$data->id_keranjang}}" onclick="hapusBarang({{$data->id_keranjang}})"> <i class="bi bi-trash"></i> </a></td>
+                                <td style="width:10%;padding-left:30px;color:white;"><a  class="btn btn-danger btn-sm" id="delete{{$data->id_keranjang}}" onclick="hapusBarang({{$data->id_keranjang}})"> <i class="bi bi-trash"></i> </a></td>
                             </tr>
                             @endforeach
                         </table> 
@@ -41,7 +41,7 @@
                                 @foreach($ruangan as $datas)
                                 <tr style="height:50px">
                                     <td style="width:85%">{{$datas->nama_item}}</td>
-                                    <td style="width:10%;padding-left:30px;"><a href="#" class="btn btn-danger btn-sm" id="delete{{$datas->id_keranjang}}" onclick="hapusBarang({{$datas->id_keranjang}})"> <i class="bi bi-trash"></i> </a></td>
+                                    <td style="width:10%;padding-left:30px;color:white;"><a  class="btn btn-danger btn-sm" id="delete{{$datas->id_keranjang}}" onclick="hapusBarang({{$datas->id_keranjang}})"> <i class="bi bi-trash"></i> </a></td>
                                 </tr>
                                 @endforeach
                             </table> 
@@ -68,7 +68,7 @@
                             <tr style="height:50px">
                                 <td style="width:40%">{{$datas->nama_item}}</td>
                                 <td style="width:40%">{{$datas->plat_kendaraan}}</td>
-                                <td style="width:10%;padding-left:30px;"><a href="#" class="btn btn-danger btn-sm" id="delete{{$datas->id_keranjang}}" onclick="hapusBarang({{$datas->id_keranjang}})"> <i class="bi bi-trash"></i> </a></td>
+                                <td style="width:10%;padding-left:30px;color:white;"><a  class="btn btn-danger btn-sm" id="delete{{$datas->id_keranjang}}" onclick="hapusBarang({{$datas->id_keranjang}})"> <i class="bi bi-trash"></i> </a></td>
                             </tr>
                             @endforeach
                         </table> 
@@ -190,12 +190,23 @@
                                             <input type="text" class="form-control" placeholder="Nama Penanggung Jawab" id="nama_pj" name="nama_pj" value="{{Auth::user()->name}}" readonly required>
                                         </div>
                                         <div class="col col-12 col-md-12 mt-2">
+                                            <label for=""><b>Unit/Jabatan</b></label>
+                                            <select name="dari" class="form-control">
+                                                @if(Auth::user()->sebagai == Auth::user()->keterangan)
+                                                <option value="{{Auth::user()->sebagai}}">{{Auth::user()->sebagai}}</option>
+                                                @else
+                                                <option value="{{Auth::user()->sebagai}}">{{Auth::user()->sebagai}}</option>
+                                                <option value="{{Auth::user()->keterangan}}">{{Auth::user()->keterangan}}</option>
+                                                @endif
+                                            </select>
+                                        </div>
+                                        <div class="col col-12 col-md-12 mt-2">
                                             <label for=""><b>Nomor Identitas</b></label>
                                             <input type="number" class="form-control" placeholder="Nomor Identitas" id="no_identitas" name="no_identitas" value="{{Auth::user()->no_identitas}}" readonly>
                                         </div>
                                         <div class="col col-12 col-md-12 mt-2">
                                             <label for=""><b>Nomor HP</b></label>
-                                            <input type="number" class="form-control" placeholder="Nomor HP" id="no_hp" name="no_hp" value="{{old('no_hp')}}"  required readonly>
+                                            <input type="number" class="form-control" placeholder="Nomor HP" id="no_hp" name="no_hp" value="{{Auth::user()->no_telepon}}"  required readonly>
                                         </div>
                                         <div class="col col-12 col-md-12 mt-2">
                                             <label for=""><b>Nama Kegiatan</b><small style="color:red">*</small></label>
@@ -203,7 +214,7 @@
                                         </div>
                                         <div class="col col-12 col-md-12 mt-2">
                                             <label for=""><b>Upload Surat Pengajuan</b><small>Format : PDF</small></label>
-                                            <input  onchange="ceksurat()" type="file" class="form-control" placeholder="Nama Kegiatan" id="bukti" name="surat_pengajuan">
+                                            <input  onchange="ceksurat()" type="file" class="form-control" placeholder="Nama Kegiatan" id="bukti" name="surat_pengajuan" accept="application/pdf">
                                             <div id="alert1"></div>
                                         </div>
                                         <input type="text" id="eror" value="0" hidden>

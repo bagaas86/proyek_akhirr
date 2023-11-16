@@ -22,11 +22,6 @@
     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 </div>
 @endif    
-        @php
-        date_default_timezone_set("Asia/Jakarta");
-        $d = date("Y-m");
-        @endphp
-      
     <div class="card">
         <div class="xtabledm">
             <div id="table">
@@ -73,32 +68,93 @@
             </div>
         </div>
 
+
+        <div class="card">
+            <div class="xtabledm">
+                @php
+                date_default_timezone_set("Asia/Jakarta");
+                $c = date("Y-m");
+                $finaldate_laporan = date('Y-m', strtotime($c.'+1 month'));
+                @endphp
+                <div class="row mt-4">
+                    <div class="form-group col-md-4">
+                        <label for="">Periode Peminjaman</label>
+                            <div class="input-group">
+                                <input type="month" id="bulan_laporan" class="form-control"  value="{{ $c }}" onchange="jg()">
+                                <div style="width:20%">
+                                    <input style="text-align:center" type="text" class="form-control" value="-" readonly>
+                                  </div>
+                                <input type="month" id="bulan2_laporan" class="form-control"  value="{{ $finaldate_laporan }}" onchange="jg()">
+                            </div>
+                           <div class="input-group">
+                             <input type="date" id="dari_laporan" class="form-control" onchange="tampil()">
+                             <div style="width:20%">
+                               <input style="text-align:center" type="text" class="form-control" value="-" readonly>
+                             </div>
+                             <input type="date" id="sampai_laporan" class="form-control" onchange="tampil()">
+                           </div>
+                       </div> 
+                       <div class="col-md-4 mt-4">
+                        <a class="btn btn-primary" style="color:white" onclick="cetakLaporan()">Download</a>
+                        </div> 
+                       
+                </div>
+                <div id="tables">
+
+                </div>
+
+            </div>
+
+        </div>
+
         <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/chart.umd.min.js"></script>
 
 <script>
 
 $(document).ready(function() {
             jh(),
+            jg(),
             bar()
        
         });
-// function tampil() {
-//             var filter = $("#filter").val();
-//             var dari = $("#dari").val();
-//             var sampai = $("#sampai").val();
-//             $.ajax({
-//                 type: "get",
-//                 url: "{{ url('tampilpeminjaman') }}",
-//                 data:{
-//                     "filter": filter,
-//                     "dari": dari,
-//                     "sampai": sampai,
-//                 },
-//                 success: function(data) {
-//                     $("#table").html(data);
-//                 }
-//             });
-//         }
+
+        function jg()
+        {
+        var bulan_laporan =  $("#bulan_laporan").val();
+        var bulan2_laporan =  $("#bulan2_laporan").val();
+                $.ajax({
+                type: "get",
+                url: "{{ url('harilaporan') }}",
+                data:{
+                    "bulan": bulan_laporan,
+                    "bulan2": bulan2_laporan,
+                },
+                success: function(data) {
+                    $("#dari_laporan").val(bulan_laporan+"-01");
+                    $("#sampai_laporan").val(bulan2_laporan+"-"+data);
+                    tampil()
+                }
+            });
+     
+        };    
+    
+
+        function tampil() {
+            var dari_laporan = $("#dari_laporan").val();
+            var sampai_laporan = $("#sampai_laporan").val();
+            $.ajax({
+                type: "get",
+                url: "{{ url('tampillaporan') }}",
+                data:{
+                    "dari": dari_laporan,
+                    "sampai": sampai_laporan,
+                },
+                success: function(data) {
+                    $("#tables").html(data);
+                }
+            });
+        }
+
 
 function jh()
     {
@@ -119,6 +175,35 @@ function jh()
             });
      
         };    
+
+        function cetakLaporan()
+    {
+        var dari_laporan = $("#dari_laporan").val();
+        var sampai_laporan = $("#sampai_laporan").val();
+        $("#download").html(`Sedang Membuat Berita Acara, Harap Tunggu...`)
+        $.ajax({
+                type: "get",
+                url: "{{ url('cetaklaporan') }}",
+                data: {
+                "dari": dari_laporan,
+                "sampai": sampai_laporan,
+                 },
+                 xhrFields: {
+                responseType: 'blob',
+                },
+                success: function(response) {
+                    var blob = new Blob([response]);
+                    var link = document.createElement('a');
+
+                    link.href = window.URL.createObjectURL(blob);
+                    link.download = "Laporan.pdf";
+                    link.click()
+                },
+                error: function(blob){
+                console.log(blob);
+            }
+            });
+    }
     
     function bar() {
           $.get("{{ url('profil/chartlahan') }}/", {}, function(data, status){

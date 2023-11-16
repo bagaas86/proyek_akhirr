@@ -20,6 +20,11 @@ class supir extends Model
     {
         return DB::table('supir')->get();
     }
+
+    public function countSupir()
+    {
+        return DB::table('supir')->count();
+    }
     
     // create
     public function addData($data)

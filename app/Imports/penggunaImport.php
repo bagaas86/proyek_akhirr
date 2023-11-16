@@ -24,6 +24,14 @@ class penggunaImport implements ToModel, WithHeadingRow, WithValidation
     //     $this->pengguna = new pengguna();
        
     // }
+
+    public function sheets(): array
+    {
+        return [
+            'Sheet1' => $this
+        ];
+    }
+
     public function model(array $row)
     {
 
@@ -32,6 +40,7 @@ class penggunaImport implements ToModel, WithHeadingRow, WithValidation
                 'username' => $row['username'],
                 'no_identitas'=> $row['username'],
                 'sebagai'=> $row['unit'],
+                'keterangan'=> $row['unit'],
                 'foto' => "default.png",
                 'password' => Hash::make($row['username']),
                 'status_user' => "Aktif",
@@ -39,16 +48,14 @@ class penggunaImport implements ToModel, WithHeadingRow, WithValidation
             ];
     
             return new User($data);
+           
     }
 
 
     public function rules(): array
     {
        return[
-        'username' => [
-            'required',
-            Rule::unique('users', 'username'),
-        ],
+     
         ]; 
       
     }

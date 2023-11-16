@@ -23,7 +23,6 @@ return new class extends Migration
             $table->string('lokasi_item')->nullable();
             $table->string('kondisi_item')->nullable();
             $table->string('item_tersedia')->nullable();
-            $table->timestamps();
         });
     }
 

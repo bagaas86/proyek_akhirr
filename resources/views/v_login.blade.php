@@ -50,8 +50,8 @@
                   <form class="form" action="{{route('login.check')}}" method="POST" >
                      @csrf
 						<div class="form-group mb-3">
-							<label class="floating-label" for="Email">Username</label>
-							<input type="text" class="form-control  @error('username') is-invalid @enderror" id="Email" placeholder="" name="username">
+							<label class="floating-label" for="Email">NIP/NIM/NIS Terdaftar</label>
+							<input type="number" class="form-control  @error('username') is-invalid @enderror" id="Email" placeholder="" name="username">
 							@error('username')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
@@ -69,7 +69,7 @@
 						</div>
 						<button class="btn btn-block btn-primary mb-4">Masuk</button>
                   <form>
-						<p class="mb-2 text-muted">Lupa Password? <a href="auth-reset-password.html" class="f-w-400">Atur ulang</a></p>
+						<p class="mb-2 text-muted">Lupa Password? Datang ke Bagian Umum POLSUB!</p>
 						{{-- <p class="mb-0 text-muted">Don’t have an account? <a href="auth-signup.html" class="f-w-400">Signup</a></p> --}}
 					</div>
 				</div>

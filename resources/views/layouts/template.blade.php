@@ -95,6 +95,7 @@
 
         <!-- [ Main Content ] end -->
         </div> --}}
+        {{-- <div class="fixed-button active"><a href="/" class="btn btn-md btn-warning"><i class="fa fa-home" aria-hidden="true"></i> Kembali keee Home</a> </div> --}}
 </div>
 
 

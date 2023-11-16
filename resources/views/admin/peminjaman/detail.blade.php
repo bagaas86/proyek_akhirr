@@ -29,9 +29,9 @@ $lama = $diff+1;
                                                 <td style="width:50%">{{$peminjaman->nama_pj}}</td>  
                                             </tr>
                                             <tr style="vertical-align:top;font-size:12px">
-                                                <td style="width:40%;font-weight:bold">Unit/Organisasi</td>
+                                                <td style="width:40%;font-weight:bold">Unit/Jabatan</td>
                                                 <td style="width:5%">:</td>
-                                                <td style="width:50%">{{$peminjaman->sebagai}}</td>  
+                                                <td style="width:50%">{{$peminjaman->dari}}</td>  
                                             </tr>
                                             <tr style="vertical-align:top;font-size:12px">
                                                 <td style="width:40%;font-weight:bold">No. Identitas</td>
@@ -82,7 +82,7 @@ $lama = $diff+1;
                         <div class="header" style="text-align: center">
                             <h5>List Pengajuan Peminjaman</h5>
                         </div>
-                        <div class="table">
+                        <div class="table table-responsive">
                             <table>
                                 <tr style="border-bottom:1px solid rgb(0, 0, 0);font-size:14px">
                                     <th style="width:60%">Nama BMN</th>
@@ -101,17 +101,33 @@ $lama = $diff+1;
                             </table> 
                         </div>
                         @if($peminjaman->jenis_peminjaman == "Barang,Ruangan,Kendaraan,Supir" OR $peminjaman->jenis_peminjaman == "Barang,Kendaraan,Supir" OR $peminjaman->jenis_peminjaman == "Ruangan,Kendaraan,Supir" OR $peminjaman->jenis_peminjaman == "Kendaraan,Supir")
-                        <div class="table mt-4">
+                        <div class="table table-responsive mt-4">
                             <table style="width:100%">
                                 <tr style="border-bottom:1px solid rgb(0, 0, 0);font-size:14px">
-                                    <th style="width:70%">Nama Supir</th>
-                                    <th style="width:30%">Umur</th> 
+                                    <th style="width:60%">Nama Supir</th>
+                                    <th>Aksi</th>
                                 </tr>
                                 @foreach($supir as $data)
                                 <tr style="font-size:14px">
-                                    <td style="width:70%">{{$data->nama_supir}}</td>
-                                    <td style="width:30%">{{$data->umur_supir}} Tahun</td>
+                                    <td style="width:60%">
+                                      {{$data->nama_supir}}
+                                    </td>
+                                    <td style="width:10%"><a href="#" onclick="lihatInfo_Supir({{$data->id_supir}})"><i class="bi bi-eye"></i></a></td>
                                 </tr>
+                                @if(Auth::user()->sebagai == "Pengelola Supir" AND $approval->pengelola_supir <> "Disetujui")    
+                                <tr>
+                                    <td>
+                                        <select class="form-control" name="id_supir" id="supir" onchange="gantiSupir({{$data->id_keranjang}})">
+                                            @foreach ($driver as $item)
+                                            <option value="{{$item->id_supir}}">{{$item->nama_supir}}</option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-primary" onclick="gantiSupir({{$data->id_keranjang}})" href="#">Ganti Supir</a>
+                                    </td>
+                                </tr>
+                                @endif
                                 @endforeach
                             </table>
                         </div> 
@@ -160,6 +176,35 @@ $lama = $diff+1;
             $("#exampleModalCenter2").modal('show');
         })
     }
+
+    function lihatInfo_Supir(id_supir)
+    {
+        var id_peminjaman = $("#id_peminjaman").val();
+        $.get("{{ url('datainfosupir') }}/" + id_supir, {}, function(data, status){
+        $("#exampleModalCenterTitle2").html(`Informasi Supir`)
+            $("#page2").html(data);
+            $("#modalFooter2").html(`
+            <a style="color:white" id="kembali" class="btn  btn-secondary" onclick="modalDetail(`+id_peminjaman+`)" >Kembali</a>
+            `)
+            $("#exampleModalCenter2").modal('show');
+        })
+    }
+
+    function gantiSupir(id_keranjang) { 
+        var id_supir = $("#supir").val();
+        var id_peminjaman = $("#id_peminjaman").val();
+            $.ajax({
+                type: "get",
+                url: "{{ url('editsupir') }}/" + id_keranjang,
+                data :{
+                    'id_peminjaman' : id_peminjaman,
+                    'id_supir' : id_supir,
+                },
+                success: function(data) {
+                    modalDetail(id_peminjaman)
+                }
+            });
+        }
 </script>
 
 

@@ -50,7 +50,7 @@
                                 <option value="" selected disabled>-- Pilih Lokasi Barang --</option>
                                 <option value="Kampus 1" @if($item->lokasi_item == "Kampus 1") selected @endif>Kampus 1</option>
                                 <option value="Kampus 2" @if($item->lokasi_item == "Kampus 2") selected @endif>Kampus 2</option>
-                                <option value="Kampus 1 & 2" @if($item->lokasi_item == "Kampus 1 & 2") selected @endif>Kampus 1 & 2</option>
+                                {{-- <option value="Kampus 1 & 2" @if($item->lokasi_item == "Kampus 1 & 2") selected @endif>Kampus 1 & 2</option> --}}
                             </select>
                             @error('lokasi_item')
                             <span class="invalid-feedback" role="alert">

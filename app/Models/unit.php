@@ -13,21 +13,30 @@ class unit extends Model
     {
         return DB::table('unit')->get();
     }
-    public function jurusanData()
-    {
-        return DB::table('unit')->where('jenis_unit', "Jurusan")->get();
-    }
 
-    public function ormawaData()
+    public function unitData()
     {
-        return DB::table('unit')->where('jenis_unit', "Ormawa")->get();
+        return DB::table('unit')->where('jenis', "Unit")->get();
     }
-
+    
     public function jabatanData()
     {
-        return DB::table('unit')->where('jenis_unit', "Jabatan")->get();
+        return DB::table('unit')->where('jenis', "Jabatan")->get();
     }
 
+
+    
+    // public function jurusanData()
+    // {
+    //     return DB::table('unit')->where('jenis_unit', "Jurusan")->get();
+    // }
+
+    // public function ormawaData()
+    // {
+    //     return DB::table('unit')->where('jenis_unit', "Ormawa")->get();
+    // }
+
+  
     // create
     public function addData($data)
     {

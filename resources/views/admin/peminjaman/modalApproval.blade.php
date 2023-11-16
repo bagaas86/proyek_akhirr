@@ -26,6 +26,7 @@
         <div class="col col-md-6 col-6">
             <div class="card-header h-50">
                 <img src="{{asset('foto/dm/pengguna/default.png')}}" class="img-rounded" style="width:30%">
+                <h6>{{$approval->nama_wakil_direktur_2}}</h6>
                 <h6>Wakil Direktur II</h6>
                 @if($approval->wakil_direktur_2 <> "Proses" AND $approval->wakil_direktur_2 <> "Disetujui")
                 <label for="">Alasan Penolakan</label>
@@ -45,9 +46,10 @@
         </div>
         @endif
 
-        <div class="col col-md-4 col-6">
+        <div class="col col-md-6 col-6">
             <div class="card-header h-50">
-                <img src="{{asset('foto/dm/pengguna/default.png')}}" class="img-rounded" style="width:50%">
+                <img src="{{asset('foto/dm/pengguna/default.png')}}" class="img-rounded" style="width:30%">
+                <h6>{{$approval->nama_kepala_bagian}}</h6>
                 <h6>Kepala Bagian Umum</h6>
                 @if($approval->kepala_bagian <> "Proses"  AND $approval->kepala_bagian <> "Disetujui")
                 <label for="">Alasan Penolakan</label>
@@ -69,7 +71,8 @@
 
         <div class="col col-md-6 col-6">
             <div class="card-header h-50">
-                <img src="{{asset('foto/dm/pengguna/default.png')}}" class="img-rounded" style="width:50%">
+                <img src="{{asset('foto/dm/pengguna/default.png')}}" class="img-rounded" style="width:30%">
+                <h6>{{$approval->nama_staff_umum}}</h6>
                 <h6>Staff Umum</h6>
                 @if($approval->staff_umum <> "Proses" AND $approval->staff_umum <> "Disetujui")
                 <label for="">Alasan Penolakan</label>
@@ -92,7 +95,8 @@
         @if($approval->jenis_peminjaman == "Barang,Ruangan,Kendaraan,Supir" OR $approval->jenis_peminjaman == "Barang,Kendaraan,Supir" OR $approval->jenis_peminjaman == "Ruangan,Kendaraan,Supir" OR $approval->jenis_peminjaman == "Kendaraan,Supir")
         <div class="col col-md-6 col-6">
             <div class="card-header h-50">
-                <img src="{{asset('foto/dm/pengguna/default.png')}}" class="img-rounded" style="width:50%">
+                <img src="{{asset('foto/dm/pengguna/default.png')}}" class="img-rounded" style="width:30%">
+                <h6>{{$approval->nama_pengelola_supir}}</h6>
                 <h6>Pengelola Supir</h6>
                 @if($approval->pengelola_supir <> "Proses" AND $approval->pengelola_supir <> "Disetujui")
                 <label for="">Alasan Penolakan</label>

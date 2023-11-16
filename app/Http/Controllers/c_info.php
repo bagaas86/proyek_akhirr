@@ -48,11 +48,14 @@ class c_info extends Controller
         $detail = DB::table('keranjangs')
                 ->join('peminjaman', 'keranjangs.id_peminjaman','=','peminjaman.id_peminjaman')   
                 ->join('items', 'keranjangs.id_item','=','items.id_item')
+          
                 ->where('keranjangs.id_item', $id_item)
                 ->where('peminjaman.status_peminjaman', "Pengajuan Diterima" )
                 ->get();
+
         $nama_item = DB::table('items')
-                ->where('id_item', $id_item)
+                ->leftjoin('kendaraan', 'items.id_item','=','kendaraan.id_item')
+                ->where('items.id_item', $id_item)
                 ->first();
 
         $data = [
@@ -61,5 +64,24 @@ class c_info extends Controller
         ];
 
         return view ('admin.peminjaman.info' ,$data);
+    }
+
+    public function dataSupir($id_supir)
+    {
+        $detail = DB::table('aktivitas')
+                ->join('supir', 'aktivitas.id_supir','=','supir.id_supir')   
+                ->where('aktivitas.id_supir', $id_supir)
+                ->get();
+        $nama_supir = DB::table('supir')
+        ->where('id_supir', $id_supir)
+        ->first();
+
+
+        $data = [
+            'supir' => $detail,
+            'identitas' => $nama_supir,
+        ];
+
+        return view ('admin.peminjaman.supir' ,$data);
     }
 }

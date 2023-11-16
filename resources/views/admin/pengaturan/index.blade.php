@@ -103,7 +103,11 @@
                                         <strong>{{ $message }}</strong>
                                     </span>
                                     @enderror
+                                    @if($index->ttd_kabag <> null)
                                     <img id="imageResult2" style="width:250px;height:200px;"  class="img-thumbnail" src="{{asset('foto/ttd/'. $index->ttd_kabag)}}">
+                                    @else
+                                    <img id="imageResult2" style="width:250px;height:200px;"  class="img-thumbnail" src="{{asset('foto/ttd/default.png')}}">
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -145,7 +149,12 @@
                                     <strong>{{ $message }}</strong>
                                 </span>
                                 @enderror
+                                @if($index->ttd_bagian_umum <> null)
                                 <img id="imageResult" style="width:250px;height:200px;"  class="img-thumbnail" src="{{asset('foto/ttd/'. $index->ttd_bagian_umum)}}">
+                                @else
+                                <img id="imageResult" style="width:250px;height:200px;"  class="img-thumbnail" src="{{asset('foto/ttd/default.png')}}">
+                                @endif
+
                             </div>
                         </div>
                     </div>
@@ -188,7 +197,11 @@
                                     <strong>{{ $message }}</strong>
                                 </span>
                                 @enderror
+                                @if($index->ttd_pengelola_supir <> null)
                                 <img id="imageResult5" style="width:250px;height:200px;"  class="img-thumbnail" src="{{asset('foto/ttd/'. $index->ttd_pengelola_supir)}}">
+                                @else
+                                <img id="imageResult5" style="width:250px;height:200px;"  class="img-thumbnail" src="{{asset('foto/ttd/default.png')}}">
+                                @endif
                             </div>
                         </div>
                     </div>

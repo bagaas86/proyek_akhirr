@@ -10,24 +10,32 @@ use App\Models\peminjaman;
 use App\Models\pengguna;
 use App\Models\pengembalian;
 use App\Models\pengaturan;
+use App\Models\supir;
 use DB;
 
 class c_login extends Controller
 {
+
+
     public function errorPage()
     {
         $this->item = new item();
+        $this->pengaturan= new pengaturan();
         $data = [
-            'item' => $this->item->itemReady()
+            'item' => $this->item->itemReady(),
+            'umum' => $this->pengaturan->joinUmum(),
         ];
         return view('v_landingPage', $data);
     }
     public function landingPage()
     {
         $this->item = new item();
+        $this->pengaturan= new pengaturan();
         $data = [
-            'item' => $this->item->itemReady()
+            'item' => $this->item->itemReady(),
+            'umum' => $this->pengaturan->joinUmum(),
         ];
+
         return view('v_landingPage', $data);
     }
 
@@ -82,6 +90,7 @@ class c_login extends Controller
         $this->pengguna = new pengguna();
         $this->pengembalian = new pengembalian();
         $this->pengaturan = new pengaturan();
+        $this->supir = new supir();
         $id = Auth::user()->id;
 
         $total_barang = $this->item->totalBarang();
@@ -101,8 +110,35 @@ class c_login extends Controller
         $id_pengelola_supir = intval($pengaturan->id_pengelola_supir);  
         $id_user = Auth::user()->id;
 
+        // kabag
+        $total_pengajuan_kabag = $this->peminjaman->totalPengajuan_Kabag();
+        $total_pengajuan_kabag_disetujui = $this->peminjaman->totalPengajuan_Kabag_Disetujui();
+        $total_pengajuan_kabag_ditolak = $this->peminjaman->totalPengajuan_Kabag_Ditolak();
+        // end kabag
+
+        // wadir2
+        $total_pengajuan_wadir2 = $this->peminjaman->totalPengajuan_Wadir2();
+        $total_pengajuan_wadir2_disetujui = $this->peminjaman->totalPengajuan_Wadir2_Disetujui();
+        $total_pengajuan_wadir2_ditolak = $this->peminjaman->totalPengajuan_Wadir2_Ditolak();
+        // end wadir2
+
+        // supir
+        $total_pengajuan_supir= $this->peminjaman->totalPengajuan_Supir();
+        $total_pengajuan_supir_disetujui = $this->peminjaman->totalPengajuan_Supir_Disetujui();
+        $total_pengajuan_supir_ditolak = $this->peminjaman->totalPengajuan_Supir_Ditolak();
+        $total_supir = $this->supir->countSupir();
+        // end supir
+
             if(Auth::user()->sebagai == "Wakil Direktur 2" AND $id_wadir2 == $id_user){
             $data = [
+                'total_pengajuan_wadir2' => $total_pengajuan_wadir2,
+                'total_pengajuan_wadir2_disetujui' => $total_pengajuan_wadir2_disetujui,
+                'total_pengajuan_wadir2_ditolak' => $total_pengajuan_wadir2_ditolak,
+                'total_peminjaman_saya' => $total_peminjaman_saya,
+                ];
+                return view('admin.v_dashboard', $data);
+            }elseif(Auth::user()->sebagai == "Admin"){
+                  $data = [
                     'total_pengajuan_peminjaman' => $tpp,
                     'total_barang'  => $total_barang,
                     'total_ruangan'  => $total_ruangan,
@@ -112,15 +148,13 @@ class c_login extends Controller
                     // 'total_pengajuan_diterima_peminjaman' => $tpp_diterima,
                 ];
                 return view('admin.v_dashboard', $data);
-            }elseif(Auth::user()->sebagai == "Kepala Bagian" AND $id_kepala_bagian == $id_user){
+            }
+            elseif(Auth::user()->sebagai == "Kepala Bagian" AND $id_kepala_bagian == $id_user){
             $data = [
-                        'total_pengajuan_peminjaman' => $tpp,
-                        'total_barang'  => $total_barang,
-                        'total_ruangan'  => $total_ruangan,
-                        'total_kendaraan'  => $total_kendaraan,
-                        'total_pengguna'  => $total_pengguna,
-                        'total_pengembalian' => $total_pengembalian,
-                        // 'total_pengajuan_diterima_peminjaman' => $tpp_diterima,
+                'total_pengajuan_kabag' => $total_pengajuan_kabag,
+                'total_pengajuan_kabag_disetujui' => $total_pengajuan_kabag_disetujui,
+                'total_pengajuan_kabag_ditolak' => $total_pengajuan_kabag_ditolak,
+                'total_peminjaman_saya' => $total_peminjaman_saya,
                     ];
                     return view('admin.v_dashboard', $data);
             }
@@ -132,19 +166,18 @@ class c_login extends Controller
                             'total_kendaraan'  => $total_kendaraan,
                             'total_pengguna'  => $total_pengguna,
                             'total_pengembalian' => $total_pengembalian,
+                            'total_peminjaman_saya' => $total_peminjaman_saya,
                             // 'total_pengajuan_diterima_peminjaman' => $tpp_diterima,
                         ];
                         return view('admin.v_dashboard', $data);
             }
             elseif(Auth::user()->sebagai == "Pengelola Supir" AND $id_pengelola_supir == $id_user){
                 $data = [
-                            'total_pengajuan_peminjaman' => $tpp,
-                            'total_barang'  => $total_barang,
-                            'total_ruangan'  => $total_ruangan,
-                            'total_kendaraan'  => $total_kendaraan,
-                            'total_pengguna'  => $total_pengguna,
-                            'total_pengembalian' => $total_pengembalian,
-                            // 'total_pengajuan_diterima_peminjaman' => $tpp_diterima,
+                    'total_pengajuan_supir' => $total_pengajuan_supir,
+                    'total_pengajuan_supir_disetujui' => $total_pengajuan_supir_disetujui,
+                    'total_pengajuan_supir_ditolak' => $total_pengajuan_supir_ditolak,
+                    'total_peminjaman_saya' => $total_peminjaman_saya,
+                    'total_supir' => $total_supir,
                         ];
                         return view('admin.v_dashboard', $data);
             }else{

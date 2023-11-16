@@ -25,6 +25,7 @@ class User extends Authenticatable
         'sebagai',
         'foto',
         'status_user',
+        'keterangan',
     ];
 
     /**

@@ -39,15 +39,19 @@
                 <input type="text" name="id_peminjaman" value="{{$peminjaman->id_peminjaman}}" hidden>
                 <div class="col col-12 col-md-12 mt-2">
                     <label for=""><b>Deskripsi Pengembalian</b><small style="color:red">*</small></label>
-                    <input type="text" class="form-control" placeholder="Deskripsi Pengembalian" id="deskripsi_pengembalian" name="deskripsi_pengembalian" value="{{old('deskripsi_pengembalian')}}" required>
+                    <input type="text" class="form-control" placeholder="Deskripsi Pengembalian" id="deskripsi_pengembalian" name="deskripsi_pengembalian" value="" required>
                 </div>
                 <div class="col col-12 col-md-12 mt-2">
                         <a href="#" class="btn btn-block btn-warning" onclick="fotokegiatan()">
-                          <i class="bi bi-camera"></i> Bukti</a>
+                          <i class="bi bi-camera"></i> Bukti Foto</a>
                 </div>
                 <div class="col col-12 col-md-12 mt-2">
                 <div id="hasil_buktiPengembalian" class="overflow-hidden d-flex justify-content-center mt-3"></div>
                 <input type="text" id="bukti_pengembalian" name="bukti_pengembalian" hidden>
+                </div>
+                <div class="col col-12 col-md-12 mt-2">
+                    <label for="">Bukti Video</label>
+                    <input type="file" name="camera_record" accept="video/*" class="form-control">
                 </div>
             <div style="text-align: center">
                 <button class="btn btn-block btn-primary mt-4">Kirim Pelaporan Pengembalian</button>

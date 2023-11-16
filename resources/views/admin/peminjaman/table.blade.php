@@ -10,7 +10,7 @@
         <tr style="font-size: 14px">
             <th>No</th>
             <th>Nama Penanggung Jawab</th>
-            <th>Sebagai</th>
+            <th>Unit/Jabatan</th>
             <th>Waktu Pengajuan</th>
             <th>Waktu Peminjaman</th>
             <th>Jenis Peminjaman</th>
@@ -30,8 +30,8 @@
         <tr style="font-size: 12px">
             <td></td>
             <td style="width:15%">{{$data->nama_pj}}</td>
-            <td style="width:10%">{{$data->sebagai}}</td>
-            <td>{{$waktu_pengajuan}}</td>
+            <td style="width:10%">{{$data->dari}}</td>
+            <td>{{$waktu_pengajuan}} <span style="color:white" class="badge @if($data->status_peminjaman == "Proses") bg-primary @else bg-success @endif">{{$data->status_peminjaman}}</span></td>
             <td>{{$waktu_awal}} s/d {{$waktu_akhir}}</td>
             <td> @foreach($jenis_peminjaman as $badge)
                 <span class="badge badge-secondary">{{ $badge }}</span>
@@ -40,92 +40,92 @@
             <td>
                 @if(Auth::user()->sebagai == "Staff Umum")
                 @if($data->staff_umum == "Proses")
-                <span class="badge bg-warning">Menunggu Persetujuan Anda</span>
+                <span style="color:white" class="badge bg-warning">Menunggu Persetujuan Anda</span>
                 @elseif($data->staff_umum == "Disetujui")
-                <span class="badge bg-success">Disetujui Oleh Anda</span>
+                <span style="color:white" class="badge bg-success">Disetujui Oleh Anda</span>
                 @else
-                <span class="badge bg-danger">Ditolak</span>
+                <span style="color:white" class="badge bg-danger">Ditolak</span>
                 @endif
                 @endif
 
                 @if(Auth::user()->sebagai == "Kepala Bagian")
                 @if($data->kepala_bagian == "Proses")
-                <span class="badge bg-warning">Menunggu Persetujuan Anda</span>
+                <span style="color:white" class="badge bg-warning">Menunggu Persetujuan Anda</span>
                 @elseif($data->kepala_bagian == "Disetujui")
-                <span class="badge bg-success">Disetujui</span>
+                <span style="color:white" class="badge bg-success">Disetujui</span>
                 @else
-                <span class="badge bg-danger">Ditolak</span>
+                <span style="color:white" class="badge bg-danger">Ditolak</span>
                 @endif
                 @endif
 
-                @if(Auth::user()->sebagai == "Wakil Direktur 1")
+                {{-- @if(Auth::user()->sebagai == "Wakil Direktur 1")
                 @if($data->wakil_direktur_1 == "Proses")
-                <span class="badge bg-warning">Menunggu Persetujuan Anda</span>
+                <span style="color:white" class="badge bg-warning">Menunggu Persetujuan Anda</span>
                 @elseif($data->wakil_direktur_1 == "Disetujui")
-                <span class="badge bg-success">Disetujui</span>
+                <span style="color:white" class="badge bg-success">Disetujui</span>
                 @else
-                <span class="badge bg-danger">Ditolak</span>
+                <span style="color:white" class="badge bg-danger">Ditolak</span>
                 @endif
-                @endif
+                @endif --}}
 
                 @if(Auth::user()->sebagai == "Wakil Direktur 2")
                 @if($data->wakil_direktur_2 == "Proses")
-                <span class="badge bg-warning">Menunggu Persetujuan Anda</span>
+                <span style="color:white" class="badge bg-warning">Menunggu Persetujuan Anda</span>
                 @elseif($data->wakil_direktur_2 == "Disetujui")
-                <span class="badge bg-success">Disetujui</span>
+                <span style="color:white" class="badge bg-success">Disetujui</span>
                 @else
-                <span class="badge bg-danger">Ditolak</span>
+                <span style="color:white" class="badge bg-danger">Ditolak</span>
                 @endif
                 @endif
 
                 @if(Auth::user()->sebagai == "Pengelola Supir")
                 @if($data->pengelola_supir == "Proses")
-                <span class="badge bg-warning">Menunggu Persetujuan Anda</span>
+                <span style="color:white" class="badge bg-warning">Menunggu Persetujuan Anda</span>
                 @elseif($data->pengelola_supir == "Disetujui")
-                <span class="badge bg-success">Disetujui</span>
+                <span style="color:white" class="badge bg-success">Disetujui</span>
                 @else
-                <span class="badge bg-danger">Ditolak</span>
+                <span style="color:white" class="badge bg-danger">Ditolak</span>
                 @endif
                 @endif
             </td>
             <td style="width:20%">
-                <a href="#" onclick="modalApproval({{$data->id_peminjaman}})" class="btn btn-primary btn-sm mt-2">Lihat Persetujuan</a>
-                <a href="#" onclick="modalDetail({{$data->id_peminjaman}})" class="btn btn-primary btn-sm mt-2">Lihat</a>
+                <button href="#" onclick="modalApproval({{$data->id_peminjaman}})" class="btn btn-primary btn-sm mt-2">Lihat Persetujuan</button>
+                <button href="#" onclick="modalDetail({{$data->id_peminjaman}})" class="btn btn-primary btn-sm mt-2">Lihat</button>
                 @if(Auth::user()->sebagai == "Kepala Bagian")
                 @if($data->kepala_bagian == "Proses")
-                <a href="#" onclick="modalStatus({{$data->id_peminjaman}})" class="btn btn-success btn-sm mt-2"><i class="bi bi-check"></i></a>
-                <a href="#" onclick="modalStatusTolak({{$data->id_peminjaman}})"  class="btn btn-danger btn-sm mt-2"><i class="bi bi-x"></i></a>
+                <button href="#" onclick="modalStatus({{$data->id_peminjaman}})" id="btn_klik" class="btn btn-success btn-sm mt-2"><i class="bi bi-check"></i></button>
+                <button href="#" onclick="modalStatusTolak({{$data->id_peminjaman}})"  class="btn btn-danger btn-sm mt-2"><i class="bi bi-x"></i></button>
                 @endif
                 @endif
 
-                @if(Auth::user()->sebagai == "Wakil Direktur 1")
+                {{-- @if(Auth::user()->sebagai == "Wakil Direktur 1")
                 @if($data->wakil_direktur_1 == "Proses")
-                <a href="#" onclick="modalStatus({{$data->id_peminjaman}})" class="btn btn-success btn-sm mt-2"><i class="bi bi-check"></i></a>
+                <a href="#" onclick="modalStatus({{$data->id_peminjaman}})" id="btn_klik" class="btn btn-success btn-sm mt-2"><i class="bi bi-check"></i></a>
                 <a href="#" onclick="modalStatusTolak({{$data->id_peminjaman}})"  class="btn btn-danger btn-sm mt-2"><i class="bi bi-x"></i></a>
                 @endif
-                @endif
+                @endif --}}
 
                 @if(Auth::user()->sebagai == "Wakil Direktur 2")
                 @if($data->wakil_direktur_2 == "Proses")
-                <a href="#" onclick="modalStatus({{$data->id_peminjaman}})" class="btn btn-success btn-sm mt-2"><i class="bi bi-check"></i></a>
-                <a href="#" onclick="modalStatusTolak({{$data->id_peminjaman}})"  class="btn btn-danger btn-sm mt-2"><i class="bi bi-x"></i></a>
+                <button href="#" onclick="modalStatus({{$data->id_peminjaman}})" id="btn_klik" class="btn btn-success btn-sm mt-2"><i class="bi bi-check"></i></button>
+                <button href="#" onclick="modalStatusTolak({{$data->id_peminjaman}})"  class="btn btn-danger btn-sm mt-2"><i class="bi bi-x"></i></button>
                 @endif
                 @endif
 
                 @if(Auth::user()->sebagai == "Pengelola Supir")
                 @if($data->pengelola_supir == "Proses")
-                <a href="#" onclick="modalStatus({{$data->id_peminjaman}})" class="btn btn-success btn-sm mt-2"><i class="bi bi-check"></i></a>
-                <a href="#" onclick="modalStatusTolak({{$data->id_peminjaman}})"  class="btn btn-danger btn-sm mt-2"><i class="bi bi-x"></i></a>
+                <button href="#" onclick="modalStatus({{$data->id_peminjaman}})" id="btn_klik" class="btn btn-success btn-sm mt-2"><i class="bi bi-check"></i></button>
+                <button href="#" onclick="modalStatusTolak({{$data->id_peminjaman}})"  class="btn btn-danger btn-sm mt-2"><i class="bi bi-x"></i></button>
                 @endif
                 @endif
 
                 @if(Auth::user()->sebagai == "Staff Umum")
                 @if($data->staff_umum == "Proses")
-                <a href="#" onclick="modalStatus({{$data->id_peminjaman}})" class="btn btn-success btn-sm mt-2"><i class="bi bi-check"></i></a>
-                <a href="#" onclick="modalStatusTolak({{$data->id_peminjaman}})"  class="btn btn-danger btn-sm mt-2"><i class="bi bi-x"></i></a>
+                <button href="#" onclick="modalStatus({{$data->id_peminjaman}})" id="btn_klik" class="btn btn-success btn-sm mt-2"><i class="bi bi-check"></i></button>
+                <button href="#" onclick="modalStatusTolak({{$data->id_peminjaman}})"  class="btn btn-danger btn-sm mt-2"><i class="bi bi-x"></i></button>
                 @endif
                 @if($data->staff_umum == "Disetujui")
-                <a href="#" onclick="modalCetak({{$data->id_peminjaman}})" class="btn btn-primary btn-sm mt-2">Berita Acara</a>
+                <button href="#" onclick="modalCetak({{$data->id_peminjaman}})" class="btn btn-primary btn-sm mt-2">Berita Acara</button>
                 @endif
                 @endif
 
@@ -187,6 +187,8 @@
 
     function ubahStatus(id_peminjaman) { 
         var status = $("#status").val();
+        $("#sendButton").hide();
+     
             $.ajax({
                 type: "get",
                 url: "{{ url('ubahstatus') }}/" + id_peminjaman,
@@ -318,7 +320,7 @@
             $("#page").html('Apakah Anda yakin Ingin Menyetujui Peminjaman?');
             $("#modalFooter").html(`
             <a style="color:white" class="btn  btn-secondary" data-dismiss="modal">Tutup</a>
-            <a style="color:white" href="#" onclick="ubahStatus(`+id_peminjaman+`)" class="btn  btn-success">Setuju</a>)`)
+            <a style="color:white" href="#" id="sendButton" onclick="ubahStatus(`+id_peminjaman+`)" class="btn  btn-success">Setuju</a>)`)
             $("#exampleModalCenter").modal('show');
     }
 
